@@ -1306,7 +1306,7 @@ def C_CH4(PT,melt_wf,models=default_models): # C_CH4 = wmCH4/fCH4 (ppm)
         lnK0 = 4.93 # ppm CH4 
         #lnK0 = -7.63 # mole fraction CH4
         DV = 26.85 # cm3/mol
-        lnK = lnK0 - (DV*(P-P0))/(R*T) 
+        lnK = lnK0 - (DV*(P-P0))/(R*T)
         if models.loc["high precision","option"] == "True":
             K_ = gp.exp(lnK) # for fCH4 in GPa
         else:
@@ -3482,9 +3482,9 @@ def FefO2_ONeill18_terms(PT,melt_wf,models=default_models): # Eq. (9a) in O'Neil
         Terms a, B, FMQ
     """
     # 1n(Fe3Fe2) = a*DFMQ + B
-    a = 0.125
+    a = 0.25
     # mole fractions on a single cation basis in the melt based on oxide components (all Fe as FeO) with no volatiles
-    melt_comp = mg.melt_cation_proportion(melt_wf,"volatiles","Fe speciation")
+    melt_comp = mg.melt_cation_proportion(melt_wf,"no","no")
     B = - 1.36 + 2.4*melt_comp["Ca"] + 2.0*melt_comp["Na"] + 3.7*melt_comp["K"] - 2.4*melt_comp["P"]
     # FMQ
     T_K = PT['T']+273.15
@@ -3496,7 +3496,7 @@ def FefO2_Borisov18_terms(PT,melt_wf,models=default_models): # Eq. (4) from Bori
     # Borisov et al. (2018) CMP 173
     a = 0.207
     # melt mole fraction with no volatiles and all Fe as FeOT
-    melt_comp = mg.melt_mole_fraction(melt_wf,models,"no","no")  
+    melt_comp = mg.melt_mole_fraction(melt_wf,models,"no","no",molmass='ONeill22',majors='ONeill22')  
     B = (4633.3/T_K -0.445*melt_comp["SiO2"] - 0.900*melt_comp["TiO2"] + 1.532*melt_comp["MgO"] + 0.314*melt_comp["CaO"] + 2.030*melt_comp["Na2O"] + 3.355*melt_comp["K2O"] - 4.851*melt_comp["P2O5"] - 3.081*melt_comp["SiO2"]*melt_comp["Al2O3"] -  4.370*melt_comp["SiO2"]*melt_comp["MgO"] - 1.852)
     return a, B
 
@@ -3557,10 +3557,7 @@ def fO22Fe3FeT(fO2,PT,melt_wf,models=default_models): # converting fO2 to Fe3/Fe
         else:
             DQFM = math.log10(fO2) - FMQ
         lnFe3Fe2 = a*DQFM + B
-        if models.loc["high precision","option"] == "True":
-            Fe3Fe2 =  gp.exp(lnFe3Fe2)
-        else:
-            Fe3Fe2 =  math.exp(lnFe3Fe2)
+        Fe3Fe2 =  10.**(lnFe3Fe2)
         return Fe3Fe2/(Fe3Fe2 + 1.0)
     
     elif model == "Borisov18": # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
@@ -3651,7 +3648,7 @@ def f_O2(PT,melt_wf,models=default_models):
     elif model == "ONeill18": # Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162 doi:10.1016/j.epsl.2018.10.0020012-821X
         F = mg.Fe3Fe2(melt_wf) # Fe3+/Fe2+
         a,B,FMQ = FefO2_ONeill18_terms(PT,melt_wf,models)
-        DQFM = (math.log(F) - B)/a
+        DQFM = (math.log10(F) - B)/a
         logfO2 = DQFM + FMQ
         return 10.0**logfO2
     
