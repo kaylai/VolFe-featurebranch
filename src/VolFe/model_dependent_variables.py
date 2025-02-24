@@ -2350,7 +2350,7 @@ def CORK(PT,p0,a,b,c,d,models):
     T_K = PT['T']+273.15
     def MRK(P_kb,VMRK,R,T_K,a,b): # MRK volume equation rearranged to equal 0
         return P_kb*pow(VMRK,3.0) - R*T_K*pow(VMRK,2.0) - (b*R*T_K + pow(b,2.0)*P_kb - a*pow(T_K,-0.5))*VMRK - (a*b)*pow(T_K,-0.5)
-
+        
     def dMRK(P_kb,VMRK,R,T_K,a,b): # derivative of above
         return 3.0*P_kb*pow(VMRK,2.0) - 2.0*R*T_K*VMRK - (b*R*T_K + pow(b,2.0)*P_kb - a*pow(T_K,-0.5))
 
@@ -2364,20 +2364,20 @@ def CORK(PT,p0,a,b,c,d,models):
             delta1 = dVMRK(MRK,P_kb,VMRK0,R,T_K,a,b)
         return VMRK0
     
-    R = 8.314e-3 # in kJ/mol/K
+    R = 8.3144598e-3 # in kJ/mol/K
     P_kb = P/1000.0
     
     Vi = ((R*T_K)/P_kb) + b
         
-    VMRK = NR_VMRK(MRK, dMRK, Vi, 1E20, P_kb,R,T_K,a,b)
-        
+    VMRK = NR_VMRK(MRK, dMRK, Vi, 1E-12, P_kb,R,T_K,a,b)
+
     if P_kb > p0:
         V = VMRK + c*pow((P_kb-p0),0.5) + d*(P_kb-p0)
         ln_y_virial = (1/(R*T_K))*((2./3.)*c*pow((P_kb-p0),1.5) + (d/2.0)*pow((P_kb-p0),2.0))
     else:
         V = VMRK
         ln_y_virial = 0.0
-        
+   
     z = (P_kb*V)/(R*T_K)
     A = a/(b*R*pow(T_K,1.5))
     B = (b*P_kb)/(R*T_K)
@@ -2390,6 +2390,7 @@ def CORK(PT,p0,a,b,c,d,models):
     else:
         ln_y = z - 1.0 - math.log(z-B) - A*math.log(1.0 + (B/z)) + ln_y_virial
         value = math.exp(ln_y)
+
     return value
 
 ### Flowers (1979) modified from code from MIMiC (Rasmussen et al., 2021: https://github.com/DJRgeoscience/MIMiC), originally from VolatileCalc (Newman & Lowenstern, 2001)
@@ -2836,9 +2837,13 @@ def y_CO2(PT,models=default_models):
             p0 = 5.00 # in kb
             a = 741.2 + -0.10891*(T_K) + -3.4203e-4*pow(T_K,2.0)
             b = 3.057
-            c = -2.26924e-1 + -7.73793e-5*T_K
-            d = 1.33790e-2 + -1.1740e-5*T_K
-            y = CORK(PT,p0,a,b,c,d,models)
+            c = -2.26924e-1 + 7.73793e-5*T_K
+            d = 1.33790e-2 + -1.01740e-5*T_K
+            #y = CORK(PT,p0,a,b,c,d,models)
+            R = 8.3144598e-3
+            P_kb = P/1000.
+            lnf = ((R*T_K*math.log(1000*P_kb)) + (b*P_kb) + (a/(b*T_K**0.5))*((math.log(R*T_K + b*P_kb))-(math.log(R*T_K + 2*b*P_kb))) + ((2./3.)*c*P_kb*P_kb**0.5) + ((d/2.)*P_kb**2.))/(R*T_K)
+            y = (math.exp(lnf))/P
         elif model == "Shi92": # Shi & Saxena (1992) AmMin 77(9-10):1038-1049
             gas_species = "CO2"
             y = y_SS(gas_species,PT,models)
