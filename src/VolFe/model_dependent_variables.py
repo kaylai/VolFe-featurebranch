@@ -572,8 +572,8 @@ def C_H2O(PT,melt_wf,models=default_models):
             if models.loc["high precision","option"] == "True":
                 C = A*gp.exp((-DV*(P-P0))/(R*T0)) 
             else:
-                C = A*math.exp((-DV*(P-P0))/(R*T0)) 
-        
+                C = A*math.exp((-DV*(P-P0))/(R*T0))
+
         ### Work in progress ###
         elif model_solubility == "ETN-1": # Fitted to ETN-1 and VES-9 Xm_H2Omol calculated at 1200 'C data from Lesne et al. (2011) 162:133-151
             C = 3.3989655e-6 
@@ -623,15 +623,8 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
     - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
     - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
     - 'StromboliAlkaliBasalt_Lense11' PST-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
-    - 'SunsetCraterAlkaliBasalt_Allison19' Sunset Crater in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
-    - 'SFVFBasalticAndesite_Allison19' SVFV in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
-    - 'ErebusPhonotephrite_Allison19' Erebus in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
-    - 'VesuviusPhonotephrite_Allison19' Vesuvius in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
-    - 'EtnaTrachybasalt_Allison19' Etna in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
-    - 'StromboliAlkaliBasalt_Allison19' Stromboli in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4 
     - 'Basanite_Holloway94' Basanite in Table 5 from Holloway and Blank (1994) RiMG 30:187-230 doi:10.1515/9781501509674-012
     - 'Leucitite_Thibault94' Leucitite from Thibault & Holloway (1994) CMP 116:216-224 doi:10.1007/BF00310701
-    - 'TholeiiteBasalt_Allison22' N72 basalt in Table 2 from Allison et al. (2022) CMP 177:40 doi:10.1007/s00410-022-01903-y
     - 'Rhyolite_Blank93' Fig.2 caption from Blank et al. (1993) EPSL 119:27-36 doi:10.1016/0012-821X(93)90004-S
 
     """
@@ -724,91 +717,91 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
             C = A*gp.exp(B)
         else:
             C = A*math.exp(B)
-    elif model == "Shishkina14": # modified from Shishkina et al. (2014) Chem. Geol. 388:112-129
-        A = 1.164 # modified by converting P^A to APyCO2 but only including data up to and including 400 MPa
-        B = 6.71*PI_-1.345
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "SunsetCraterAlkaliBasalt_Allison19": # Sunset Crater in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 16.40 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.67)
-        else:
-            A = math.exp(-14.67)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "SFVFBasalticAndesite_Allison19": # SFVF in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 15.02 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.87)
-        else:
-            A = math.exp(-14.87)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "ErebusPhonotephrite_Allison19": # Erebus in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = -14.65 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.65)
-        else:
-            A = math.exp(-14.65)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "VesuviusPhonotephrite_Allison19": # Vesuvius in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 24.42 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.04)
-        else:
-            A = math.exp(-14.04)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "EtnaTrachybasalt_Allison19": # Etna in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 21.59 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.28)
-        else:
-            A = math.exp(-14.28)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "StromboliAlkaliBasalt_Allison19": # Stromboli in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 14.93 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-14.68)
-        else:
-            A = math.exp(-14.68)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
+    #elif model == "Shishkina14": # modified from Shishkina et al. (2014) Chem. Geol. 388:112-129
+    #    A = 1.164 # modified by converting P^A to APyCO2 but only including data up to and including 400 MPa
+    #    B = 6.71*PI_-1.345
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "SunsetCraterAlkaliBasalt_Allison19": # Sunset Crater in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 16.40 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.67)
+    #    else:
+    #        A = math.exp(-14.67)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "SFVFBasalticAndesite_Allison19": # SFVF in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 15.02 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.87)
+    #    else:
+    #        A = math.exp(-14.87)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "ErebusPhonotephrite_Allison19": # Erebus in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = -14.65 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.65)
+    #    else:
+    #        A = math.exp(-14.65)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "VesuviusPhonotephrite_Allison19": # Vesuvius in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 24.42 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.04)
+    #    else:
+    #        A = math.exp(-14.04)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "EtnaTrachybasalt_Allison19": # Etna in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 21.59 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.28)
+    #    else:
+    #        A = math.exp(-14.28)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "StromboliAlkaliBasalt_Allison19": # Stromboli in Table 4 from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4) 
+    #   R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 14.93 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-14.68)
+    #    else:
+    #        A = math.exp(-14.68)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
     elif model == "Basanite_Holloway94": # Basanite in Table 5 from Holloway and Blank (1994) 
         R_ = 83.144621 # cm3 bar K−1 mol−1
         DV = 21.72 # cm3/mol ± 1.27
@@ -836,16 +829,16 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
             C = A*gp.exp(B)
         else:
             C = A*math.exp(B)
-    elif model == "TholeiiteBasalt_Allison22": # N72 basalt in Table 2 from Allison et al. (2022) CMP 177:40, based on experiments from Shishkina et al. (2010) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 19.05 # cm3/mol
-        P0 = 1000.0 # bar
-        A = gp.exp(-14.86)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
+    #elif model == "TholeiiteBasalt_Allison22": # N72 basalt in Table 2 from Allison et al. (2022) CMP 177:40, based on experiments from Shishkina et al. (2010) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 19.05 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    A = gp.exp(-14.86)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
     elif model == "Rhyolite_Blank93": # Fig. 2 caption from Blank et al. (1993) 
         R_ = 83.144621 # cm3 bar K−1 mol−1
         DV = 28. # cm3/mol ± 2
@@ -863,33 +856,33 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
             C = A*math.exp(B)
     
     ### WORK IN PROGRESS BELOW HERE ###
-    elif model == "Phonotephrite_Allison22": # AH3 Phonotephrite in Table 2 from Allison et al. (2022) CMP 177:40, based on experiments from Vetere et al. (2014) 
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = 30.45 # cm3/mol
-        P0 = 1000.0 # bar
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(-13.26)
-        else:
-            A = math.exp(-13.26)
-        B = -((DV/(R_*T_K))*(P-P0))
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
-    elif model == "Allison22mod": # modified from Allison et al. (2022) CMP 177:40
-        P0 = 1000. # bars
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        DV = -3350.650 + 3375.552*(Si+Na) + 2625.385*Ti + 3105.426*Al + 3628.018*Fe2 + 3323.320*(Mg+Ca) + 3795.115*K + 47.004*(Na/(Na+K)) # cm/mol
-        lnK0 = -128.365 + 114.098*Si + 92.263*(Ti+Al) + 122.644*(Fe2+Ca+Na) + 111.549*Mg + 138.855*K + 2.239*(Na/(Na+K))
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(lnK0)
-        else:
-            A = math.exp(lnK0)
-        B = ((-1.*DV)*(P-P0))/(R_*T_K)
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
+    #elif model == "Phonotephrite_Allison22": # AH3 Phonotephrite in Table 2 from Allison et al. (2022) CMP 177:40, based on experiments from Vetere et al. (2014) 
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = 30.45 # cm3/mol
+    #    P0 = 1000.0 # bar
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(-13.26)
+    #    else:
+    #        A = math.exp(-13.26)
+    #    B = -((DV/(R_*T_K))*(P-P0))
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
+    #elif model == "Allison22mod": # modified from Allison et al. (2022) CMP 177:40
+    #    P0 = 1000. # bars
+    #    R_ = 83.144621 # cm3 bar K−1 mol−1
+    #    DV = -3350.650 + 3375.552*(Si+Na) + 2625.385*Ti + 3105.426*Al + 3628.018*Fe2 + 3323.320*(Mg+Ca) + 3795.115*K + 47.004*(Na/(Na+K)) # cm/mol
+    #    lnK0 = -128.365 + 114.098*Si + 92.263*(Ti+Al) + 122.644*(Fe2+Ca+Na) + 111.549*Mg + 138.855*K + 2.239*(Na/(Na+K))
+    #    if models.loc["high precision","option"] == "True":
+    #        A = gp.exp(lnK0)
+    #    else:
+    #        A = math.exp(lnK0)
+    #    B = ((-1.*DV)*(P-P0))/(R_*T_K)
+    #    if models.loc["high precision","option"] == "True":
+    #        C = A*gp.exp(B)
+    #    else:
+    #        C = A*math.exp(B)
     elif model == "scaledCsulfate": # O'Neill & Mavrogenes (2022) GCA 334:368-382 eq[12a]
         # Mole fractions in the melt on cationic lattice (all Fe as FeO) no volatiles
         lnC = -8.02 + ((21100. + 44000.*Na + 18700.*Mg + 4300.*Al + 44200.*K + 35600.*Ca + 12600.*Mn + 16500.*FeT)/T_K) #CS6+ = [S6+, ppm]/fSO3 
