@@ -210,7 +210,7 @@ def find_Y(P, T, species_list):
 
                     # Carries out NR on eq f, with initial guess 'guess'
                     # and to an allowable error of tol
-                    return newton(f, guess, fprime=df, tol=1e20)
+                    return newton(f, guess, fprime=df)
 
                 assert volMRK(T, P_kb, R, a, b, guess) > 0, "MRK Volume is negative"
 
@@ -228,11 +228,7 @@ def find_Y(P, T, species_list):
 
             guess = (R * T / P_kb) + b
             Z = (P_kb * find_V(T, P_kb, P0, R, a, b, c, d, guess)) / (R * T)
-            x = find_V(T, P_kb, P0, R, a, b, c, d, guess)
-            print(P_kb * (x**3)
-                            - R * T * x**2
-                            - (b * R * T + (b**2) * P_kb - a / T**0.5) * x
-                            - (a * b / T**0.5))
+
             if P_kb > P0:
                 lnYvirial = (1 / (R * T)) * (
                     ((2 / 3) * c * (P_kb - P0) ** 1.5) + ((d / 2) * (P_kb - P0) ** 2)
