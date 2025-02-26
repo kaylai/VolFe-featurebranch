@@ -54,7 +54,7 @@ default_models = [['COH_species','yes_H2_CO_CH4_melt'],['H2S_m','True'],['specie
               ['fO2','Kress91A'],['NNObuffer','Frost91'],['FMQbuffer','Frost91'],
               ['melt composition','Basalt'],['carbon dioxide','MORB_Dixon95'],['water','Basalt_Hughes24'],['hydrogen','Basalt_Hughes24'],['sulfide','ONeill21dil'],['sulfate','ONeill22dil'],['hydrogen sulfide','Basalt_Hughes24'],['methane','Basalt_Ardia13'],['carbon monoxide','Basalt_Hughes24'],['species X solubility','Ar_Basalt_HughesIP'],['Cspeccomp','Basalt'],['Hspeccomp','MORB_HughesIP'],
               ['SCSS','ONeill21hyd'],['SCAS','Zajacz19_pss'],['sulfur_saturation','False'],['sulfur_is_sat','no'],['graphite_saturation','False'],
-              ['ideal_gas','False'],['y_CO2','Shi92'],['y_SO2','Shi92_Hughes23'],['y_H2S','Shi92_Hughes24'],['y_H2','Shaw64'],['y_O2','Shi92'],['y_S2','Shi92'],['y_CO','Shi92'],['y_CH4','Shi92'],['y_H2O','Holland91'],['y_OCS','Shi92'],['y_X','ideal'],
+              ['ideal_gas','False'],['y_CO2','Holland91'],['y_SO2','Shi92_Hughes23'],['y_H2S','Shi92_Hughes24'],['y_H2','Shaw64'],['y_O2','Shi92'],['y_S2','Shi92'],['y_CO','Shi92'],['y_CH4','Shi92'],['y_H2O','Holland91'],['y_OCS','Shi92'],['y_X','ideal'],
               ['KHOg','Ohmoto97'],['KHOSg','Ohmoto97'],['KOSg','Ohmoto97'],['KOSg2','ONeill22'], ['KCOg','Ohmoto97'],['KCOHg','Ohmoto97'],['KOCSg','Moussallam19'],['KCOs','Holloway92'],['carbonylsulfide','COS'],
               ['bulk_composition','melt-only'],['starting_P','Pvsat'],['gassing_style','closed'],['gassing_direction','degas'],['P_variation','polybaric'],['eq_Fe','yes'],['solve_species','OCS'],
               ['beta_factors','Richet77'],['alpha_H_CH4v_CH4m','no fractionation'],['alpha_H_H2v_H2m','no fractionation'],['alpha_H_H2Ov_OHmm','Rust04'],['alpha_H_H2Ov_H2Om','Rust04'],['alpha_H_H2Sv_H2Sm','no fractionation'],
@@ -2230,7 +2230,6 @@ def KregH2O(PT,melt_wf,models=default_models):
         A = 0.5761*(Na+K) - 0.2884 # eqn-8
         B = -8.9589*(Na+K) + 24.65 # eqn-9
         C = 1.7013*(Na+K) + 9.6481 # eqn-1
-    
     return A, B, C
        
     
@@ -2362,7 +2361,7 @@ def CORK(PT,p0,a,b,c,d,models):
     
     Vi = ((R*T_K)/P_kb) + b
         
-    VMRK = NR_VMRK(MRK, dMRK, Vi, 1E-12, P_kb,R,T_K,a,b)
+    VMRK = NR_VMRK(MRK, dMRK, Vi, 1E-5, P_kb,R,T_K,a,b)
 
     if P_kb > p0:
         V = VMRK + c*pow((P_kb-p0),0.5) + d*(P_kb-p0)
@@ -2810,9 +2809,9 @@ def y_CO2(PT,models=default_models):
         
     Model options for y_CO2
     -----------------------
-    - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
+    - 'Holland91' [default] Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484 
+    - 'Shi92' Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    - 'Holland91' Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484
     (Note: "ideal_gas" = "True" overides chosen option)
     """
     ideal_gas = models.loc["ideal_gas","option"]
