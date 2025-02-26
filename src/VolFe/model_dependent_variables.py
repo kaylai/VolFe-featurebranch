@@ -529,7 +529,8 @@ def C_H2O(PT,melt_wf,models=default_models):
             DV = 12 # cm3/mol
             P0 = 1.0 # bar
             A = 4.6114e-6
-            B = -((DV/(R_*T_K))*(P-P0))
+            T_K = PT['T']+273.15
+            B = -((DV/(R_*T_K))*(PT["P"]-P0))
             if models.loc["high precision","option"] == "True":
                 C = A*gp.exp(B)
             else:
@@ -567,7 +568,7 @@ def C_H2O(PT,melt_wf,models=default_models):
             else:
                 C = A*math.exp((-DV*(P-P0))/(R*T0)) 
         elif model_solubility == "NorthArchBasalt_Dixon97": # Eq. (9) from Dixon (1997) Am. Min. 82:368-378
-            A = (-3.4e-5)-((1.29e-6)*(melt_comp_ox["SiO2"]*100.)) # XmH2Om0
+            A = (-3.4e-5)-((1.29e-6)*(mg.melt_comp_ox["SiO2"]*100.)) # XmH2Om0
             DV = 12. # VH2Om0 in cm3/mol
             if models.loc["high precision","option"] == "True":
                 C = A*gp.exp((-DV*(P-P0))/(R*T0)) 
@@ -591,7 +592,7 @@ def C_H2O(PT,melt_wf,models=default_models):
 def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mole fraction) ***except Shishkina14 - wmCO2 ppm***
     
     """ 
-    Solubility constant for disolving CO2 in the melt: C_CO2,T = xmCO2,T/fCO2 [all oxidised carbon - i.e., CO2mol and CO32- - as CO2,T]
+    Solubility constant for disolving CO2 as CO2,T (all oxidised carbon, i.e., CO2mol and CO32-, as CO2,T) in the melt: C_CO2,T = xmCO2,T/fCO2 (mole fraction/bar)
 
 
     Parameters
@@ -611,21 +612,21 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
     Returns
     -------
     float
-        Solubility constant for CO2 as <class 'mpfr'>
+        Solubility constant for CO2 in mole fraction/bar
 
     
-    Model options for carbon dioxide
+    Model options for 'carbon dioxide'
     -------------
-    - 'MORB_Dixon95' [default] Bullet (5) of summary from Dixon et al. (1995) JPet 36(6):1607-1631 doi:10.1093/oxfordjournals.petrology.a037267
-    - 'Basalt_Dixon97' Eq. (7) from Dixon et al. (1997) AmMin 82(3-4)368-378 doi:10.2138/am-1997-3-415
-    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon et al. (1997) AmMin 82(3-4)368-378 doi:10.2138/am-1997-3-415
-    - 'Basalt_Lesne11' Eq. (25,26) from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
-    - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
-    - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
-    - 'StromboliAlkaliBasalt_Lense11' PST-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 doi:10.1007/s00410-010-0585-0
-    - 'Basanite_Holloway94' Basanite in Table 5 from Holloway and Blank (1994) RiMG 30:187-230 doi:10.1515/9781501509674-012
-    - 'Leucitite_Thibault94' Leucitite from Thibault & Holloway (1994) CMP 116:216-224 doi:10.1007/BF00310701
-    - 'Rhyolite_Blank93' Fig.2 caption from Blank et al. (1993) EPSL 119:27-36 doi:10.1016/0012-821X(93)90004-S
+    - 'MORB_Dixon95' [default] Bullet (5) of summary from Dixon et al. (1995) JPet 36(6):1607-1631 https://doi.org/10.1093/oxfordjournals.petrology.a037267
+    - 'Basalt_Dixon97' Eq. (7) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'Basalt_Lesne11' Eq. (25,26) from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'StromboliAlkaliBasalt_Lense11' PST-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'Basanite_Holloway94' Basanite in Table 5 from Holloway and Blank (1994) RiMG 30:187-230 https://doi.org/10.1515/9781501509674-012
+    - 'Leucitite_Thibault94' Leucitite from Thibault & Holloway (1994) CMP 116:216-224 https://doi.org/10.1007/BF00310701
+    - 'Rhyolite_Blank93' Fig.2 caption from Blank et al. (1993) EPSL 119:27-36 https://doi.org/10.1016/0012-821X(93)90004-S
 
     """
 
@@ -883,24 +884,6 @@ def C_CO3(PT,melt_wf,models=default_models): ### C_CO2,T = xmCO2,T/fCO2 ### (mol
     #        C = A*gp.exp(B)
     #    else:
     #        C = A*math.exp(B)
-    elif model == "scaledCsulfate": # O'Neill & Mavrogenes (2022) GCA 334:368-382 eq[12a]
-        # Mole fractions in the melt on cationic lattice (all Fe as FeO) no volatiles
-        lnC = -8.02 + ((21100. + 44000.*Na + 18700.*Mg + 4300.*Al + 44200.*K + 35600.*Ca + 12600.*Mn + 16500.*FeT)/T_K) #CS6+ = [S6+, ppm]/fSO3 
-        Csulfate = gp.exp(lnC)*KOSg2(PT,models) # ppm S
-        lnCsulfate = math.log(Csulfate)
-        lnC=-0.46*lnCsulfate
-        if models.loc["high precision","option"] == "True":
-            A = gp.exp(lnC)
-        else:
-            A = math.exp(lnC)
-        DV = 23.
-        P0 = 1000. # bars
-        R_ = 83.144621 # cm3 bar K−1 mol−1
-        B = ((-1.*DV)*(P-P0))/(R_*T_K)
-        if models.loc["high precision","option"] == "True":
-            C = A*gp.exp(B)
-        else:
-            C = A*math.exp(B)
     elif model == "Behrens04fit": # Fit to Behrens et al. (2004) - tried for workshop
         DV = 41.8 # cm3/mol
         P0 = 1.0 # bar
@@ -1279,22 +1262,22 @@ def C_CH4(PT,melt_wf,models=default_models): # C_CH4 = wmCH4/fCH4 (ppm)
     Returns
     -------
     float
-        Solubility constant for CH4 as <class 'mpfr'>
+        Solubility constant for CH4 in ppmw/bar
 
         
-    Model options for methane
+    Model options for "methane"
     -------------
-    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013)
+    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028
     - Only one option available currently, included for future development.
 
     """
 
     model = models.loc["methane","option"]
 
-    if model == "Basalt_Ardia13": # Eq. (7a) from Ardia et al. (2013) GCA 114:52-71
+    if model == "Basalt_Ardia13": # Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028
         R = 83.144598 # bar cm3 /mol /K 
         P = PT['P'] # pressure in bars
-        T = PT['T'] + 273.15 # T in Kelvin SHOULD BE T0
+        T = PT['T'] + 273.15 # T in Kelvin
         P0 = 100.*0.01 # kPa to bars
         lnK0 = 4.93 # ppm CH4 
         #lnK0 = -7.63 # mole fraction CH4
@@ -1335,12 +1318,12 @@ def C_CO(PT,melt_wf,models=default_models): # C_CO = wmCO/fCO (ppm)
     Returns
     -------
     float
-        Solubility constant for CH4 as <class 'mpfr'>
+        Solubility constant for CH4 in ppmw/bar
 
         
-    Model options for carbon monoxide
+    Model options for 'carbon monoxide'
     -------------
-    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) based on data from Armstrong et al. (2015), Stanley et al., (2014), and Wetzel et al., (2013)
+    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin 109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et al. (2015), Stanley et al., (2014), and Wetzel et al., (2013)
     - Only one option available currently, included for future development.
 
     """
@@ -1436,7 +1419,7 @@ def C_Cl(PT,melt_wf):
 
     # WORK IN PROGRESS
 
-    melt_comp = vf.melt_cation_proportion(melt_wf,"no","no")
+    melt_comp = mg.melt_cation_proportion(melt_wf,"no","no")
     P = PT['P']/10000. # bar to GPa
     T = PT['T'] + 273.15 # 'C to 'K
     logC = 1.601 + (4470*melt_comp['Ca'] - 3430*melt_comp['Si'] + 2592*melt_comp['FeT'] - 4092*melt_comp['K'] - 894*P)/T
@@ -2204,6 +2187,8 @@ def KregH2O(PT,melt_wf,models=default_models):
         B = 15.333
         C = 10.894
     elif Hspeccomp == "AlkaliBasalt_Lesne10": # Eq (24-27) from Lesne et al. (2010) CMP 162:133-151
+        T_K = PT['T']+273.15
+        R = 83.15 # cm3bar/molK
         lnK = ((-2704.4/T_K) + 0.641)
         A = lnK + 49016.0/(R*T_K)
         B = -2153326.51/(R*T_K)
@@ -2224,7 +2209,7 @@ def KregH2O(PT,melt_wf,models=default_models):
     ### Work in progress ###
     elif Hspeccomp == "alkali basalt XT": # No T-dependence, hence its the speciation frozen in the glass. Eqn 7-10 from Lesne et al. (2010) CMP 162:133-151 (eqn 7 is wrong)
         # wt% normalised including H2O, all Fe as FeOT
-        melt_comp = melt_normalise_wf(melt_wf,"volatiles","Fe speciation")
+        melt_comp = mg.melt_normalise_wf(melt_wf,"volatiles","Fe speciation")
         Na = melt_comp["Na2O"]*100.
         K = melt_comp["K2O"]*100.
         A = 0.5761*(Na+K) - 0.2884 # eqn-8
