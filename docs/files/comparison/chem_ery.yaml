@@ -1,0 +1,16 @@
+# Dry magma major element chemistry
+# Standard chemistry is provided for basalt, phonolite and rhyolite. Please comment out (using # at the start of each line) data you DO NOT want to use,
+# and/or provide your own chemistry data in the empty section at the bottom of the file.
+
+
+SIO2: 43.97
+TIO2: 0.7
+AL2O3: 19.09
+FEO: 9.36
+# FE2O3: 0
+MNO: 0.22
+MGO: 6.76
+CAO: 13.28
+NA2O: 1.46
+K2O: 0.37
+P2O5: 0.11
