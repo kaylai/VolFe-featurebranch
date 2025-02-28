@@ -558,7 +558,6 @@ def i2s9(element, PT, comp, R, models, guessx, nr_step, nr_tol):
         if element == "H":
             A = result1["A"]
             H = result1["H"]
-            I = result1["I"]  # noqaS
             if float(comp["H2Omol_wtpc"].iloc[0]) > 0.0:
                 result1["A"] = H
                 result1["H"] = A

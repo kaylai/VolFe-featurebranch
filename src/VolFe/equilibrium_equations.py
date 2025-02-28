@@ -2,6 +2,7 @@
 
 import pandas as pd
 import numpy as np
+import math
 
 import VolFe.differential_equations as de
 import VolFe.melt_gas as mg
@@ -2734,10 +2735,11 @@ def eq_HOFe_xenia(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
     wt_H = bulk_wf["H"]
     wt_Fe = bulk_wf["Fe"]
     guessx = guesses["guessx"]
+    T_K = PT['T']
 
     # equilibrium constants
     K1_ = 1.0 / (6.9617e-10)  # H2O = H2 + 0.5O2
-    K2_ = exp(-13.869 + 3890.0 / T_K)  # H2Og = H2Omol Zhang 1999 eq14 @1bar
+    K2_ = math.exp(-13.869 + 3890.0 / T_K)  # H2Og = H2Omol Zhang 1999 eq14 @1bar
     K3_ = 0.368  # H2O + O = 2OH
     K4a_ = mdv.C_H2_a() / 100.0  # H2g = H2m, converted to weight fraction
     K4b_ = mdv.C_H2_b()  # power for H2g = H2m
@@ -2755,34 +2757,7 @@ def eq_HOFe_xenia(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
     M_O2 = mdv.species.loc["O2", "M"]
     M_H2 = mdv.species.loc["H2", "M"]
     M_H2O = mdv.species.loc["H2O", "M"]
-    M_FeO = mdv.species.loc["FeO", "M"]
-    M_FeO15 = mdv.species.loc["FeO1.5", "M"]
     M_m_ = mg.M_m(melt_wf)
-
-    constants = [
-        P,
-        wt_O,
-        wt_H,
-        wt_Fe,
-        K1_,
-        K2_,
-        K3_,
-        K4a_,
-        K4b_,
-        K5_,
-        y_H2O_,
-        y_O2_,
-        y_H2_,
-        M_H,
-        M_O,
-        M_Fe,
-        M_O2,
-        M_H2,
-        M_H2O,
-        M_FeO,
-        M_FeO15,
-        M_m_,
-    ]
 
     def mg_HOFe(xg_O2_):
         xg_H2O_ = (1.0 - xg_O2_) / (
@@ -2798,7 +2773,7 @@ def eq_HOFe_xenia(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         wm_H2_ = K4a_ * (y_H2_ * xg_H2_ * P) ** K4b_
         Xm_t = xm_H2OT_ * M_H2O + (1.0 - xm_H2OT_) * M_m_
         Xg_t = xg_H2O_ * M_H2O + xg_H2_ * M_H2 + xg_O2_ * M_O2
-        Fe32 = 2.0 * exp(0.196 * log(y_O2_ * xg_O2_ * P) + K5_)
+        Fe32 = 2.0 * math.exp(0.196 * math.log(y_O2_ * xg_O2_ * P) + K5_)
         Fe3T = Fe32 / (1.0 + Fe32)
         wm_H2OT_ = (xm_H2OT_ * M_H2O) / Xm_t
         return (
@@ -3071,7 +3046,8 @@ def eq_SHOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
 
     Returns:
         tuple(float,float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Mole
-        fraction S2 in vapor; Melt and gas composition; Weight fraction gas; Mass balance
+        fraction S2 in vapor; Melt and gas composition; Weight fraction gas; Mass
+        balance
     """
     P = PT["P"]
     wt_O = bulk_wf["O"]
@@ -7060,8 +7036,10 @@ def eq_SCHOFe_3(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
         # (y_H2S_*(y_O2_*xg_O2_)**0.5)
         # xg_SO2_ = (K6_*y_O2_*xg_O2_*(y_S2_*xg_S2_*P)**0.5)/y_SO2_
         # xg_CO2_ = (1.0 - xg_S2_ - xg_O2_ - xg_H2_ - xg_H2O_ - xg_H2S_ - xg_SO2_)/
-        # (1.0 + (y_CO2_/(K2_*y_CO_*(y_O2_*xg_O2_*P)**0.5)) + ((y_CO2_*y_SO2_*xg_SO2_)/
-        # (K2_**3.0*K10_*y_OCS_*(y_O2_*xg_O2_)**1.5*P**0.5)) + ((y_CO2_*(y_H2O_*xg_H2O_)**2.0)/(K3_*y_CH4_*(y_O2_*xg_O2_)**2.0)))
+        # (1.0 + (y_CO2_/(K2_*y_CO_*(y_O2_*xg_O2_*P)**0.5)) + ((y_CO2_*y_SO2_*xg_SO2_)
+        # /(K2_**3.0*K10_*y_OCS_*(y_O2_*xg_O2_)**1.5*P**0.5)) + 
+        # ((y_CO2_*(y_H2O_*xg_H2O_)
+        # **2.0)/(K3_*y_CH4_*(y_O2_*xg_O2_)**2.0)))
         # xg_CO_ = (y_CO2_*xg_CO2_)/(K2_*y_CO_*(y_O2_*xg_O2_*P)**0.5)
         # xg_CH4_ = (y_CO2_*xg_CO2_*(y_H2O_*xg_H2O_)**2.0)/
         # (K3_*y_CH4_*(y_O2_*xg_O2_)**2.0)
