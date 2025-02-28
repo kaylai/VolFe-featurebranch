@@ -77,7 +77,8 @@ def test_S2fO2_df_P():
 
 
 def test_S2fO2_df_Xsulf():
-    "simple test of calc_melt_S_oxybarometer function with sulfide composition using example 3a"
+    """simple test of calc_melt_S_oxybarometer function with sulfide composition using
+    example 3a"""
 
     # Define the melt composition, sulfide composition, and T as a dictionary.
     my_analysis = {
