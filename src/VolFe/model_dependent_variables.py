@@ -79,7 +79,7 @@ default_models = [
     ["sulfur_is_sat", "no"],
     ["graphite_saturation", "False"],
     ["ideal_gas", "False"],
-    ["y_CO2", "Holland91_eq8_tab1"],
+    ["y_CO2", "Holland91_eq4,A1-3_tab1"],
     ["y_SO2", "Shi92_Hughes23"],
     ["y_H2S", "Shi92_Hughes24"],
     ["y_H2", "Shaw64"],
@@ -1343,9 +1343,9 @@ def C_S(PT, melt_wf, models=default_models):
     Geochemistry" doi:10.1002/9781119473206.ch10
     - 'ONeill21hyd' (hydrous) Eq. (10.34, 10.49) from O'Neill (2021) in "Magma Redox
     Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'Boulliung23eq6' Eq. (6) from Boulliung & Wood (2023) CMP 178:56
+    - 'Boulliung23_eq6' Eq. (6) from Boulliung & Wood (2023) CMP 178:56
     doi:10.1007/s00410-023-02033-9
-    - 'Boulliung23eq7' Eq. (7) from Boulliung & Wood (2023) CMP 178:56
+    - 'Boulliung23_eq7' Eq. (7) from Boulliung & Wood (2023) CMP 178:56
     doi:10.1007/s00410-023-02033-9
     """
     model = models.loc["sulfide", "option"]
@@ -1416,7 +1416,7 @@ def C_S(PT, melt_wf, models=default_models):
     # Eq. (6) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    if model == "Boulliung23eq6":
+    if model == "Boulliung23_eq6":
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         melt_comp = mg.melt_single_O(
@@ -1437,7 +1437,7 @@ def C_S(PT, melt_wf, models=default_models):
     # Eq. (7) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    if model == "Boulliung23eq7":
+    if model == "Boulliung23_eq7":
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         melt_comp = mg.melt_single_O(
@@ -1505,9 +1505,9 @@ def C_SO4(PT, melt_wf, models=default_models):
     - 'Boulliung22wP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420
     doi:10.1016/j.gca.2022.11.025 and Eq. (8) for P from Boulliung & Wood (2022) GCA
     336:150-164 doi:10.1016/j.gca.2022.08.032
-    - 'Boulliung23eq9' Eq. (9) from Boulliung & Wood (2023) CMP 178:56
+    - 'Boulliung23_eq9' Eq. (9) from Boulliung & Wood (2023) CMP 178:56
     doi:10.1007/s00410-023-02033-9
-    - 'Boulliung23eq11' Eq. (11) from Boulliung & Wood (2023) CMP 178:56
+    - 'Boulliung23_eq11' Eq. (11) from Boulliung & Wood (2023) CMP 178:56
     doi:10.1007/s00410-023-02033-9
 
     """
@@ -1579,7 +1579,7 @@ def C_SO4(PT, melt_wf, models=default_models):
     # Eq. (9) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    elif model == "Boulliung23eq9":
+    elif model == "Boulliung23_eq9":
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         # Used 29244.299 instead of 292544 to match spreadsheet
@@ -1603,7 +1603,7 @@ def C_SO4(PT, melt_wf, models=default_models):
     # Eq. (11) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    elif model == "Boulliung23eq11":
+    elif model == "Boulliung23_eq11":
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         melt_comp = mg.melt_single_O(
@@ -2233,9 +2233,9 @@ def SCSS(PT, melt_wf, models=default_models):
     Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
     - 'Li22_pss' Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023)
     Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Blanchard21eq11_pss' Eq. (11) from Blanchard et al. (2021) using PySulfSat by
+    - 'Blanchard21_eq11_pss' Eq. (11) from Blanchard et al. (2021) using PySulfSat by
     Wieser and Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Blanchard21eq12_pss' Eq. (12) from Blanchard et al. (2021) using PySulfSat by
+    - 'Blanchard21_eq12_pss' Eq. (12) from Blanchard et al. (2021) using PySulfSat by
     Wieser and Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
 
     """
@@ -2403,7 +2403,7 @@ def SCSS(PT, melt_wf, models=default_models):
 
     # Eq. (11) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023)
     # Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    elif model == "Blanchard21eq11_pss":
+    elif model == "Blanchard21_eq11_pss":
         output = ss.calculate_B2021_SCSS(
             df=comp,
             T_K=T,
@@ -2418,7 +2418,7 @@ def SCSS(PT, melt_wf, models=default_models):
 
     # Eq. (12) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023)
     # Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    elif model == "Blanchard21eq12_pss":
+    elif model == "Blanchard21_eq12_pss":
         output = ss.calculate_B2021_SCSS(
             df=comp,
             T_K=T,
