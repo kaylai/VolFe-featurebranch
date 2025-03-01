@@ -2546,118 +2546,20 @@ def melt_elements(melt_wf, bulk_wf, gas_comp):
 ########################################################################################
 
 
-# molar volume of individual gas species (J/mol/bar - *10 for cm3/bar)
-def gas_molar_volume(gas_species, PT, models):
-    # work in progress
-    R = 8.3145  # J/mol/K
-    if gas_species == "O2":
-        y = mdv.y_O2(PT, models)
-    elif gas_species == "CO2":
-        y = mdv.y_CO2(PT, models)
-    elif gas_species == "OCS":
-        y = mdv.y_OCS(PT, models)
-    elif gas_species == "CH4":
-        y = mdv.y_CH4(PT, models)
-    elif gas_species == "CO":
-        y = mdv.y_CO(PT, models)
-    elif gas_species == "SO2":
-        y = mdv.y_SO2(PT, models)
-    elif gas_species == "H2S":
-        y = mdv.y_H2S(PT, models)
-    elif gas_species == "H2":
-        y = mdv.y_H2(PT, models)
-    elif gas_species == "H2O":
-        y = mdv.y_H2O(PT, models)
-    elif gas_species == "X":
-        y = mdv.y_X(PT, models)
-    Vm = (R * (PT["T"] + 273.15) * y) / PT["P"]
-    return Vm
-
-
-def Vm_O2(PT, models):
-    # work in progress
-    gas_species = "O2"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_H2(PT, models):
-    # work in progress
-    gas_species = "H2"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_H2O(PT, models):
-    # work in progress
-    gas_species = "H2O"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_CO2(PT, models):
-    # work in progress
-    gas_species = "CO2"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_CH4(PT, models):
-    # work in progress
-    gas_species = "CH4"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_CO(PT, models):
-    # work in progress
-    gas_species = "CO"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_S2(PT, models):
-    # work in progress
-    gas_species = "S2"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_SO2(PT, models):
-    # work in progress
-    gas_species = "SO2"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_H2S(PT, models):
-    # work in progress
-    gas_species = "H2S"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
-def Vm_OCS(PT, models):
-    # work in progress
-    gas_species = "OCS"
-    Vm = gas_molar_volume(gas_species, models)
-    return Vm
-
-
 # molar volume of the gas in J/bar/mol
 def Vm_gas(gas_mf, PT, models):
     # work in progress
     Vm = (
-        gas_mf["O2"] * Vm_O2(PT, models)
-        + gas_mf["H2"] * Vm_H2(PT, models)
-        + gas_mf["H2O"] * Vm_H2O(PT, models)
-        + gas_mf["CO2"] * Vm_CO2(PT, models)
-        + gas_mf["CO"] * Vm_CO(PT, models)
-        + gas_mf["CH4"] * Vm_CH4(PT, models)
-        + gas_mf["S2"] * Vm_S2(PT, models)
-        + gas_mf["H2S"] * Vm_H2S(PT, models)
-        + gas_mf["SO2"] * Vm_SO2(PT, models)
-        + gas_mf["OCS"] * Vm_OCS(PT, models)
+        gas_mf["O2"] * mdv.gas_molar_volume("O2", PT, models)
+        + gas_mf["H2"] * mdv.gas_molar_volume("H2", PT, models)
+        + gas_mf["H2O"] * mdv.gas_molar_volume("H2O", PT, models)
+        + gas_mf["CO2"] * mdv.gas_molar_volume("CO2", PT, models)
+        + gas_mf["CO"] * mdv.gas_molar_volume("CO", PT, models)
+        + gas_mf["CH4"] * mdv.gas_molar_volume("CH4", PT, models)
+        + gas_mf["S2"] * mdv.gas_molar_volume("S2", PT, models)
+        + gas_mf["H2S"] * mdv.gas_molar_volume("H2S", PT, models)
+        + gas_mf["SO2"] * mdv.gas_molar_volume("SO2", PT, models)
+        + gas_mf["OCS"] * mdv.gas_molar_volume("OCS", PT, models)
     )
     return Vm
 

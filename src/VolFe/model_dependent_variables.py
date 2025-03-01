@@ -79,7 +79,7 @@ default_models = [
     ["sulfur_is_sat", "no"],
     ["graphite_saturation", "False"],
     ["ideal_gas", "False"],
-    ["y_CO2", "Holland91"],
+    ["y_CO2", "Holland91_eq8_tab1"],
     ["y_SO2", "Shi92_Hughes23"],
     ["y_H2S", "Shi92_Hughes24"],
     ["y_H2", "Shaw64"],
@@ -3174,32 +3174,21 @@ def KCOm(PT, melt_wf, models=default_models):  # K =
 ##########################################
 
 
-def CORK(PT, p0, a, b, c, d, models):
+def y_CORK(species, PT, models):
     """
-    Fugacity coefficient using CORK from Holland & Powell (1991)
+    Fugacity coefficient using eq. (4,A1-3) from Holland & Powell (1991) CMP 109:265-273
+    10.1007/BF00306484
 
 
     Parameters
     ----------
+    species: str
+        species of interest (e.g., 'H2O', 'CO2')
+
     PT: dict
         Dictionary of pressure-temperature conditions
         pressure (bars) as "P"
         temperature ('C) as "T"
-
-    p0: float
-        Constant for vapor species of interest
-
-    a: float
-        Constant for vapor species of interest
-
-    b: float
-        Constant for vapor species of interest
-
-    c: float
-        Constant for vapor species of interest
-
-    d: float
-        Constant for vapor species of interest
 
     models: pandas.DataFrame
         Dataframe detailing model options
@@ -3211,48 +3200,20 @@ def CORK(PT, p0, a, b, c, d, models):
     """
     P = PT["P"]
     T_K = PT["T"] + 273.15
-
-    def MRK(P_kb, VMRK, R, T_K, a, b):  # MRK volume equation rearranged to equal 0
-        return (
-            P_kb * pow(VMRK, 3.0)
-            - R * T_K * pow(VMRK, 2.0)
-            - (b * R * T_K + pow(b, 2.0) * P_kb - a * pow(T_K, -0.5)) * VMRK
-            - (a * b) * pow(T_K, -0.5)
-        )
-
-    def dMRK(P_kb, VMRK, R, T_K, a, b):  # derivative of above
-        return (
-            3.0 * P_kb * pow(VMRK, 2.0)
-            - 2.0 * R * T_K * VMRK
-            - (b * R * T_K + pow(b, 2.0) * P_kb - a * pow(T_K, -0.5))
-        )
-
-    def dVMRK(MRK, P_kb, VMRK, R, T_K, a, b):
-        return abs(0 - MRK(P_kb, VMRK, R, T_K, a, b))
-
-    def NR_VMRK(MRK, dMRK, VMRK0, e1, P_kb, R, T_K, a, b):
-        delta1 = dVMRK(MRK, P_kb, VMRK0, R, T_K, a, b)
-        while delta1 > e1:
-            VMRK0 = VMRK0 - MRK(P_kb, VMRK0, R, T_K, a, b) / dMRK(
-                P_kb, VMRK0, R, T_K, a, b
-            )
-            delta1 = dVMRK(MRK, P_kb, VMRK0, R, T_K, a, b)
-        return VMRK0
-
     R = 8.3144598e-3  # in kJ/mol/K
     P_kb = P / 1000.0
 
-    Vi = ((R * T_K) / P_kb) + b
+    # Appendix: Calculation of CORK volumes
+    V = vol_CORK(species, PT, models)
 
-    VMRK = NR_VMRK(MRK, dMRK, Vi, 1e-5, P_kb, R, T_K, a, b)
-
+    # Appendix: Calculation of CORK fugacities
+    a, b, c, d, p0 = parameters_Holland91(species, PT, models)
     if P_kb > p0:
-        V = VMRK + c * pow((P_kb - p0), 0.5) + d * (P_kb - p0)
+        # Eq. (A.3)
         ln_y_virial = (1 / (R * T_K)) * (
             (2.0 / 3.0) * c * pow((P_kb - p0), 1.5) + (d / 2.0) * pow((P_kb - p0), 2.0)
         )
     else:
-        V = VMRK
         ln_y_virial = 0.0
 
     z = (P_kb * V) / (R * T_K)
@@ -3262,13 +3223,142 @@ def CORK(PT, p0, a, b, c, d, models):
     if z < B:
         value = 1.0
     elif models.loc["high precision", "option"] == "True":
+        # Eq. (A.2)
         ln_y = z - 1.0 - gp.log(z - B) - A * gp.log(1.0 + (B / z)) + ln_y_virial
         value = gp.exp(ln_y)
     else:
+        # Eq. (A.2)
         ln_y = z - 1.0 - math.log(z - B) - A * math.log(1.0 + (B / z)) + ln_y_virial
         value = math.exp(ln_y)
 
     return value
+
+
+def y_sCORK(species, PT, models):
+    """Fugacity coefficient using eq. (8) from Holland & Powell (1991) CMP 109:265-273
+    10.1007/BF00306484
+
+    Args:
+        species (str): species of interest (e.g., 'H2O', 'CO2')
+        PT (dict): Dictionary of pressure-temperature conditions with pressure (bars) as
+        "P" and temperature ('C) as "T"
+
+    Returns:
+        float: fugacity coefficient
+    """
+    R = 8.3144598e-3
+    P = PT["P"]  # P in bar
+    T_K = PT["T"] + 273.15  # T in K
+    P_kb = P / 1000.0  # P in kb
+
+    a, b, c, d, p0 = parameters_Holland91(species, PT, models)  # noqa
+
+    # Eq. (8) rearranged for lnf
+    lnf = (
+        (R * T_K * math.log(1000 * P_kb))
+        + (b * P_kb)
+        + (a / (b * T_K**0.5))
+        * ((math.log(R * T_K + b * P_kb)) - (math.log(R * T_K + 2 * b * P_kb)))
+        + ((2.0 / 3.0) * c * P_kb * P_kb**0.5)
+        + ((d / 2.0) * P_kb**2.0)
+    ) / (R * T_K)
+    y = (math.exp(lnf)) / P
+    return y
+
+
+def parameters_Holland91(species, PT, models):
+    """Parameters for (simplified) CORK equations in Holland & Powell (1991) CMP =
+    109:265-273 10.1007/BF00306484
+
+    Args:
+        species (str): species of interest (e.g., 'H2O', 'CO2')
+        PT (dict): Dictionary of pressure-temperature conditions with pressure (bars) as
+        "P" and temperature ('C) as "T"
+        models (pandas.DataFrame): Dataframe detailing model options
+
+    Returns:
+        tuple(float,float,float,float,float): a, b, c, d, p0
+    """
+
+    # Parameters for gas species of interest using corresponding states using eq. (9)
+    # and Table 2
+    def corresponding_states_Holland91(PT, Tc, Pc):
+        T = PT["T"] + 273.1  # T in K
+        # Table 2
+        a0 = 5.45963e-5
+        a1 = -8.63920e-6
+        b0 = 9.18301e-4
+        c0 = -3.30558e-5
+        c1 = 2.30524e-6
+        d0 = 6.93054e-7
+        d1 = -8.38293e-8
+        # Eq. (9)
+        a = (
+            a0 * (Tc ** (5 / 2) / Pc) + a1 * (Tc * (3 / 2) / Pc) * T
+        )  # Kj2 kbar^-1 K^(1/2) mol^(-2)
+        b = b0 * (Tc / Pc)  # kJ kbar^-1 mol^-1
+        c = c0 * (Tc / Pc ** (3 / 2)) + (c1 / Pc ** (3 / 2)) * T
+        d = d0 * (Tc / Pc**2) + (d1 / Pc**2) * T
+        return a, b, c, d
+
+    def constants_CO2_Holland91(PT, models):
+        model = models.loc["y_CO2", "option"]
+        T_K = PT["T"] + 273.15
+
+        if model in ["Holland91_eq4,A1-3_tab1", "Holland91_eq8_tab1"]:
+            # Table 1
+            a = 741.2 + -0.10891 * (T_K) + -3.4203e-4 * pow(T_K, 2.0)
+            b = 3.057
+            c = -2.26924e-1 + 7.73793e-5 * T_K  # Eq. (4)
+            d = 1.33790e-2 + -1.01740e-5 * T_K  # Eq. (4)
+            p0 = 5.0  # kbar
+        elif model == "Holland91_eq8,9_tab2":
+            Tc = 304.2  # Critical temperature in K
+            Pc = 0.0738  # Critical pressure in kbar
+            a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)  # Eq. (9), Table 2
+            p0 = ""
+
+        return a, b, c, d, p0
+
+    def constants_H2O_Holland91(PT):
+        T_K = PT["T"] + 273.15
+
+        # Table 1
+        p0 = 2.00  # in kb
+        # Eq. (6) T >673 K
+        a = (
+            1113.4
+            + -0.22291 * (T_K - 673.0)
+            + -3.8022e-4 * pow((T_K - 673.0), 2.0)
+            + 1.7791e-7 * pow((T_K - 673.0), 3.0)
+        )
+        b = 1.465
+        c = -3.025650e-2 + -5.343144e-6 * T_K
+        d = -3.2297554e-3 + 2.2215221e-6 * T_K
+
+        return a, b, c, d, p0
+
+    if species == "H2O":
+        a, b, c, d, p0 = constants_H2O_Holland91(PT)
+    elif species == "CO2":
+        a, b, c, d, p0 = constants_CO2_Holland91(PT, models)
+    elif species == "CH4":
+        Tc = 190.6  # Critical temperature in K
+        Pc = 0.0460  # Critical pressure in kbar
+        a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
+        p0 = ""
+    elif species == "H2":
+        Tc = 41.26  # Critical temperature in K
+        Pc = 0.0211  # Critical pressure in kbar
+        a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
+        p0 = ""
+    elif species == "CO":
+        Tc = 132.9  # Critical temperature in K
+        Pc = 0.0350  # Critical pressure in kbar
+        a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
+        p0 = ""
+
+    return a, b, c, d, p0
 
 
 # Flowers (1979) modified from code from MIMiC (Rasmussen et al., 2021:
@@ -3927,7 +4017,8 @@ def y_H2O(PT, models=default_models):
 
     Model options for y_H2O
     -----------------------
-    - 'Holland91' [default] Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484
+    - 'Holland91' [default] Eq. (4,6,A1-3) and Table 1 (T > 673 K only) from Holland &
+    Powell (1991) CMP 109:265-273 10.1007/BF00306484
     - 'ideal' Treat as ideal gas, y = 1 at all P.
     (Note: "ideal_gas" = "True" overides chosen option)
     """
@@ -3935,28 +4026,17 @@ def y_H2O(PT, models=default_models):
     model = models.loc["y_H2O", "option"]
 
     P = PT["P"]
-    T_K = PT["T"] + 273.15
 
     if ideal_gas == "True" or model == "ideal":
         return 1.0
     elif P < 1.0:  # ideal gas below 1 bar
         return 1.0
     else:
-        if (
-            model == "Holland91"
-        ):  # Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484
-            # (T > 673 K only) - using Holland & Powell (1991) CORK
-            p0 = 2.00  # in kb
-            a = (
-                1113.4
-                + -0.22291 * (T_K - 673.0)
-                + -3.8022e-4 * pow((T_K - 673.0), 2.0)
-                + 1.7791e-7 * pow((T_K - 673.0), 3.0)
-            )
-            b = 1.465
-            c = -3.025650e-2 + -5.343144e-6 * T_K
-            d = -3.2297554e-3 + 2.2215221e-6 * T_K
-            y = CORK(PT, p0, a, b, c, d, models)
+        # Eq. (4,6,A1-3) and Table 1 (T > 673 K only) from Holland & Powell (1991) CMP
+        # 109:265-273 10.1007/BF00306484
+        if model == "Holland91":
+            # Eq. (4,A1-3)
+            y = y_CORK("H2O", PT, models)
         elif model == "Flowers79":
             y = MRK(PT, 1.0)
         return y
@@ -3985,7 +4065,12 @@ def y_CO2(PT, models=default_models):
 
     Model options for y_CO2
     -----------------------
-    - 'Holland91' [default] Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484
+    - 'Holland91_eq8_tab1' [default] Eq. (8) and Table 1 from Holland & Powell (1991)
+    CMP 109:265-273 10.1007/BF00306484
+    - 'Holland91_eq4,A1-3_tab1' Eq. (4,A1-3) and Table 1 from Holland & Powell (1991)
+    CMP 109:265-273 10.1007/BF00306484
+    - 'Holland91_eq8,9_tab2' Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP
+    109:265-273 10.1007/BF00306484
     - 'Shi92' Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
     (Note: "ideal_gas" = "True" overides chosen option)
@@ -3994,33 +4079,23 @@ def y_CO2(PT, models=default_models):
     model = models.loc["y_CO2", "option"]
 
     P = PT["P"]
-    T_K = PT["T"] + 273.15
 
     if ideal_gas == "True" or model == "ideal":
         return 1.0
     elif P < 1.0:  # ideal gas below 1 bar
         return 1.0
     else:
-        if (
-            model == "Holland91"
-        ):  # Holland & Powell (1991) CMP 109:265-273 10.1007/BF00306484
-            a = 741.2 + -0.10891 * (T_K) + -3.4203e-4 * pow(T_K, 2.0)
-            b = 3.057
-            c = -2.26924e-1 + 7.73793e-5 * T_K
-            d = 1.33790e-2 + -1.01740e-5 * T_K
-            # y = CORK(PT,p0,a,b,c,d,models)
-            R = 8.3144598e-3
-            P_kb = P / 1000.0
-            lnf = (
-                (R * T_K * math.log(1000 * P_kb))
-                + (b * P_kb)
-                + (a / (b * T_K**0.5))
-                * ((math.log(R * T_K + b * P_kb)) - (math.log(R * T_K + 2 * b * P_kb)))
-                + ((2.0 / 3.0) * c * P_kb * P_kb**0.5)
-                + ((d / 2.0) * P_kb**2.0)
-            ) / (R * T_K)
-            y = (math.exp(lnf)) / P
-        elif model == "Shi92":  # Shi & Saxena (1992) AmMin 77(9-10):1038-1049
+        # Eq. (4,A1-3) and Table 1 from Holland & Powell (1991) CMP 109:265-273
+        if model == "Holland91_eq4,A1-3_tab1":
+            y = y_CORK("CO2", PT, models)  # Eq. (4,A1-3)
+        # Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP 109:265-273
+        elif model == "Holland91_eq8,9_tab2":
+            y = y_sCORK("CO2", PT, models)  # Eq. (8)
+        # Eq. (8) and Table 1 from Holland & Powell (1991) CMP 109:265-273
+        elif model == "Holland91_eq8_tab1":
+            y = y_sCORK("CO2", PT, models)  # Eq. (8)
+        # Shi & Saxena (1992) AmMin 77(9-10):1038-1049
+        elif model == "Shi92":
             gas_species = "CO2"
             y = y_SS(gas_species, PT, models)
         if model == "Flowers79":
@@ -5554,7 +5629,148 @@ def melt_density(PT, melt_wf, models=default_models):  # g/cm3
 
 
 ########################################################################################
-# CONSTANTS ########################################################## #################
+# VOLUME ###############################################################################
+########################################################################################
+
+
+def vol_CORK(species, PT, models):
+    """Appendix: Calculation of CORK volumes using eq. (4, A1-3) from Holland & Powell
+    (1991) CMP 109:265-273 10.1007/BF00306484
+
+    Args:
+        species (str): gas species of interest (e.g., 'H2O', 'CO2')
+        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
+        "P", temperature ('C) as "T"
+        models (pandas.DataFrame): Dataframe of the model options
+
+    Returns:
+        float: volume in kJ/kbar
+    """
+
+    P = PT["P"]
+    T_K = PT["T"] + 273.15
+
+    # Eq. (A.1)
+    def MRK(P_kb, VMRK, R, T_K, a, b):  # MRK volume equation rearranged to equal 0
+        return (
+            P_kb * pow(VMRK, 3.0)
+            - R * T_K * pow(VMRK, 2.0)
+            - (b * R * T_K + pow(b, 2.0) * P_kb - a * pow(T_K, -0.5)) * VMRK
+            - (a * b) * pow(T_K, -0.5)
+        )
+
+    def dMRK(P_kb, VMRK, R, T_K, a, b):  # derivative of above
+        return (
+            3.0 * P_kb * pow(VMRK, 2.0)
+            - 2.0 * R * T_K * VMRK
+            - (b * R * T_K + pow(b, 2.0) * P_kb - a * pow(T_K, -0.5))
+        )
+
+    def dVMRK(MRK, P_kb, VMRK, R, T_K, a, b):
+        return abs(0 - MRK(P_kb, VMRK, R, T_K, a, b))
+
+    def NR_VMRK(MRK, dMRK, VMRK0, e1, P_kb, R, T_K, a, b):
+        delta1 = dVMRK(MRK, P_kb, VMRK0, R, T_K, a, b)
+        while delta1 > e1:
+            VMRK0 = VMRK0 - MRK(P_kb, VMRK0, R, T_K, a, b) / dMRK(
+                P_kb, VMRK0, R, T_K, a, b
+            )
+            delta1 = dVMRK(MRK, P_kb, VMRK0, R, T_K, a, b)
+        return VMRK0
+
+    R = 8.3144598e-3  # in kJ/mol/K
+    P_kb = P / 1000.0
+
+    a, b, c, d, p0 = parameters_Holland91(species, PT, models)
+
+    Vi = ((R * T_K) / P_kb) + b
+
+    VMRK = NR_VMRK(MRK, dMRK, Vi, 1e-5, P_kb, R, T_K, a, b)
+
+    if P_kb > p0:
+        # Eq. (4)
+        V = VMRK + c * pow((P_kb - p0), 0.5) + d * (P_kb - p0)
+    else:
+        V = VMRK
+
+    return V
+
+
+def vol_sCORK(species, PT, models):
+    """Volume using eq. (7a) from Holland & Powell (1991) CMP 109:265-273
+    10.1007/BF00306484
+
+    Args:
+        species (str): gas species of interest (e.g., 'H2O', 'CO2')
+        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
+        "P", temperature ('C) as "T"
+        models (pandas.DataFrame): Dataframe of the model options
+
+
+    Returns:
+        float: volume in kJ/kbar
+    """
+    R = 8.3144598e-3
+    P_bar = PT["P"]  # P in bar
+    T = PT["T"] + 273.15  # T in K
+    P = P_bar / 1000.0  # P in kb
+
+    a, b, c, d, p0 = parameters_Holland91(species, PT, models)  # noqa
+
+    # Eq. (7a) rearranged for lnf
+    V = (
+        ((R * T) / P)
+        + b
+        - ((a * R * T**0.5) / (((R * T) + (b * P)) * ((R * T) + (2.0 * b * P))))
+        + (c * P**0.5)
+        + (d * P)
+    )
+
+    return V
+
+
+def gas_molar_volume(species, PT, models):
+    """Calculates molar volume of a given gas species
+
+    Args:
+        species (str): gas species of interest (e.g., 'H2O', 'CO2')
+        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
+        "P", temperature ('C) as "T"
+        models (pandas.DataFrame): Dataframe of the model options
+
+    Returns:
+        float: volume in cm3/mol
+    """
+    if species == "H2O":
+        model = models.loc["y_H2O", "option"]
+        if model == "Holland91":
+            V = vol_CORK(species, PT, models)
+    if species == "CO2":
+        model = models.loc["y_CO2", "option"]
+        if model == "Holland91_eq4,A1-3_tab1":
+            V = vol_CORK(species, PT, models)
+        elif model == "Holland91_eq8,9_tab2":
+            V = vol_sCORK(species, PT, models)
+        elif model == "Holland91_eq8_tab1":
+            V = vol_sCORK(species, PT, models)
+    if species == "CH4":
+        model = models.loc["y_CH4", "option"]
+        if model == "Holland91_eq8,9_tab2":
+            V = vol_sCORK(species, PT, models)
+    if species == "H2":
+        model = models.loc["y_H2", "option"]
+        if model == "Holland91_eq8,9_tab2":
+            V = vol_sCORK(species, PT, models)
+    if species == "CO":
+        model = models.loc["y_CO", "option"]
+        if model == "Holland91_eq8,9_tab2":
+            V = vol_sCORK(species, PT, models)
+
+    return V
+
+
+########################################################################################
+# CONSTANTS ############################################################################
 ########################################################################################
 
 species = [
