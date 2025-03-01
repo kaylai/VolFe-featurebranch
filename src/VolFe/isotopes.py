@@ -160,17 +160,17 @@ def alphas_H(PT, comp, models):
         F = a / A
         G = b / A
         H = c / A
-    values = {
-        H_species1: A,
-        "H2mol": B,
-        "CH4mol": C,
-        "H2Smol": D,
-        "H2O": A,
-        "H2": F,
-        "CH4": G,
-        "H2S": H,
-        H_species2: 1.0,
-    }
+        values = {
+            H_species1: A,
+            "H2mol": B,
+            "CH4mol": C,
+            "H2Smol": D,
+            "H2O": A,
+            "H2": F,
+            "CH4": G,
+            "H2S": H,
+            H_species2: 1.0,
+        }
 
     return values
 
@@ -326,7 +326,7 @@ def allocate_species(element, comp, alphas, species_distribution):
                 T_a = species_distribution[species]
                 species = "CO2"
                 a_g, T_g = alphas[species], species_distribution[species]
-                species = "CO32-2"
+                species = "CO32-"
                 a_h, T_h = alphas[species], species_distribution[species]
         species = "CO"
         a_b, T_b = alphas[species], species_distribution[species]
@@ -398,20 +398,76 @@ def allocate_species(element, comp, alphas, species_distribution):
     return alphas_out, species_distribution_out
 
 
-def i2s9(element, PT, comp, R, models, guessx, nr_step, nr_tol):
+def rename_output(element, input, comp):
+    output = {}
+    if element == "S":
+        output["m_S2-"] = input["A"]
+        output["g_S2"] = input["B"]
+        output["g_OCS"] = input["C"]
+        output["g_H2S"] = input["D"]
+        output["g_SO2"] = input["E"]
+        output["m_SO42-"] = input["F"]
+        output["m_H2Smol"] = input["G"]
+    if element == "C":
+        if float(comp["wt_g_wtpc"].iloc[0]) > 0.0:
+            output["g_CO2"] = input["A"]
+            output["m_CO2mol"] = input["G"]
+            output["m_CO32-"] = input["H"]
+        else:
+            if float(comp["CO2carb_ppmw"].iloc[0]) > 0.0:
+                output["m_CO32-"] = input["A"]
+                output["m_CO2mol"] = input["G"]
+                output["g_CO2"] = input["H"]
+            else:
+                output["m_CO2mol"] = input["A"]
+                output["g_CO2"] = input["G"]
+                output["m_CO32-"] = input["H"]
+        output["g_CO"] = input["B"]
+        output["g_CH4"] = input["C"]
+        output["g_OCS"] = input["D"]
+        output["m_COmol"] = input["E"]
+        output["m_CH4mol"] = input["F"]
+    if element == "H":
+        if float(comp["wt_g_wtpc"].iloc[0]) > 0.0:
+            output["g_H2O"] = input["A"]
+            output["m_H2Omol"] = input["H"]
+            output["m_OH-"] = input["I"]
+        else:
+            if float(comp["H2Omol_wtpc"].iloc[0]) > 0.0:
+                output["m_H2Omol"] = input["A"]
+                output["g_H2O"] = input["H"]
+                output["m_OH-"] = input["I"]
+            else:
+                output["m_OH-"] = input["A"]
+                output["m_H2Omol"] = input["H"]
+                output["g_H2O"] = input["I"]
+        output["g_H2"] = input["B"]
+        output["g_CH4"] = input["C"]
+        output["g_H2S"] = input["D"]
+        output["m_H2mol"] = input["E"]
+        output["m_CH4mol"] = input["F"]
+        output["m_H2Smol"] = input["G"]
+
+    return output
+
+
+def i2s9(element, PT, comp, R, models, nr_step, nr_tol):
 
     if element == "S":
         alphas = alphas_S(PT, comp, models)
         species_distribution = c.mf_S_species(comp)
         R_i = R["S"]
+        guessx = iso_initial_guesses(element, R, comp)
     elif element == "C":
         alphas = alphas_C(PT, comp, models)
         species_distribution = c.mf_C_species(comp)
         R_i = R["C"]
+        guessx = iso_initial_guesses(element, R, comp)
     elif element == "H":
         alphas = alphas_H(PT, comp, models)
         species_distribution = c.mf_H_species(comp)
         R_i = R["H"]
+        guessx = iso_initial_guesses(element, R, comp)
 
     alphas_, species_distribution_ = allocate_species(
         element, comp, alphas, species_distribution
@@ -564,7 +620,8 @@ def i2s9(element, PT, comp, R, models, guessx, nr_step, nr_tol):
             else:
                 result1["A"] = G
                 result1["G"] = A
-    return result1, result2
+    renamed_result1 = rename_output(element, result1, comp)
+    return renamed_result1, result2
 
 
 def av_m_g(element, ratio, constants):

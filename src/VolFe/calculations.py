@@ -1796,17 +1796,11 @@ def calc_pure_solubility(PT, melt_wf, models):
 
 
 # WORK IN PROGRESS
-def calc_isotopes(PT, comp, R, models, guesses, nr_step, nr_tol, run=0.0):
+def calc_isotopes(PT, comp, R, models, nr_step, nr_tol, run=0.0):
     comp_ = comp[run : run + 1]  # noqa
-    R_all_species_C, R_m_g_C = iso.i2s9(
-        "C", PT, comp_, R, models, guesses["C"], nr_step, nr_tol
-    )
-    R_all_species_S, R_m_g_S = iso.i2s9(
-        "S", PT, comp_, R, models, guesses["S"], nr_step, nr_tol
-    )
-    R_all_species_H, R_m_g_H = iso.i2s9(
-        "H", PT, comp_, R, models, guesses["H"], nr_step, nr_tol
-    )
+    R_all_species_C, R_m_g_C = iso.i2s9("C", PT, comp_, R, models, nr_step, nr_tol)
+    R_all_species_S, R_m_g_S = iso.i2s9("S", PT, comp_, R, models, nr_step, nr_tol)
+    R_all_species_H, R_m_g_H = iso.i2s9("H", PT, comp_, R, models, nr_step, nr_tol)
     return R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
 
 

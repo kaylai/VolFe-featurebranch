@@ -3249,3 +3249,350 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
         print(n, setup.loc[run, "Sample"], results1["SiO2"])
 
     return results
+
+
+########################################################################################
+# WORK IN PROGRESS #####################################################################
+########################################################################################
+
+
+# outputting model options used in the calculation
+def results_isotopes_model_options(models):
+    results_headers = pd.DataFrame(
+        [
+            [
+                "beta_factors",
+                "alpha_H2S_S",
+                "alpha_SO2_SO4",
+                "alpha_S_H2Sv_H2Sm",
+                "alpha_C_CO2v_CO32mm",
+                "alpha_C_CO2v_CO2m",
+                "alpha_C_CO2v_CO2T",
+                "alpha_C_COv_COm",
+                "alpha_C_CH4v_CH4m",
+                "alpha_H_H2Ov_H2Om",
+                "alpha_H_H2Ov_OHmm",
+                "alpha_H_H2v_H2m",
+                "alpha_H_CH4v_CH4m",
+                "alpha_H_H2Sv_H2Sm",
+                "Date",
+            ]
+        ]
+    )
+    results_values = pd.DataFrame(
+        [
+            [
+                models.loc["beta_factors", "option"],
+                models.loc["alpha_H2S_S", "option"],
+                models.loc["alpha_SO2_SO4", "option"],
+                models.loc["alpha_S_H2Sv_H2Sm", "option"],
+                models.loc["alpha_C_CO2v_CO32mm", "option"],
+                models.loc["alpha_C_CO2v_CO2m", "option"],
+                models.loc["alpha_C_CO2v_CO2T", "option"],
+                models.loc["alpha_C_COv_COm", "option"],
+                models.loc["alpha_C_CH4v_CH4m", "option"],
+                models.loc["alpha_H_H2Ov_H2Om", "option"],
+                models.loc["alpha_H_H2Ov_OHmm", "option"],
+                models.loc["alpha_H_H2v_H2m", "option"],
+                models.loc["alpha_H_CH4v_CH4m", "option"],
+                models.loc["alpha_H_H2Sv_H2Sm", "option"],
+                datetime.datetime.now(),
+            ]
+        ]
+    )
+    return results_headers, results_values
+
+
+def results_isotopes_gas_melt(comp, run):
+    results_headers = pd.DataFrame(
+        [
+            [
+                "xgO2_mf",
+                "xgH2_mf",
+                "xgH2O_mf",
+                "xgS2_mf",
+                "xgSO2_mf",
+                "xgH2S_mf",
+                "xgCO2_mf",
+                "xgCO_mf",
+                "xgCH4_mf",
+                "xgOCS_mf",
+                "H2OT_wtpc",
+                "OH_wtpc",
+                "H2Omol_wtpc",
+                "H2_ppmw",
+                "CH4_ppmw",
+                "CO2T_ppmw",
+                "CO2mol_ppmw",
+                "CO2carb_ppmw",
+                "CO_ppmw",
+                "S2-_ppmw",
+                "S6+_ppmw",
+                "H2S_ppmw",
+                "H2OT-eq_wtpc",
+                "CO2T-eq_ppmw",
+                "ST_ppmw",
+                "wt_g_wtpc",
+            ]
+        ]
+    )
+
+    results_values = pd.DataFrame(
+        [
+            [
+                comp.loc[run, "xgO2_mf"],
+                comp.loc[run, "xgH2_mf"],
+                comp.loc[run, "xgH2O_mf"],
+                comp.loc[run, "xgS2_mf"],
+                comp.loc[run, "xgSO2_mf"],
+                comp.loc[run, "xgH2S_mf"],
+                comp.loc[run, "xgCO2_mf"],
+                comp.loc[run, "xgCO_mf"],
+                comp.loc[run, "xgCH4_mf"],
+                comp.loc[run, "xgOCS_mf"],
+                comp.loc[run, "H2OT_wtpc"],
+                comp.loc[run, "OH_wtpc"],
+                comp.loc[run, "H2Omol_wtpc"],
+                comp.loc[run, "H2_ppmw"],
+                comp.loc[run, "CH4_ppmw"],
+                comp.loc[run, "CO2T_ppmw"],
+                comp.loc[run, "CO2mol_ppmw"],
+                comp.loc[run, "CO2carb_ppmw"],
+                comp.loc[run, "CO_ppmw"],
+                comp.loc[run, "S2-_ppmw"],
+                comp.loc[run, "S6+_ppmw"],
+                comp.loc[run, "H2S_ppmw"],
+                comp.loc[run, "H2OT-eq_wtpc"],
+                comp.loc[run, "CO2T-eq_ppmw"],
+                comp.loc[run, "ST_ppmw"],
+                comp.loc[run, "wt_g_wtpc"],
+            ]
+        ]
+    )
+    return results_headers, results_values
+
+
+def results_table_isotopes(
+    PT, R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
+):
+
+    results_headers = pd.DataFrame(
+        [
+            [
+                "T_C",
+                "P_bar",
+                "R_S_m_tot",
+                "R_S_g_tot",
+                "R_H_m_tot",
+                "R_H_g_tot",
+                "R_C_m_tot",
+                "R_C_g_tot",
+                "R_S_m_S2-",
+                "R_S_m_S6+",
+                "R_S_m_H2S",
+                "R_S_g_H2S",
+                "R_S_g_SO2",
+                "R_S_g_S2",
+                "R_S_g_OCS",
+                "R_H_m_H2O",
+                "R_H_m_H2S",
+                "R_H_m_CH4",
+                "R_H_m_OH",
+                "R_H_g_H2O",
+                "R_H_g_H2S",
+                "R_H_g_H2",
+                "R_H_g_CH4",
+                "R_C_m_CO2",
+                "R_C_m_CO2carb",
+                "R_C_m_CO",
+                "R_C_m_CH4",
+                "R_C_g_CO2",
+                "R_C_g_CO",
+                "R_C_g_CH4",
+                "R_C_g_OCS",
+            ]
+        ]
+    )
+    results_values = pd.DataFrame(
+        [
+            [
+                PT["T"],
+                PT["P"],
+                R_m_g_S["R_m"],
+                R_m_g_S["R_g"],
+                R_m_g_H["R_m"],
+                R_m_g_H["R_g"],
+                R_m_g_C["R_m"],
+                R_m_g_C["R_g"],
+                R_all_species_S["m_S2-"],
+                R_all_species_S["m_SO42-"],
+                R_all_species_S["m_H2Smol"],
+                R_all_species_S["g_H2S"],
+                R_all_species_S["g_SO2"],
+                R_all_species_S["g_S2"],
+                R_all_species_S["g_OCS"],
+                R_all_species_H["m_H2Omol"],
+                R_all_species_H["m_H2Smol"],
+                R_all_species_H["m_CH4mol"],
+                R_all_species_H["m_OH-"],
+                R_all_species_H["g_H2O"],
+                R_all_species_H["g_H2S"],
+                R_all_species_H["g_H2"],
+                R_all_species_H["g_CH4"],
+                R_all_species_C["m_CO2mol"],
+                R_all_species_C["m_CO32-"],
+                R_all_species_C["m_COmol"],
+                R_all_species_C["m_CH4mol"],
+                R_all_species_C["g_CO2"],
+                R_all_species_C["g_CO"],
+                R_all_species_C["g_CH4"],
+                R_all_species_C["g_OCS"],
+            ]
+        ]
+    )
+    return results_headers, results_values
+
+
+def results_table_isotopes_d(
+    R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
+):
+
+    results_headers = pd.DataFrame(
+        [
+            [
+                "d34S_m_tot",
+                "d34S_g_tot",
+                "dD_m_tot",
+                "dD_g_tot",
+                "d13C_m_tot",
+                "d13C_g_tot",
+                "d34S_m_S2-",
+                "d34S_m_S6+",
+                "d34S_m_H2S",
+                "d34S_g_H2S",
+                "d34S_g_SO2",
+                "d34S_g_S2",
+                "d34S_g_OCS",
+                "dD_m_H2O",
+                "dD_m_H2S",
+                "dD_m_CH4",
+                "dD_m_OH",
+                "dD_g_H2O",
+                "dD_g_H2S",
+                "dD_g_H2",
+                "dD_g_CH4",
+                "d13C_m_CO2",
+                "d13C_m_CO2carb",
+                "d13C_m_CO",
+                "d13C_m_CH4",
+                "d13C_g_CO2",
+                "d13C_g_CO",
+                "d13C_g_CH4",
+                "d13C_g_OCS",
+            ]
+        ]
+    )
+    results_values = pd.DataFrame(
+        [
+            [
+                iso.ratio2delta("VCDT", 34, "S", R_m_g_S["R_m"]),
+                iso.ratio2delta("VCDT", 34, "S", R_m_g_S["R_g"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_m_g_H["R_m"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_m_g_H["R_g"]),
+                iso.ratio2delta("VPDB", 13, "C", R_m_g_C["R_m"]),
+                iso.ratio2delta("VPDB", 13, "C", R_m_g_C["R_g"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["m_S2-"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["m_SO42-"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["m_H2Smol"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["g_H2S"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["g_SO2"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["g_S2"]),
+                iso.ratio2delta("VCDT", 34, "S", R_all_species_S["g_OCS"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["m_H2Omol"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["m_H2Smol"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["m_CH4mol"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["m_OH-"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["g_H2O"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["g_H2S"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["g_H2"]),
+                iso.ratio2delta("VSMOW", 2, "H", R_all_species_H["g_CH4"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["m_CO2mol"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["m_CO32-"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["m_COmol"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["m_CH4mol"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["g_CO2"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["g_CO"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["g_CH4"]),
+                iso.ratio2delta("VPDB", 13, "C", R_all_species_C["g_OCS"]),
+            ]
+        ]
+    )
+    return results_headers, results_values
+
+
+def calc_isotopes_gassing(
+    setup,
+    R_i_d,
+    first_row=0,
+    last_row=None,
+    nr_step=1.0,
+    nr_tol=1.0e-9,
+    models=mdv.default_models,
+):
+
+    if last_row is None:
+        last_row = len(setup)
+
+    R_i = {}
+    R_i["C"] = iso.delta2ratio("VPDB", 13, "C", R_i_d["d13C"])
+    R_i["H"] = iso.delta2ratio("VSMOW", 2, "H", R_i_d["dD"])
+    R_i["S"] = iso.delta2ratio("VCDT", 34, "S", R_i_d["d34S"])
+
+    for run in range(first_row, last_row, 1):
+
+        PT = {"P": setup.loc[run, "P_bar"]}
+        PT["T"] = setup.loc[run, "T_C"]
+
+        R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H = (
+            c.calc_isotopes(PT, setup, R_i, models, nr_step, nr_tol, run=run)
+        )
+
+        iso_headers, iso_values = results_table_isotopes(
+            PT,
+            R_all_species_S,
+            R_m_g_S,
+            R_all_species_C,
+            R_m_g_C,
+            R_all_species_H,
+            R_m_g_H,
+        )
+
+        chem_headers, chem_values = results_isotopes_gas_melt(setup, run)
+
+        opt_headers, opt_values = results_isotopes_model_options(models)
+
+        iso_d_headers, iso_d_values = results_table_isotopes_d(
+            R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
+        )
+
+        all_values = pd.concat(
+            [iso_values, iso_d_values, chem_values, opt_values], axis=1
+        )
+
+        if run == first_row:
+            all_headers = pd.concat(
+                [iso_headers, iso_d_headers, chem_headers, opt_headers], axis=1
+            )
+            results = pd.concat([all_headers, all_values])
+        else:
+            results = pd.concat([results, all_values])
+
+    results.columns = results.iloc[0]
+    results = results[1:]
+    results.reset_index(drop=True, inplace=True)
+    if models.loc["output csv", "option"] == "True":
+        results.to_csv("results_gassing_isotopes.csv", index=False, header=True)
+
+    if models.loc["print status", "option"] == "True":
+        print("done", datetime.datetime.now())
+    return results
