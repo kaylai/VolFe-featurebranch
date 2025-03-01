@@ -231,3 +231,10 @@ intersphinx_mapping = {
     "pandas": ("http://pandas.pydata.org/pandas-docs/stable/", None),
     "numpy": ("https://docs.scipy.org/doc/numpy", None),
 }
+
+# file name for logo image, located in /img folder
+html_logo = "figures/volfe_logo.png"
+html_theme_options = {
+    "logo_only": True,
+    "display_version": False,
+}
