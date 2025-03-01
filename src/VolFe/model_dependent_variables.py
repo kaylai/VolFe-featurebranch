@@ -3342,19 +3342,16 @@ def parameters_Holland91(species, PT, models):
         a, b, c, d, p0 = constants_H2O_Holland91(PT)
     elif species == "CO2":
         a, b, c, d, p0 = constants_CO2_Holland91(PT, models)
-    elif species == "CH4":
-        Tc = 190.6  # Critical temperature in K
-        Pc = 0.0460  # Critical pressure in kbar
-        a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
-        p0 = ""
-    elif species == "H2":
-        Tc = 41.26  # Critical temperature in K
-        Pc = 0.0211  # Critical pressure in kbar
-        a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
-        p0 = ""
-    elif species == "CO":
-        Tc = 132.9  # Critical temperature in K
-        Pc = 0.0350  # Critical pressure in kbar
+    elif species in ["CH4", "CO", "H2"]:
+        if species == "CH4":
+            Tc = 190.6  # Critical temperature in K
+            Pc = 0.0460  # Critical pressure in kbar
+        elif species == "H2":
+            Tc = 41.26  # Critical temperature in K
+            Pc = 0.0211  # Critical pressure in kbar
+        elif species == "CO":
+            Tc = 132.9  # Critical temperature in K
+            Pc = 0.0350  # Critical pressure in kbar
         a, b, c, d = corresponding_states_Holland91(PT, Tc, Pc)
         p0 = ""
 
@@ -5753,7 +5750,7 @@ def gas_molar_volume(species, PT, models):
             V = vol_sCORK(species, PT, models)
         elif model == "Holland91_eq8_tab1":
             V = vol_sCORK(species, PT, models)
-    if species == "CH4":
+    if species in "CH4":
         model = models.loc["y_CH4", "option"]
         if model == "Holland91_eq8,9_tab2":
             V = vol_sCORK(species, PT, models)
