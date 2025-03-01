@@ -33,8 +33,8 @@ def test_S2fO2_df_pvsat():
 
     result1 = vf.calc_melt_S_oxybarometer(my_analysis)
 
-    assert result1.loc[0, "P (bar) sulf"] == pytest.approx(3209.679276)
-    assert result1.loc[0, "DFMQ-sulfide"] == pytest.approx(0.905944)
+    assert result1.loc[0, "P (bar) sulf"] == pytest.approx(3143.2127892116996)
+    assert result1.loc[0, "DFMQ-sulfide"] == pytest.approx(0.8847658028308452)
     assert result1.loc[0, "P (bar) anh"] == ""
     assert result1.loc[0, "DFMQ-sulfate"] == ""
 
@@ -71,7 +71,7 @@ def test_S2fO2_df_P():
     result = vf.calc_melt_S_oxybarometer(my_analysis)
 
     assert result.loc[0, "P (bar) sulf"] == pytest.approx(1000.0)
-    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(1.158861)
+    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(1.130552073633682)
     assert result.loc[0, "P (bar) anh"] == pytest.approx(1000.0)
     assert result.loc[0, "DFMQ-sulfate"] == ""
 
@@ -109,8 +109,8 @@ def test_S2fO2_df_Xsulf():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis)
 
-    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3223.517523)
-    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(1.023231)
+    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3155.6932017896575)
+    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(1.001908452370417)
     assert result.loc[0, "P (bar) anh"] == ""
     assert result.loc[0, "DFMQ-sulfate"] == ""
 
@@ -145,7 +145,11 @@ def test_S2fO2_df_useropt():
     my_analysis = pd.DataFrame(my_analysis, index=[0])
 
     # choose the options I want - everything else will use the default options
-    my_models = [["SCSS", "Fortin15_pss"], ["SCAS", "Chowdhury19"], ["y_S2", "ideal"]]
+    my_models = [
+        ["SCSS", "Fortin15_pss"],
+        ["SCAS", "Chowdhury19_pss"],
+        ["y_S2", "ideal"],
+    ]
 
     # turn to dataframe with correct column headers and indexes
     my_models = vf.make_df_and_add_model_defaults(my_models)
@@ -153,7 +157,7 @@ def test_S2fO2_df_useropt():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis, models=my_models)
 
-    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3515.0324378885393)
+    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3467.7226166201126)
     assert result.loc[0, "DFMQ-sulfide"] == ""
     assert result.loc[0, "P (bar) anh"] == ""
     assert result.loc[0, "DFMQ-sulfate"] == ""

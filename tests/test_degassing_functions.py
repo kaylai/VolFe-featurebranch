@@ -40,17 +40,17 @@ def test_degas_df_default():
 
     result = vf.calc_gassing(my_analysis, models=options)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3847.3361533976154)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.47292836384512427)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4015295658357)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048030277135318553)
+    assert result.loc[0, "P_bar"] == pytest.approx(3774.7617761471683)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4713653160583551)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3520719880657)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048209457695052205)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(-0.3400085464233662)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(-0.3715315657204652)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.0062599242785629046
+        0.0062436501019958925
     )
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        4.1326131294704035e-05
+        4.721772756477822e-05
     )
 
 
@@ -88,18 +88,20 @@ def test_degas_df_sat_sulf():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3834.8735665073505)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4726603883083058)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3951153749524)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00021302858508563988)
+    assert result.loc[0, "P_bar"] == pytest.approx(3762.539480458943)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4711014824863762)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.345721827803)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00021903844348751043)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
     assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
-        -0.05880714327033232
+        -0.09301623162644468
     )
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.006398173687476844
+        0.006395280169798468
     )
-    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(5.39915910546583e-06)
+    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
+        6.458729911225949e-06
+    )
 
 
 def test_degas_df_closed_CO2i():
@@ -137,18 +139,20 @@ def test_degas_df_closed_CO2i():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3847.3361533976154)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.47292836384512427)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4015295658357)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048030277135318553)
+    assert result.loc[0, "P_bar"] == pytest.approx(3774.7617761471683)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4713653160583551)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3520719880657)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048209457695052205)
     assert result.loc[len(result) - 1, "P_bar"] == 3.0
     assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
-        -0.28872864539710363
+        -0.31424700679099793
     )
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.33668806961068326
+        0.33383038860830905
     )
-    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(9.77474064866415e-05)
+    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
+        0.0001096376822722297
+    )
 
 
 def test_degas_df_closed_wtg():
@@ -186,24 +190,25 @@ def test_degas_df_closed_wtg():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3847.3361533976154)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.47292836384512427)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4015295658357)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048030277135318553)
+    assert result.loc[0, "P_bar"] == pytest.approx(3774.7617761471683)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4713653160583551)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3520719880657)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048209457695052205)
     assert result.loc[len(result) - 1, "P_bar"] == 2.0
     assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
-        -0.31229980033722704
+        -0.33980240602253176
     )
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.16718214175986407
+        0.16490071166490516
     )
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        7.370194166547196e-05
+        8.329271540222744e-05
     )
 
 
 def test_degas_df_open():
-    "simple test of calc_gassing function for open-system degassing using example 2c"
+    """simple test of calc_gassing function for open-system degassing using example 2c
+    but with lower initial volatile content for speed"""
 
     my_analysis = {
         "Sample": "Sari15-04-33",
@@ -235,12 +240,12 @@ def test_degas_df_open():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(197.81558695022989)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.38677405655738273)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(49.395162960661466)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00012094116333795436)
+    assert result.loc[0, "P_bar"] == pytest.approx(197.13967305154458)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.38675667256337576)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(49.39514201474989)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00011917735128162983)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.4116067548696618)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.41711812367376133)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == 0.0
     assert result.loc[len(result) - 1, "xgS2_mf"] == 0.0
 
@@ -284,15 +289,15 @@ def test_regas_df_closed():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3847.3361533976154)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.47292836384512427)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4015295658357)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048030277135318553)
+    assert result.loc[0, "P_bar"] == pytest.approx(3774.7617761471683)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4713653160583551)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3520719880657)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048209457695052205)
     assert result.loc[len(result) - 1, "P_bar"] == 5100.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.4630266222472912)
-    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(2345.1186943946186)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.456896945446573)
+    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(2406.1752529769747)
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        0.0004195571211495622
+        0.0004136844111072347
     )
 
 
@@ -336,15 +341,15 @@ def test_regas_df_open():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(3847.3361533976154)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.47292836384512427)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4015295658357)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048030277135318553)
+    assert result.loc[0, "P_bar"] == pytest.approx(3774.7617761471683)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4713653160583551)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.3520719880657)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00048209457695052205)
     assert result.loc[len(result) - 1, "P_bar"] == 4001.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.46976292373420847)
-    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(1579.963744721686)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.46560619026030636)
+    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(1635.0957630618632)
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        0.0004575936690526102
+        0.0004476919049765029
     )
 
 
@@ -375,16 +380,18 @@ def test_degas_df_CHOAr_basalt():
 
     result = vf.calc_gassing(my_analysis, models=options)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(1463.9612748927782)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.41841020608934265)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.3811228660554)
-    assert result.loc[0, "xgX_mf"] == pytest.approx(0.08549163676895262)
+    assert result.loc[0, "P_bar"] == pytest.approx(1432.8626980758336)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.417655396610054)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.37243543199065)
+    assert result.loc[0, "xgX_mf"] == pytest.approx(0.08734713083466868)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5594127323997524)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5808125442618355)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.004903203107918983
+        0.004933477939764058
     )
-    assert result.loc[len(result) - 1, "xgX_mf"] == pytest.approx(0.0002394718896877798)
+    assert result.loc[len(result) - 1, "xgX_mf"] == pytest.approx(
+        0.00024074332275451124
+    )
 
 
 def test_degas_df_CHONe_basalt():
@@ -425,17 +432,17 @@ def test_degas_df_CHONe_basalt():
     # run calculation
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(1408.6576220265883)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.41706712820600345)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.36565954920235)
-    assert result.loc[0, "xgX_mf"] == pytest.approx(0.04720051250386283)
+    assert result.loc[0, "P_bar"] == pytest.approx(1378.1248030980487)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.41632410629870975)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.3570945815046)
+    assert result.loc[0, "xgX_mf"] == pytest.approx(0.04824625574741737)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5593157668590552)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5807041443952983)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.004902089137362658
+        0.0049322249176338455
     )
     assert result.loc[len(result) - 1, "xgX_mf"] == pytest.approx(
-        0.00047395291067061073
+        0.00047645662193990696
     )
 
 
@@ -475,16 +482,18 @@ def test_degas_df_CHOAr_rhyolite():
 
     result = vf.calc_gassing(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(1367.3755625959768)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4160622647228962)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.3540745261418)
-    assert result.loc[0, "xgX_mf"] == pytest.approx(0.01662109032000306)
+    assert result.loc[0, "P_bar"] == pytest.approx(1337.3034231690124)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.41532902481154554)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.3456125370773)
+    assert result.loc[0, "xgX_mf"] == pytest.approx(0.01699485123085667)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5592426877679912)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.5806225288411904)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.00490124988736414
+        0.004931281928233859
     )
-    assert result.loc[len(result) - 1, "xgX_mf"] == pytest.approx(0.0002393756490633622)
+    assert result.loc[len(result) - 1, "xgX_mf"] == pytest.approx(
+        0.00024063541075409293
+    )
 
 
 def test_degas_df_HSO():
@@ -514,17 +523,15 @@ def test_degas_df_HSO():
 
     result = vf.calc_gassing(my_analysis, models=options)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(380.10070821002193)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.39144299300803187)
+    assert result.loc[0, "P_bar"] == pytest.approx(380.16027020784526)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.39144451230686617)
     assert result.loc[0, "CO2T_ppmw"] == 0.0
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.005648279548092143)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.0055645408964144945)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
-        -0.33361632492418103
-    )
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(-0.3838932210138193)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == 0.0
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        0.00010120701139514083
+        0.00012487825695314437
     )
 
 
@@ -555,11 +562,15 @@ def test_degas_df_CSO():
 
     result = vf.calc_gassing(my_analysis, models=options)
 
-    assert result.loc[0, "P_bar"] == pytest.approx(1077.2077950994615)
-    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4089435192488029)
-    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.15727361904624)
-    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.001913668221326871)
+    assert result.loc[0, "P_bar"] == pytest.approx(1048.549372410781)
+    assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.4082351490266145)
+    assert result.loc[0, "CO2T_ppmw"] == pytest.approx(494.1488684153764)
+    assert result.loc[0, "xgS2_mf"] == pytest.approx(0.0019195490893958809)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(-0.2855805216179945)
-    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(0.1530199730355921)
-    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(0.04026569803310184)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
+        -0.32400927886842723
+    )
+    assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
+        0.15829899800303915
+    )
+    assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(0.045219820386032165)

@@ -20,9 +20,9 @@ def test_other_df_y():
 
     result = vf.calc_fugacity_coefficients(my_analysis)
 
-    assert result.loc[0, "yO2"] == pytest.approx(1.209858)
-    assert result.loc[0, "yS2"] == pytest.approx(1.191327)
-    assert result.loc[0, "yCO2"] == pytest.approx(1.265765)
+    assert result.loc[0, "yO2"] == pytest.approx(1.209857826330598)
+    assert result.loc[0, "yS2"] == pytest.approx(1.1913268980917349)
+    assert result.loc[0, "yCO2"] == pytest.approx(1.301912410138897)
 
 
 def test_other_df_C():
@@ -55,9 +55,9 @@ def test_other_df_C():
 
     result = vf.calc_sol_consts(my_analysis)
 
-    assert result.loc[0, "ln[C_CH4]"] == pytest.approx(-4.499333)
-    assert result.loc[0, "ln[C_S6+]"] == pytest.approx(29.764955489655186)
-    assert result.loc[0, "ln[C_H2OT]"] == pytest.approx(-12.286979)
+    assert result.loc[0, "ln[C_CH4]"] == pytest.approx(-4.499332634382082)
+    assert result.loc[0, "ln[C_S6+]"] == pytest.approx(29.85822594690088)
+    assert result.loc[0, "ln[C_H2OT]"] == pytest.approx(-12.2869790594239)
 
 
 def test_other_df_puresol():
@@ -86,8 +86,8 @@ def test_other_df_puresol():
 
     result = vf.calc_pure_solubility(my_analysis)
 
-    assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.222062871596409)
-    assert result.loc[500, "CO2_ppmw"] == pytest.approx(2606.5792533661706)
+    assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.14715142977834)
+    assert result.loc[500, "CO2_ppmw"] == pytest.approx(2710.823512744141)
 
 
 def test_other_df_puresol_useropt():
@@ -122,8 +122,8 @@ def test_other_df_puresol_useropt():
 
     result = vf.calc_pure_solubility(my_analysis, models=my_models)
 
-    assert result.loc[1, "H2O_wtpc"] == pytest.approx(10.04115868113018)
-    assert result.loc[500, "CO2_ppmw"] == pytest.approx(3025.990363824278)
+    assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.958981268050458)
+    assert result.loc[500, "CO2_ppmw"] == pytest.approx(3146.998672937647)
 
 
 def test_other_df_isobar():
@@ -161,5 +161,5 @@ def test_other_df_isobar():
     )
 
     assert result.loc[80, "P_bar"] == pytest.approx(4000)
-    assert result.loc[50, "H2O_wtpc"] == pytest.approx(2.1880898834157447)
-    assert result.loc[30, "CO2_ppm"] == pytest.approx(870.0216854013381)
+    assert result.loc[50, "H2O_wtpc"] == pytest.approx(2.170719419802378)
+    assert result.loc[30, "CO2_ppm"] == pytest.approx(908.6199308537963)
