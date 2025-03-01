@@ -79,7 +79,7 @@ default_models = [
     ["sulfur_is_sat", "no"],
     ["graphite_saturation", "False"],
     ["ideal_gas", "False"],
-    ["y_CO2", "Holland91_eq4,A1-3_tab1"],
+    ["y_CO2", "Shi92"],
     ["y_SO2", "Shi92_Hughes23"],
     ["y_H2S", "Shi92_Hughes24"],
     ["y_H2", "Shaw64"],
