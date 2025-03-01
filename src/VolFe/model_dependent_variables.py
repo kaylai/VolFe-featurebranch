@@ -5634,7 +5634,7 @@ def melt_density(PT, melt_wf, models=default_models):  # g/cm3
 
 
 def vol_CORK(species, PT, models):
-    """Appendix: Calculation of CORK volumes using eq. (4, A1-3) from Holland & Powell
+    """Appendix: Calculation of CORK volumes using eq. (4, A1) from Holland & Powell
     (1991) CMP 109:265-273 10.1007/BF00306484
 
     Args:
@@ -5717,7 +5717,7 @@ def vol_sCORK(species, PT, models):
 
     a, b, c, d, p0 = parameters_Holland91(species, PT, models)  # noqa
 
-    # Eq. (7a) rearranged for lnf
+    # Eq. (7a)
     V = (
         ((R * T) / P)
         + b
@@ -5739,7 +5739,7 @@ def gas_molar_volume(species, PT, models):
         models (pandas.DataFrame): Dataframe of the model options
 
     Returns:
-        float: volume in cm3/mol
+        float: volume in kJ/kbar
     """
     if species == "H2O":
         model = models.loc["y_H2O", "option"]
