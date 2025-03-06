@@ -2,6 +2,6 @@
 Applications
 ===================================================================================
 
-These are examples how to use VolFe to explore natural data or model different systems.
+These are examples of how to use VolFe to explore natural data or model different systems.
 
-- :doc:`Example 5a <Examples/5a marianas>`: Example for a dataset from the Marianas arc (from Hughes et al., in prep).
+- :doc:`Example 5a <Examples/5a marianas>`: Example for a melt inclusion and submarine pillow glass dataset from the Marianas arc (Brounce et al., 2014; Kelley and Cottrell, 2012; Cottrell et al., 2021) from `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_.

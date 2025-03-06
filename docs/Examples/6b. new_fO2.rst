@@ -4,52 +4,58 @@
 
 To add a new parameterisation for Fe\ :sup:`3+`\ /Fe\ :sub:`T` to *f*\ \ :sub:`O2` dependence involves creating a new “terms” function, which details how any parameters depend on pressure, temperature, melt composition, etc.
 
-Here is an example for Borisov et al. (2018):
+Here is an example for Borisov et al. (2018) in ``model_dependent_variables.py`` looks:
 
 .. code-block:: python
 
-    def FefO2_Borisov18_terms(run,PT,melt_wf,setup,species,models): # Borisov et al. (2018) CMP 173
-
-        T_K = PT['T']+273.15
-
+    def FefO2_Borisov18_terms(
+        PT, melt_wf, models=default_models
+        ):  # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+        T_K = PT["T"] + 273.15
+        # Borisov et al. (2018) CMP 173
         a = 0.207
-
         # melt mole fraction with no volatiles and all Fe as FeOT
-
-        tot,Si, Ti, Al, FeOT, FeO, Fe2O3, Mg, Mn, Ca, Na, K, P, H2O, CO2, S, X = mg.melt_mole_fraction(run,melt_wf,setup,species,models,"no","no")
-
-        B = (4633.3/T_K -0.445*Si - 0.900*Ti + 1.532*Mg + 0.314*Ca + 2.030*Na + 3.355*K - 4.851*P - 3.081*Si*Al -  4.370*Si*Mg - 1.852)
-
+        melt_comp = mg.melt_mole_fraction(
+            melt_wf, models, "no", "no", molmass="ONeill22", majors="ONeill22"
+        )
+        B = (
+            4633.3 / T_K
+            - 0.445 * melt_comp["SiO2"]
+            - 0.900 * melt_comp["TiO2"]
+            + 1.532 * melt_comp["MgO"]
+            + 0.314 * melt_comp["CaO"]
+            + 2.030 * melt_comp["Na2O"]
+            + 3.355 * melt_comp["K2O"]
+            - 4.851 * melt_comp["P2O5"]
+            - 3.081 * melt_comp["SiO2"] * melt_comp["Al2O3"]
+            - 4.370 * melt_comp["SiO2"] * melt_comp["MgO"]
+            - 1.852
+        )
         return a, B
 
 Then, the new parameterisation must be added to the functions ``fO22Fe3FeT`` and ``f_O2`` in the ``model_dependent_variables.py`` file, which is shown here for Borisov et al. (2018):
 
 .. code-block:: python
 
-    def fO22Fe3FeT(fO2,run,PT,melt_wf,setup,species,models): # converting fO2 to Fe3/FeT
+    def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe3/FeT
 
-        model = models.loc["fO2","option"]
+        model = models.loc["fO2", "option"]
 
-        T_K = PT['T']+273.15
+        # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+        if model == "Borisov18":
+            a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
+            Fe3Fe2 = 10.0 ** (a * math.log10(fO2) + B)
+            return Fe3Fe2 / (Fe3Fe2 + 1.0)
 
-        if model == "Borisov18": # Borisov et al. (2018) CMP 173:
+    def f_O2(PT, melt_wf, models=default_models):
 
-            a,B = FefO2_Borisov18_terms(run,PT,melt_wf,setup,species,models)
+        model = models.loc["fO2", "option"]
 
-            Fe3Fe2 = 10.**(a*gp.log10(fO2) + B)
-
-            return Fe3Fe2/(Fe3Fe2 + 1.0)
-
-    def f_O2(run,PT,melt_wf,setup,species,models):
-
-        model = models.loc["fO2","option"]
-
-        if model == "Borisov18": # Borisov et al. (2018) CMP 173
-
+        # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+        elif model == "Borisov18":
             F = mg.Fe3Fe2(melt_wf)
-
-            a,B = FefO2_Borisov18_terms(run,PT,melt_wf,setup,species,models)
-
-            fO2 = 10.**((gp.log10(F) - B)/a)
-
+            a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
+            fO2 = 10.0 ** ((math.log10(F) - B) / a)
             return fO2
+
+To use it, the "fO2" option in "models" would be set to "Borisov18".

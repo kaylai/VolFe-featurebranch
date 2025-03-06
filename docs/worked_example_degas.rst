@@ -6,7 +6,7 @@ As magmas rise to the surface, volatiles dissolved in the melt exsolve into the 
 
 VolFe calculates the proportions of vapor and melt and their compositions and speciation during open- and closed-system, re- and degassing for various combinations of C, H, S, and noble gases as the volatile species.
 
-This calculation is described in detail in `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_ (schematic in figure below, `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_).
+This calculation is described in detail in `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_ (schematic in figure below, ).
 
 .. figure:: figures/degassingcalc.png
 
