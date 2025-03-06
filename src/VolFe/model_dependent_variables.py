@@ -425,13 +425,9 @@ def make_df_and_add_model_defaults(models):
     ### Specifying species ###
 
     COH_species: Specifying what COH species are present in the melt and vapor.
-        - 'yes_H2_CO_CH4_melt' [default] Include H2mol (if H present), COmol (if C
-        present) and/or CH4mol (if H and C present) as dissolved melt species.
-        - 'no_H2_CO_CH4_melt' H2, CO and/or CH4 are insoluble in the melt but they are
-        still present in the vapor (H2 in the vapor if H present, CO in the vapor if C
-        present, CH4 in the vapor if both H and C present).
-        - 'H2O-CO2 only' The only species present in the vapor are H2O and CO2 and in
-        the melt are H2OT and CO2T (i.e., no CO, H2, and/or CH4 in the melt or vapor).
+        - 'yes_H2_CO_CH4_melt' [default] Include H2mol (if H present), COmol (if C present) and/or CH4mol (if H and C present) as dissolved melt species.
+        - 'no_H2_CO_CH4_melt' H2, CO and/or CH4 are insoluble in the melt but they are still present in the vapor (H2 in the vapor if H present, CO in the vapor if C present, CH4 in the vapor if both H and C present).
+        - 'H2O-CO2 only' The only species present in the vapor are H2O and CO2 and in the melt are H2OT and CO2T (i.e., no CO, H2, and/or CH4 in the melt or vapor).
 
     H2S_m: Is H2S a dissolved melt species.
         - 'True' [default] Include H2Smol as a dissolved melt species.
@@ -444,8 +440,7 @@ def make_df_and_add_model_defaults(models):
         touch!
 
     Hspeciation:
-        - 'none' [default] Oxidised H in the melt only occurs as H2O species (i.e., no
-        OH-).
+        - 'none' [default] Oxidised H in the melt only occurs as H2O species (i.e., no OH-).
         Only one option available currently, included for future development.
 
 
@@ -472,12 +467,10 @@ def make_df_and_add_model_defaults(models):
     hydrogen: Model for the parameterisation of the H2 solubility constant.
         See function C_H2 for options.
 
-    sulfide: Model for the parameterisation for the *S2- solubility constant (all
-    calibrated over wide range of silicate melt compositions).
+    sulfide: Model for the parameterisation for the *S2- solubility constant (all calibrated over wide range of silicate melt compositions).
         See function C_S for options.
 
-    sulfate: Model for the parameterisation of the S6+ solubility constant (all
-    calibrated over wide range of silicate melt compositions).
+    sulfate: Model for the parameterisation of the S6+ solubility constant (all calibrated over wide range of silicate melt compositions).
         See function C_SO4 for options.
 
     hydrogen sulfide: Model for the parameterisation for the H2S solubility constant.
@@ -492,45 +485,33 @@ def make_df_and_add_model_defaults(models):
     species X solubility: Model for the parameterisation of the X solubility constant.
         See function C_X for options.
 
-    Cspeccomp: Model for the parameterisation of the speciation constant for CO2mol and
-    CO32- in the melt.
+    Cspeccomp: Model for the parameterisation of the speciation constant for CO2mol and CO32- in the melt.
         See function K_COm for options.
 
-    Hspeccomp: Model for the parameterisation of the speciation constant for H2Omol and
-    OH- in the melt, either assuming ideal or regular solution models.
+    Hspeccomp: Model for the parameterisation of the speciation constant for H2Omol and OH- in the melt, either assuming ideal or regular solution models.
         See function K_HOm for options.
 
 
     ### Saturation conditions ###
 
-    SCSS: Model for parameterisation of the sulfide content at sulfide saturation
-    (S2-CSS).
+    SCSS: Model for parameterisation of the sulfide content at sulfide saturation (S2-CSS).
         See function SCSS for options.
 
-    SCAS: Model for parameterisation of the sulfate content at anhydrite saturation
-    (S6+CAS).
+    SCAS: Model for parameterisation of the sulfate content at anhydrite saturation (S6+CAS).
         See function SCAS for options.
 
-    sulfur_saturation: Is sulfur allowed to form sulfide or anhydrite if sulfur content
-    of the melt reaches saturation levels for these phases?
-        - 'False' [default] melt ± vapor are the only phases present - results are
-        metastable with respect to sulfide and anhydrite if they could saturate.
-        - 'True' If saturation conditions for sulfide or anhydrite are met, melt sulfur
-        content reflects this.
+    sulfur_saturation: Is sulfur allowed to form sulfide or anhydrite if sulfur content of the melt reaches saturation levels for these phases?
+        - 'False' [default] melt ± vapor are the only phases present - results are metastable with respect to sulfide and anhydrite if they could saturate.
+        - 'True' If saturation conditions for sulfide or anhydrite are met, melt sulfur content reflects this.
 
-    graphite_saturation: Is graphite allowed to form if the carbon content of the melt
-    reaches saturation levels for graphite?
-        - 'False' [default] melt ± vapor are the only phases present - results are
-        metastable with respect to graphite if it could saturate.
-        - 'True' If saturation conditions for graphite are met, melt carbon content
-        reflects this.
+    graphite_saturation: Is graphite allowed to form if the carbon content of the melt reaches saturation levels for graphite?
+        - 'False' [default] melt ± vapor are the only phases present - results are metastable with respect to graphite if it could saturate.
+        - 'True' If saturation conditions for graphite are met, melt carbon content reflects this.
 
     ### Fugacity coefficients ###
 
-    ideal_gas: Treat all vapor species as ideal gases (i.e., all fugacity coefficients =
-      1 at all P).
-        - 'False' [default] At least some of the vapor species are not treated as ideal
-        gases.
+    ideal_gas: Treat all vapor species as ideal gases (i.e., all fugacity coefficients = 1 at all P).
+        - 'False' [default] At least some of the vapor species are not treated as ideal gases.
         - 'True' All fugacity coefficients = 1 at all P.
 
     y_CO2: Model for the parameterisation of the CO2 fugacity coefficient.
@@ -569,35 +550,28 @@ def make_df_and_add_model_defaults(models):
 
     ### Equilibrium constants ###
 
-    KHOg: Model for the parameterisation of the equilibiurm constant for
-    H2 + 0.5O2 = H2O.
+    KHOg: Model for the parameterisation of the equilibiurm constant for H2 + 0.5O2 = H2O.
         See function KHOg for options.
 
-    KHOSg: Model for the parameterisation of the equilibiurm constant for
-    0.5S2 + H2O = H2S + 0.5O2.
+    KHOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + H2O = H2S + 0.5O2.
         See function KHOSg for options.
 
-    KOSg: Model for the parameterisation of the equilibiurm constant for
-    0.5S2 + O2 = SO2.
+    KOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + O2 = SO2.
         See function KOSg for options.
 
-    KOSg2: Model for the parameterisation of the equilibiurm constant for
-    0.5S2 + 1.5O2 = SO3.
+    KOSg2: Model for the parameterisation of the equilibiurm constant for 0.5S2 + 1.5O2 = SO3.
         See function KOSg2 for options.
 
-    KOCg: Model for the parameterisation of the equilibiurm constant for
-    CO + 0.5O2 = CO2.
+    KOCg: Model for the parameterisation of the equilibiurm constant for CO + 0.5O2 = CO2.
         See function KOCg for options.
 
-    KCOHg: Model for the parameterisation of the equilibiurm constant for
-    CH4 + 2O2 = CO2 + 2H2O.
+    KCOHg: Model for the parameterisation of the equilibiurm constant for CH4 + 2O2 = CO2 + 2H2O.
         See function KCOHg for options.
 
     KOCSg: Model for the parameterisation of the equilibiurm constant for OCS.
         See function KOCSg for options.
 
-    KCOs: Model for the parameterisation of the equilibiurm constant for
-    Cgrahite + O2 = CO2.
+    KCOs: Model for the parameterisation of the equilibiurm constant for Cgrahite + O2 = CO2.
         See function KCOs for options.
 
     carbonylsulfide: Reaction equilibrium KOCSg is for.
@@ -607,43 +581,23 @@ def make_df_and_add_model_defaults(models):
 
     ### Degassing calculation ###
 
-    bulk_composition: Specifying what the inputted melt composition (i.e., dissolved
-    volatiles and fO2-estimate) corresponds to for the degassing calculation
-        -'melt-only' [default] The inputted melt composition (i.e., dissolved volatiles)
-        represents the bulk system - there is no vapor present. The fO2-estimate is
-        calculated at Pvsat for this melt composition.
-        - 'melt+vapor_wtg' The inputted melt composition (i.e., dissolved volatiles) is
-        in equilibrium with a vapor phase. The amount of vapor as weight fraction gas
-        (wtg) is specified in the inputs. The bulk system composition will be calculated
-        by calculating Pvsat and the vapor composition given the input composition.
-        - 'melt+vapor_initialCO2' The inputted melt composition (i.e., dissolved
-        volatiles) is in equilibrium with a vapor phase. The initial CO2 content of the
-        melt (i.e., before degassing) is specified in the inputs. The bulk system
-        composition will be calculated by calculating Pvsat and the vapor composition
-        given the input composition. The amount of vapor present is calculated using the
-        given initial CO2.
+    bulk_composition: Specifying what the inputted melt composition (i.e., dissolved volatiles and fO2-estimate) corresponds to for the degassing calculation
+        -'melt-only' [default] The inputted melt composition (i.e., dissolved volatiles) represents the bulk system - there is no vapor present. The fO2-estimate is calculated at Pvsat for this melt composition.
+        - 'melt+vapor_wtg' The inputted melt composition (i.e., dissolved volatiles) is in equilibrium with a vapor phase. The amount of vapor as weight fraction gas (wtg) is specified in the inputs. The bulk system composition will be calculated by calculating Pvsat and the vapor composition given the input composition.
+        - 'melt+vapor_initialCO2' The inputted melt composition (i.e., dissolved volatiles) is in equilibrium with a vapor phase. The initial CO2 content of the melt (i.e., before degassing) is specified in the inputs. The bulk system composition will be calculated by calculating Pvsat and the vapor composition given the input composition. The amount of vapor present is calculated using the given initial CO2.
 
     starting_P: Determing the starting pressure for a degassing calculation.
-        - 'Pvsat' [default] Calculation starts at Pvsat for the inputted melt
-        composition (i.e., dissolved volatiles).
-        - 'set' Calculation starts at the pressure specified in the inputs (using P_bar,
-        pressure in bars).
+        - 'Pvsat' [default] Calculation starts at Pvsat for the inputted melt composition (i.e., dissolved volatiles).
+        - 'set' Calculation starts at the pressure specified in the inputs (using P_bar, pressure in bars).
 
-    gassing_style: Does the bulk composition of the system (including oxygen) remain
-    constant during the re/degassing
+    gassing_style: Does the bulk composition of the system (including oxygen) remain constant during the re/degassing
     calculation.
-        - 'closed' [default] The bulk composition of the system (inc. oxygen) is
-        constant during re/degassing calculation - vapor and melt remain in chemical
-        equilibrium throughout.
-        - 'open' At each pressure-step, the vapor in equilibrium with the melt is
-        removed (or added for regassing), such that the bulk composition of the system
-        changes. This does not refer to being buffered in terms of fO2.
+        - 'closed' [default] The bulk composition of the system (inc. oxygen) is constant during re/degassing calculation - vapor and melt remain in chemical equilibrium throughout.
+        - 'open' At each pressure-step, the vapor in equilibrium with the melt is removed (or added for regassing), such that the bulk composition of the system changes. This does not refer to being buffered in terms of fO2.
 
     gassing_direction: Is pressure increasing or decreasing from the starting perssure.
-        - 'degas' [default] Pressure progressively decreases from starting pressure for
-        isothermal, polybaric calculations (i.e., degassing).
-        - 'regas' Pressure progressively increases from starting pressure for
-        isothermal, polybaric calculations (i.e., regassing).
+        - 'degas' [default] Pressure progressively decreases from starting pressure for isothermal, polybaric calculations (i.e., degassing).
+        - 'regas' Pressure progressively increases from starting pressure for isothermal, polybaric calculations (i.e., regassing).
 
     P_variation: Is pressure varying during the calculation?
         - 'polybaric' [default] Pressure progressively changes during the calculation.
@@ -653,19 +607,15 @@ def make_df_and_add_model_defaults(models):
         - 'isothermal' [default] Temperature is constant during the calculation.
         Only one option available currently, included for future development.
 
-    # WHY DID I THINK THIS WAS USEFUL #
     eq_Fe: Does iron in the melt equilibrate with fO2.
         - 'yes' [default] Iron equilibrates with fO2
         Only one option available currently, included for future development.
 
     solve_species: What species are used to solve the equilibrium equations? This should
     not need to be changed unless the solver is struggling.
-        - 'OCS' [default] Guess mole fractions of O2, CO, and S2 in the vapor to solve
-        the equilibrium equations.
-        - 'OHS' Guess mole fractions of O2, H2, and S2 in the vapor to solve the
-        equilibrium equations.
-        - 'OCH' Guess mole fractions of O2, CO, and H2 in the vapor to solve the
-        equilibrium equations.
+        - 'OCS' [default] Guess mole fractions of O2, CO, and S2 in the vapor to solve the equilibrium equations.
+        - 'OHS' Guess mole fractions of O2, H2, and S2 in the vapor to solve the equilibrium equations.
+        - 'OCH' Guess mole fractions of O2, CO, and H2 in the vapor to solve the equilibrium equations.
 
 
     ### Other ###
@@ -673,18 +623,15 @@ def make_df_and_add_model_defaults(models):
     density: Model for parameterisation of melt density
         See function melt_density for options.
 
-    setup: Specifies whether model options are specified in the models or setup
-    dataframe.
+    setup: Specifies whether model options are specified in the models or setup dataframe.
         - 'False' [default] All model options are specified in the models dataframe.
         - 'True' Some of the model options are specified in the setup dataframe.
 
-    print status: Specifies whether some sort of status information during the
-    calculation is outputted to let you know progress.
+    print status: Specifies whether some sort of status information during the calculation is outputted to let you know progress.
         - 'False' [default] No information about calculation progress is printed.
         - 'True' Some information about calculation progress is printed.
 
-    output csv: Specicies whether a csv of the outputted dataframe is saved at the end
-    of the calculation.
+    output csv: Specicies whether a csv of the outputted dataframe is saved at the end of the calculation.
         - 'True' [default] csv is outputted
         - 'False' csv is not outputted
 
@@ -1812,7 +1759,7 @@ def C_CH4(PT, melt_wf, models=default_models):
 
     Model options for "methane"
     -------------
-    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028 # noqa
+    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028
     - Only one option available currently, included for future development.
 
     """
@@ -1870,7 +1817,7 @@ def C_CO(PT, melt_wf, models=default_models):
 
     Model options for 'carbon monoxide'
     -------------
-    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin 109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et al. (2015), Stanley et al. (2014), and Wetzel et al. (2013) # noqa
+    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin 109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et al. (2015), Stanley et al. (2014), and Wetzel et al. (2013)
     - Only one option available currently, included for future development.
 
     """
@@ -4052,13 +3999,13 @@ def y_CO2(PT, models=default_models):
 
     Model options for y_CO2
     -----------------------
-    - 'Holland91_eq8_tab1' [default] Eq. (8) and Table 1 from Holland & Powell (1991)
+    - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
+    - 'Holland91_eq8_tab1' Eq. (8) and Table 1 from Holland & Powell (1991)
     CMP 109:265-273 10.1007/BF00306484
     - 'Holland91_eq4,A1-3_tab1' Eq. (4,A1-3) and Table 1 from Holland & Powell (1991)
     CMP 109:265-273 10.1007/BF00306484
     - 'Holland91_eq8,9_tab2' Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP
     109:265-273 10.1007/BF00306484
-    - 'Shi92' Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
     (Note: "ideal_gas" = "True" overides chosen option)
     """
