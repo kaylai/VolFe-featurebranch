@@ -971,15 +971,8 @@ def calc_Pvsat(
     ):  # n is number of rows of data in conditions file
         run = n
         PT = {"T": setup.loc[run, "T_C"]}
+        melt_wf_i = mg.melt_comp(run, setup)
         melt_wf = mg.melt_comp(run, setup)
-        melt_wf["CO2"] = setup.loc[run, "CO2ppm"] / 1000000.0
-        melt_wf["H2OT"] = setup.loc[run, "H2O"] / 100.0
-        if "sulf_XFe" in setup:
-            melt_wf["sulf_XFe"] = setup.loc[run, "sulf_XFe"]
-        if "sulf_XCu" in setup:
-            melt_wf["sulf_XCu"] = setup.loc[run, "sulf_XCu"]
-        if "sulf_XNi" in setup:
-            melt_wf["sulf_XNi"] = setup.loc[run, "sulf_XNi"]
 
         # check if any options need to be read from the setup file rather than the
         # models file
@@ -998,16 +991,9 @@ def calc_Pvsat(
             P_sat_fO2_fS2_result = c.P_sat_fO2_fS2(PT, melt_wf, models, p_tol)
             PT["P"] = P_sat_fO2_fS2_result["P_tot"]
         else:
-            wm_ST = setup.loc[run, "STppm"] / 1000000.0
+            wm_ST = melt_wf["ST"]
         melt_wf["ST"] = wm_ST
-        melt_wf["CT"] = (
-            melt_wf["CO2"] / mdv.species.loc["CO2", "M"]
-        ) * mdv.species.loc["C", "M"]
-        melt_wf["HT"] = (melt_wf["H2OT"] / mdv.species.loc["H2O", "M"]) * (
-            2.0 * mdv.species.loc["H", "M"]
-        )
-        wm_X = setup.loc[run, "Xppm"] / 1000000.0
-        melt_wf["XT"] = wm_X
+
         # if models.loc["bulk_composition", "option"] == "melt-only":
         #    bulk_wf = {
         #        "H": (2.0 * mdv.species.loc["H", "M"] * melt_wf["H2OT"])
@@ -1073,10 +1059,10 @@ def calc_Pvsat(
         results_values_table_melt_vol = pd.DataFrame(
             [
                 [
-                    setup.loc[run, "H2O"],
-                    setup.loc[run, "CO2ppm"],
-                    setup.loc[run, "STppm"],
-                    setup.loc[run, "Xppm"],
+                    melt_wf_i["H2OT"] * 100.0,
+                    melt_wf_i["CO2"] * 1000000.0,
+                    melt_wf_i["ST"] * 1000000.0,
+                    melt_wf_i["XT"] * 1000000.0,
                 ]
             ]
         )
@@ -1249,26 +1235,7 @@ def calc_gassing(
     # set T and volatile composition of the melt
     PT = {"T": setup.loc[run, "T_C"]}
     melt_wf = mg.melt_comp(run, setup)
-    melt_wf["CO2"] = setup.loc[run, "CO2ppm"] / 1000000.0
-    melt_wf["H2OT"] = setup.loc[run, "H2O"] / 100.0
-    melt_wf["ST"] = setup.loc[run, "STppm"] / 1000000.0
-    melt_wf["H2"] = 0.0
-    melt_wf["XT"] = setup.loc[run, "Xppm"] / 1000000.0
-    melt_wf["CT"] = (melt_wf["CO2"] / mdv.species.loc["CO2", "M"]) * mdv.species.loc[
-        "C", "M"
-    ]
-    melt_wf["HT"] = (
-        2.0 * melt_wf["H2OT"] / mdv.species.loc["H2O", "M"]
-    ) * mdv.species.loc["H", "M"]
-    melt_wf["ST"] = melt_wf["ST"]
-    if "S6ST" in setup:
-        melt_wf["S6ST"] = setup.loc[run, "S6ST"]
-    if "sulf_XFe" in setup:
-        melt_wf["sulf_XFe"] = setup.loc[run, "sulf_XFe"]
-    if "sulf_XCu" in setup:
-        melt_wf["sulf_XCu"] = setup.loc[run, "sulf_XCu"]
-    if "sulf_XNi" in setup:
-        melt_wf["sulf_XNi"] = setup.loc[run, "sulf_XNi"]
+    melt_wf_i = mg.melt_comp(run, setup)
 
     # Calculate saturation pressure for composition given in setup file
     if models.loc["COH_species", "option"] == "H2O-CO2 only":
@@ -1347,10 +1314,10 @@ def calc_gassing(
     results_values_table_melt_vol = pd.DataFrame(
         [
             [
-                wm_H2Oeq * 100.0,
-                wm_CO2eq * 1000000.0,
-                conc["wm_ST"] * 1000000.0,
-                melt_wf["XT"] * 1000000.0,
+                melt_wf_i["H2OT"] * 100.0,
+                melt_wf_i["CO2"] * 1000000.0,
+                melt_wf_i["ST"] * 1000000.0,
+                melt_wf_i["XT"] * 1000000.0,
             ]
         ]
     )
@@ -2571,19 +2538,6 @@ def calc_sol_consts(setup, first_row=0, last_row=None, models=mdv.default_models
 
         PT = {"T": setup.loc[run, "T_C"]}
         melt_wf = mg.melt_comp(run, setup)
-        CO2 = setup.loc[run, "CO2ppm"] / 1000000.0
-        CT = (CO2 / mdv.species.loc["CO2", "M"]) * mdv.species.loc["C", "M"]
-        H2O = setup.loc[run, "H2O"] / 100.0
-        HT = (H2O / mdv.species.loc["H2O", "M"]) * mdv.species.loc["H2", "M"]
-        XT = setup.loc[run, "Xppm"] / 1000000.0
-        ST = setup.loc[run, "STppm"] / 1000000.0
-        melt_wf["CO2"] = CO2
-        melt_wf["H2OT"] = H2O
-        melt_wf["ST"] = ST
-        melt_wf["X"] = XT
-        melt_wf["XT"] = XT
-        melt_wf["HT"] = HT
-        melt_wf["CT"] = CT
         PT["P"] = setup.loc[run, "P_bar"]
         melt_wf["Fe3FeT"] = mg.Fe3FeT_i(PT, melt_wf, models)
         C_CO32 = mdv.C_CO3(PT, melt_wf, models)
@@ -2901,22 +2855,6 @@ def calc_melt_S_oxybarometer(
 
         PT = {"T": setup.loc[run, "T_C"]}
         melt_wf = mg.melt_comp(run, setup)
-        melt_wf["H2OT"] = setup.loc[run, "H2O"] / 100.0
-        melt_wf["CO2"] = setup.loc[run, "CO2ppm"] / 1000000.0
-        melt_wf["HT"] = (
-            (setup.loc[run, "H2O"] / 100.0) / mdv.species.loc["H2O", "M"]
-        ) * mdv.species.loc["H2", "M"]
-        melt_wf["ST"] = setup.loc[run, "STppm"] / 1000000.0
-        melt_wf["XT"] = setup.loc[run, "Xppm"] / 1000000.0
-        melt_wf["CT"] = (
-            (setup.loc[run, "CO2ppm"] / 1000000.0) / mdv.species.loc["CO2", "M"]
-        ) * mdv.species.loc["C", "M"]
-        if "sulf_XFe" in setup:
-            melt_wf["sulf_XFe"] = setup.loc[run, "sulf_XFe"]
-        if "sulf_XCu" in setup:
-            melt_wf["sulf_XCu"] = setup.loc[run, "sulf_XCu"]
-        if "sulf_XNi" in setup:
-            melt_wf["sulf_XNi"] = setup.loc[run, "sulf_XNi"]
 
         if "P_bar" in setup:
             if setup.loc[run, "P_bar"] > 0.0:
@@ -3059,16 +2997,7 @@ def calc_sulfur_vcomp(setup, models=mdv.default_models):
         PT = {"T": setup.loc[n, "T_C"], "P": setup.loc[n, "P_bar"]}
         P = int(PT["P"])
         T = int(PT["T"])
-        melt_wf["CO2"] = setup.loc[n, "CO2ppm"] / 1000000.0
-        melt_wf["H2OT"] = setup.loc[n, "H2O"] / 100.0
-        melt_wf["ST"] = setup.loc[n, "STppm"] / 1000000.0
-        melt_wf["CT"] = (
-            melt_wf["CO2"] / mdv.species.loc["CO2", "M"]
-        ) * mdv.species.loc["C", "M"]
-        melt_wf["HT"] = (melt_wf["H2OT"] / mdv.species.loc["H2O", "M"]) * (
-            2.0 * mdv.species.loc["H", "M"]
-        )
-        melt_wf["Fe3FeT"] = setup.loc[n, "Fe3+FeT"]
+        melt_wf["Fe3FeT"] = melt_wf["Fe3FeT_i"]
         fO2 = mdv.f_O2(PT, melt_wf, models)
         FMQ = mg.fO22Dbuffer(PT, fO2, "FMQ", models)
         sulfsat = c.sulfur_saturation(PT, melt_wf, models)
@@ -3139,6 +3068,66 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
     -------
     'random_compositions.csv' if 'output csv' is True
     """
+    sd = {}
+    sd_type = {}
+
+    for x in ["Fe3FeT", "S6ST", "DNNO", "DFMQ", "log_fO2"]:
+        if x in setup:
+            fO2_opt = x
+            if x in ["Fe3FeT", "S6ST", "log_fO2"]:
+                fO2_opt_i = x + "_i"
+            else:
+                fO2_opt_i = x
+
+    if "FeO" in setup:
+        Fe_opt = "FeO"
+        fO2_opt = "Fe2O3"
+        fO2_opt_i = "Fe2O3"
+    else:
+        if "FeOT" in setup:
+            Fe_opt = "FeOT"
+        elif "Fe2O3T" in setup:
+            Fe_opt = "Fe2O3T"
+
+    sd[Fe_opt] = setup.loc[run, Fe_opt + "_sd"]
+    if Fe_opt + "_sd_type" in setup:
+        sd_type[Fe_opt] = setup.loc[run, Fe_opt + "_sd+type"]
+    else:
+        sd_type[Fe_opt] = "A"
+    sd[fO2_opt] = setup.loc[run, fO2_opt + "_sd"]
+    if fO2_opt + "_sd_type" in setup:
+        sd_type[fO2_opt] = setup.loc[run, fO2_opt + "_sd+type"]
+    else:
+        sd_type[fO2_opt] = "A"
+
+    for x in [
+        "SiO2",
+        "TiO2",
+        "Al2O3",
+        "MnO",
+        "MgO",
+        "CaO",
+        "Na2O",
+        "K2O",
+        "P2O5",
+        "H2O",
+        "CO2ppm",
+        "Xppm",
+        "STppm",
+        "T_C",
+    ]:
+        if x + "_sd" in setup:
+            sd[x] = setup.loc[run, x + "_sd"]
+        else:
+            sd[x] = ""
+        if x + "_sd_type" in setup:
+            sd_type[x] = setup.loc[run, Fe_opt + "_sd+type"]
+        else:
+            if x + "_sd" in setup:
+                sd_type[x] = "A"
+            else:
+                sd_type[x] = ""
+
     # set up results table
     results = pd.DataFrame(
         [
@@ -3148,7 +3137,7 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
                 "SiO2",
                 "TiO2",
                 "Al2O3",
-                "FeOT",
+                Fe_opt,
                 "MnO",
                 "MgO",
                 "CaO",
@@ -3159,30 +3148,33 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
                 "CO2ppm",
                 "Xppm",
                 "STppm",
-                "Fe3FeT",
+                fO2_opt,
             ]
         ]
     )
+
+    melt_comp = mg.melt_comp(run, setup)
+
     results1 = pd.DataFrame(
         [
             [
                 setup.loc[run, "Sample"],
                 setup.loc[run, "T_C"],
-                setup.loc[run, "SiO2"],
-                setup.loc[run, "TiO2"],
-                setup.loc[run, "Al2O3"],
-                setup.loc[run, "FeOT"],
-                setup.loc[run, "MnO"],
-                setup.loc[run, "MgO"],
-                setup.loc[run, "CaO"],
-                setup.loc[run, "Na2O"],
-                setup.loc[run, "K2O"],
-                setup.loc[run, "P2O5"],
-                setup.loc[run, "H2O"],
-                setup.loc[run, "CO2ppm"],
-                setup.loc[run, "Xppm"],
-                setup.loc[run, "STppm"],
-                setup.loc[run, "Fe3FeT"],
+                melt_comp["SiO2"],
+                melt_comp["TiO2"],
+                melt_comp["Al2O3"],
+                melt_comp[Fe_opt],
+                melt_comp["MnO"],
+                melt_comp["MgO"],
+                melt_comp["CaO"],
+                melt_comp["Na2O"],
+                melt_comp["K2O"],
+                melt_comp["P2O5"],
+                melt_comp["H2OT"] * 100.0,
+                melt_comp["CO2"] * 100000.0,
+                melt_comp["X"] * 1000000.0,
+                melt_comp["ST"] * 1000000,
+                melt_comp[fO2_opt_i],
             ]
         ]
     )
@@ -3193,21 +3185,21 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
             [
                 "sds",
                 "",
-                setup.loc[run, "SiO2_sd"],
-                setup.loc[run, "TiO2_sd"],
-                setup.loc[run, "Al2O3_sd"],
-                setup.loc[run, "FeOT_sd"],
-                setup.loc[run, "MnO_sd"],
-                setup.loc[run, "MgO_sd"],
-                setup.loc[run, "CaO_sd"],
-                setup.loc[run, "Na2O_sd"],
-                setup.loc[run, "K2O_sd"],
-                setup.loc[run, "P2O5_sd"],
-                setup.loc[run, "H2O_sd"],
-                setup.loc[run, "CO2ppm_sd"],
-                setup.loc[run, "Xppm_sd"],
-                setup.loc[run, "STppm_sd"],
-                setup.loc[run, "Fe3FeT_sd"],
+                sd["SiO2"],
+                sd["TiO2"],
+                sd["Al2O3"],
+                sd[Fe_opt],
+                sd["MnO"],
+                sd["MgO"],
+                sd["CaO"],
+                sd["Na2O"],
+                sd["K2O"],
+                sd["P2O5"],
+                sd["H2O"],
+                sd["CO2ppm"],
+                sd["Xppm"],
+                sd["STppm"],
+                sd[fO2_opt],
             ]
         ]
     )
@@ -3218,21 +3210,21 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
             [
                 "sd types",
                 "",
-                setup.loc[run, "SiO2_sd_type"],
-                setup.loc[run, "TiO2_sd_type"],
-                setup.loc[run, "Al2O3_sd_type"],
-                setup.loc[run, "FeOT_sd_type"],
-                setup.loc[run, "MnO_sd_type"],
-                setup.loc[run, "MgO_sd_type"],
-                setup.loc[run, "CaO_sd_type"],
-                setup.loc[run, "Na2O_sd_type"],
-                setup.loc[run, "K2O_sd_type"],
-                setup.loc[run, "P2O5_sd_type"],
-                setup.loc[run, "H2O_sd_type"],
-                setup.loc[run, "CO2ppm_sd_type"],
-                setup.loc[run, "Xppm_sd_type"],
-                setup.loc[run, "STppm_sd_type"],
-                setup.loc[run, "Fe3FeT_sd_type"],
+                sd_type["SiO2"],
+                sd_type["TiO2"],
+                sd_type["Al2O3"],
+                sd_type[Fe_opt],
+                sd_type["MnO"],
+                sd_type["MgO"],
+                sd_type["CaO"],
+                sd_type["Na2O"],
+                sd_type["K2O"],
+                sd_type["P2O5"],
+                sd_type["H2O"],
+                sd_type["CO2ppm"],
+                sd_type["Xppm"],
+                sd_type["STppm"],
+                sd_type[fO2_opt],
             ]
         ]
     )
@@ -3240,15 +3232,19 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
     results = pd.concat([results, results1], ignore_index=True)
     for n in range(0, iterations, 1):  # n is number of rows of data in conditions file
         results1 = c.compositions_within_error(run, setup)
+        if "T_C" in results1:
+            T_C_ = results1["T_C"]
+        else:
+            T_C_ = setup.loc[run, "T_C"]
         results1 = pd.DataFrame(
             [
                 [
                     run,
-                    setup.loc[run, "T_C"],
+                    T_C_,
                     results1["SiO2"],
                     results1["TiO2"],
                     results1["Al2O3"],
-                    results1["FeOT"],
+                    results1[Fe_opt],
                     results1["MnO"],
                     results1["MgO"],
                     results1["CaO"],
@@ -3259,7 +3255,7 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
                     results1["CO2ppm"],
                     results1["Xppm"],
                     results1["STppm"],
-                    results1["Fe3FeT"],
+                    results1[fO2_opt],
                 ]
             ]
         )
@@ -3267,12 +3263,93 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
 
     results.columns = results.iloc[0]
     results = results[1:]
+    results.reset_index()
     if models.loc["output csv", "option"] == "True":
-        results.to_csv("random_compositions.csv", index=False, header=False)
+        results.to_csv("random_compositions.csv", index=False, header=True)
     if models.loc["print status", "option"] == "True":
         print(n, setup.loc[run, "Sample"], results1["SiO2"])
 
     return results
+
+
+def calc_comp_error_function(
+    setup,
+    function="calc_pvsat",
+    first_row=0,
+    last_row=None,
+    iterations=100,
+    models=mdv.default_models,
+):
+
+    av_results_all = pd.DataFrame(
+        [
+            [
+                "sample",
+                "P_bar_av",
+                "P_bar_sd",
+                "Fe3+/FeT_av",
+                "Fe3+/FeT_sd",
+                "fO2_DNNO_av",
+                "fO2_DNNO_sd",
+                "fO2_DFMQ_av",
+                "fO2_DFMQ_sd",
+                "Pvsat (H2O CO2 only)_av",
+                "Pvsat (H2O CO2 only)_sd",
+            ]
+        ]
+    )
+
+    if last_row is None:
+        last_row = len(setup) - 1
+
+    for n in range(first_row, last_row, 1):
+        run = n
+        comp = calc_comp_error(setup, run, iterations=iterations, models=models)
+        if function == "calc_pvsat":
+            result = calc_Pvsat(
+                comp, models=models, first_row=4, last_row=len(comp) - 1
+            )
+            av_results = {}
+            av_results["sample"] = setup.loc[run, "Sample"]
+            for x in [
+                "P_bar",
+                "Fe3+/FeT",
+                "fO2_DNNO",
+                "fO2_DFMQ",
+                "Pvsat (H2O CO2 only)",
+            ]:
+                av_results[x + "_av"] = result[x].mean()
+                av_results[x + "_sd"] = result[x].std()
+            av_results_all1 = pd.DataFrame(
+                [
+                    [
+                        av_results["sample"],
+                        av_results["P_bar_av"],
+                        av_results["P_bar_sd"],
+                        av_results["Fe3+/FeT_av"],
+                        av_results["Fe3+/FeT_sd"],
+                        av_results["fO2_DNNO_av"],
+                        av_results["fO2_DNNO_sd"],
+                        av_results["fO2_DFMQ_av"],
+                        av_results["fO2_DFMQ_sd"],
+                        av_results["Pvsat (H2O CO2 only)_av"],
+                        av_results["Pvsat (H2O CO2 only)_sd"],
+                    ]
+                ]
+            )
+            av_results_all = pd.concat([av_results_all, av_results_all1])
+            if models.loc["print status", "option"] == "True":
+                print(iterations, setup.loc[run, "Sample"])
+
+    av_results_all.columns = av_results_all.iloc[0]
+    av_results_all = av_results_all[1:]
+
+    if models.loc["output csv", "option"] == "True":
+        av_results_all.to_csv(
+            function + "_random_compositions.csv", index=False, header=True
+        )
+
+    return av_results_all
 
 
 ########################################################################################
