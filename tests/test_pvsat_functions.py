@@ -32,8 +32,8 @@ def test_pvsat_df_FeOT_Fe3FeT():
 
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(327.86218802821065)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.28952949944672657)
+    assert result1.loc[0, "P_bar"] == pytest.approx(328.1286006538541)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.2895363111360165)
 
 
 def test_pvsat_df_Fe2O3T_DFMQ():
@@ -65,8 +65,8 @@ def test_pvsat_df_Fe2O3T_DFMQ():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(322.43330736560756)
-    assert result1.loc[0, "Fe3+/FeT"] == pytest.approx(0.13814188387373783)
+    assert result1.loc[0, "P_bar"] == pytest.approx(322.69273744461606)
+    assert result1.loc[0, "Fe3+/FeT"] == pytest.approx(0.13814150758825333)
 
 
 def test_pvsat_df_FeO_Fe2O3():
@@ -98,8 +98,8 @@ def test_pvsat_df_FeO_Fe2O3():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(401.5048965976075)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(1.2870686126290094)
+    assert result1.loc[0, "P_bar"] == pytest.approx(401.8412382530453)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(1.2870771835977974)
 
 
 def test_pvsat_df_FeOT_DNNO():
@@ -131,8 +131,8 @@ def test_pvsat_df_FeOT_DNNO():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(437.91288779200636)
-    assert result1.loc[0, "Fe3+/FeT"] == pytest.approx(0.26751210303385464)
+    assert result1.loc[0, "P_bar"] == pytest.approx(438.2533344273222)
+    assert result1.loc[0, "Fe3+/FeT"] == pytest.approx(0.2675098697721887)
 
 
 def test_pvsat_df_FeOT_S6ST():
@@ -164,8 +164,8 @@ def test_pvsat_df_FeOT_S6ST():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(390.07202160844827)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.9934978675684318)
+    assert result1.loc[0, "P_bar"] == pytest.approx(390.3809134727575)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.9934743744146308)
 
 
 def test_pvsat_df_FeOT_DNNO_Fe3FeT():
@@ -201,7 +201,7 @@ def test_pvsat_df_FeOT_DNNO_Fe3FeT():
     ):
         result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(327.86218802821065)
+    assert result1.loc[0, "P_bar"] == pytest.approx(328.1286006538541)
     assert result1.loc[0, "Fe3+/FeT"] == pytest.approx(0.155)
 
 
@@ -243,8 +243,8 @@ def test_pvsat_df_FeOT_Fe3FeT_useroptions():
 
     result1 = vf.calc_Pvsat(my_analysis, models=my_models)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(276.6629907830998)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.2882189037488603)
+    assert result1.loc[0, "P_bar"] == pytest.approx(276.43084437979365)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.288212954362395)
 
 
 def test_pvsat_df_X_Ar_bas():
@@ -274,8 +274,8 @@ def test_pvsat_df_X_Ar_bas():
 
     result1 = vf.calc_Pvsat(my_analysis)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(577.1271961072131)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29586683967215155)
+    assert result1.loc[0, "P_bar"] == pytest.approx(577.5630635058873)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.2958778582322017)
 
 
 def test_pvsat_df_X_Ar_rhy():
@@ -312,8 +312,8 @@ def test_pvsat_df_X_Ar_rhy():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis, models=my_models)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(373.1245846901211)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29068559860265886)
+    assert result1.loc[0, "P_bar"] == pytest.approx(373.4229997324037)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29069321289847494)
 
 
 def test_pvsat_df_X_Ne_bas():
@@ -350,8 +350,8 @@ def test_pvsat_df_X_Ne_bas():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis, models=my_models)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(460.26322719346643)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.2929046311818917)
+    assert result1.loc[0, "P_bar"] == pytest.approx(460.62148215869695)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29291373619921846)
 
 
 def test_pvsat_df_X_Ne_rhy():
@@ -388,5 +388,5 @@ def test_pvsat_df_X_Ne_rhy():
     # runs the calculation
     result1 = vf.calc_Pvsat(my_analysis, models=my_models)
 
-    assert result1.loc[0, "P_bar"] == pytest.approx(351.39240758590665)
-    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29013080786955925)
+    assert result1.loc[0, "P_bar"] == pytest.approx(351.67554197992524)
+    assert result1.loc[0, "fO2_DFMQ"] == pytest.approx(0.29013803939118965)

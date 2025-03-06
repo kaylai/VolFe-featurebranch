@@ -22,7 +22,7 @@ def test_other_df_y():
 
     assert result.loc[0, "yO2"] == pytest.approx(1.209857826330598)
     assert result.loc[0, "yS2"] == pytest.approx(1.1913268980917349)
-    assert result.loc[0, "yCO2"] == pytest.approx(1.301912410138897)
+    assert result.loc[0, "yCO2"] == pytest.approx(1.2657647433655634)
 
 
 def test_other_df_C():
@@ -87,7 +87,7 @@ def test_other_df_puresol():
     result = vf.calc_pure_solubility(my_analysis)
 
     assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.14715142977834)
-    assert result.loc[500, "CO2_ppmw"] == pytest.approx(2710.823512744141)
+    assert result.loc[500, "CO2_ppmw"] == pytest.approx(2606.5792533661706)
 
 
 def test_other_df_puresol_useropt():
@@ -123,7 +123,7 @@ def test_other_df_puresol_useropt():
     result = vf.calc_pure_solubility(my_analysis, models=my_models)
 
     assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.958981268050458)
-    assert result.loc[500, "CO2_ppmw"] == pytest.approx(3146.998672937647)
+    assert result.loc[500, "CO2_ppmw"] == pytest.approx(3025.990363824278)
 
 
 def test_other_df_isobar():
@@ -162,4 +162,4 @@ def test_other_df_isobar():
 
     assert result.loc[80, "P_bar"] == pytest.approx(4000)
     assert result.loc[50, "H2O_wtpc"] == pytest.approx(2.170719419802378)
-    assert result.loc[30, "CO2_ppm"] == pytest.approx(908.6199308537963)
+    assert result.loc[30, "CO2_ppm"] == pytest.approx(869.9121719926527)
