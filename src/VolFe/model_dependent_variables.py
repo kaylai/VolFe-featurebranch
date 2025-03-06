@@ -1870,9 +1870,7 @@ def C_CO(PT, melt_wf, models=default_models):
 
     Model options for 'carbon monoxide'
     -------------
-    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin
-    109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et
-    al. (2015), Stanley et al., (2014), and Wetzel et al., (2013)
+    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin 109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et al. (2015), Stanley et al. (2014), and Wetzel et al. (2013) # noqa
     - Only one option available currently, included for future development.
 
     """
@@ -1928,16 +1926,11 @@ def C_X(PT, melt_wf, models=default_models):
 
     Model options for species X solubility
     -------------
-    - 'Ar_Basalt_HughesIP' [default] Hughes et al. (in prep) based on data from
-    Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
-    - Ar_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano
-    et al. (2010) Chemical Geology 279(3–4):145-157
-    - Ne_Basalt_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et
-    al. (2010) Chemical Geology 279(3–4):145-157
-    - Ne_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano
-    et al. (2010) Chemical Geology 279(3–4):145-157
-    - [user specified number]: User can type a number that will be used instead (i.e., a
-    constant value)
+    - 'Ar_Basalt_HughesIP' [default] Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
+    - Ar_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
+    - Ne_Basalt_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
+    - Ne_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
+    - [user specified number]: User can type a number that will be used instead (i.e., a constant value) # noqa
 
     """
 
