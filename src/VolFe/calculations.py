@@ -1562,7 +1562,9 @@ def conc_insolubles(PT, melt_wf, models):
     S2m = melt_wf["S2-"]  # weight fraction of S2-
     S6p = (
         mg.C_SO4(PT, melt_wf, models) * mdv.f_O2(PT, melt_wf, models) ** 2 * S2m
-    ) / mg.C_S(PT, melt_wf, models)  # weight fraction S6+
+    ) / mg.C_S(
+        PT, melt_wf, models
+    )  # weight fraction S6+
     H2S = (
         mg.C_H2S(PT, melt_wf, models) * mg.f_H2S(PT, melt_wf, models)
     ) / 1000000.0  # weight fraction H2S
@@ -1623,113 +1625,44 @@ def compositions_within_error(run, setup):
     Returns:
         dict: Random composition within error of given composition
     """
-    if setup.loc[run, "SiO2_sd_type"] == "A":  # absolute
-        SiO2_sd = setup.loc[run, "SiO2_sd"]
-    else:
-        SiO2_sd = setup.loc[run, "SiO2_sd"] * setup.loc[run, "SiO2"]
-    SiO2 = float(np.random.normal(setup.loc[run, "SiO2"], SiO2_sd, 1))
 
-    if setup.loc[run, "TiO2_sd_type"] == "A":  # absolute
-        TiO2_sd = setup.loc[run, "TiO2_sd"]
-    else:
-        TiO2_sd = setup.loc[run, "TiO2_sd"] * setup.loc[run, "TiO2"]
-    TiO2 = float(np.random.normal(setup.loc[run, "TiO2"], TiO2_sd, 1))
+    result = {}
 
-    if setup.loc[run, "Al2O3_sd_type"] == "A":  # absolute
-        Al2O3_sd = setup.loc[run, "Al2O3_sd"]
-    else:
-        Al2O3_sd = setup.loc[run, "Al2O3_sd"] * setup.loc[run, "Al2O3"]
-    Al2O3 = float(np.random.normal(setup.loc[run, "Al2O3"], Al2O3_sd, 1))
+    for x in [
+        "P_bar",
+        "T_C",
+        "SiO2",
+        "TiO2",
+        "Al2O3",
+        "FeOT",
+        "Fe2O3",
+        "FeO",
+        "MnO",
+        "MgO",
+        "CaO",
+        "Na2O",
+        "K2O",
+        "P2O5",
+        "H2O",
+        "CO2ppm",
+        "Xppm",
+        "STppm",
+        "Fe3FeT",
+        "S6ST",
+        "DFMQ",
+        "DNNO",
+    ]:
+        if x in setup:
+            if x + "_sd_type" in setup:
+                if setup.loc[run, x + "_sd_type"] == "R":  # relative
+                    sd = setup.loc[run, x + "_sd"] * setup.loc[run, x]
+            else:
+                sd = setup.loc[run, x + "_sd"]
+            value = float(np.random.normal(setup.loc[run, x], sd, 1))
+            result[x] = value
+        else:
+            result[x] = 0.0
 
-    if setup.loc[run, "FeOT_sd_type"] == "A":  # absolute
-        FeOT_sd = setup.loc[run, "FeOT_sd"]
-    else:
-        FeOT_sd = setup.loc[run, "FeOT_sd"] * setup.loc[run, "FeOT"]
-    FeOT = float(np.random.normal(setup.loc[run, "FeOT"], FeOT_sd, 1))
-
-    if setup.loc[run, "MnO_sd_type"] == "A":  # absolute
-        MnO_sd = setup.loc[run, "MnO_sd"]
-    else:
-        MnO_sd = setup.loc[run, "MnO_sd"] * setup.loc[run, "MnO"]
-    MnO = float(np.random.normal(setup.loc[run, "MnO"], MnO_sd, 1))
-
-    if setup.loc[run, "MgO_sd_type"] == "A":  # absolute
-        MgO_sd = setup.loc[run, "MgO_sd"]
-    else:
-        MgO_sd = setup.loc[run, "MgO_sd"] * setup.loc[run, "MgO"]
-    MgO = float(np.random.normal(setup.loc[run, "MgO"], MgO_sd, 1))
-
-    if setup.loc[run, "CaO_sd_type"] == "A":  # absolute
-        CaO_sd = setup.loc[run, "CaO_sd"]
-    else:
-        CaO_sd = setup.loc[run, "CaO_sd"] * setup.loc[run, "CaO"]
-    CaO = float(np.random.normal(setup.loc[run, "CaO"], CaO_sd, 1))
-
-    if setup.loc[run, "Na2O_sd_type"] == "A":  # absolute
-        Na2O_sd = setup.loc[run, "Na2O_sd"]
-    else:
-        Na2O_sd = setup.loc[run, "Na2O_sd"] * setup.loc[run, "Na2O"]
-    Na2O = float(np.random.normal(setup.loc[run, "Na2O"], Na2O_sd, 1))
-
-    if setup.loc[run, "K2O_sd_type"] == "A":  # absolute
-        K2O_sd = setup.loc[run, "K2O_sd"]
-    else:
-        K2O_sd = setup.loc[run, "K2O_sd"] * setup.loc[run, "K2O"]
-    K2O = float(np.random.normal(setup.loc[run, "K2O"], K2O_sd, 1))
-
-    if setup.loc[run, "P2O5_sd_type"] == "A":  # absolute
-        P2O5_sd = setup.loc[run, "P2O5_sd"]
-    else:
-        P2O5_sd = setup.loc[run, "P2O5_sd"] * setup.loc[run, "P2O5"]
-    P2O5 = float(np.random.normal(setup.loc[run, "P2O5"], P2O5_sd, 1))
-
-    if setup.loc[run, "H2O_sd_type"] == "A":  # absolute
-        H2O_sd = setup.loc[run, "H2O_sd"]
-    else:
-        H2O_sd = setup.loc[run, "H2O_sd"] * setup.loc[run, "H2O"]
-    H2O = float(np.random.normal(setup.loc[run, "H2O"], H2O_sd, 1))
-
-    if setup.loc[run, "CO2ppm_sd_type"] == "A":  # absolute
-        CO2ppm_sd = setup.loc[run, "CO2ppm_sd"]
-    else:
-        CO2ppm_sd = setup.loc[run, "CO2ppm_sd"] * setup.loc[run, "CO2ppm"]
-    CO2ppm = float(np.random.normal(setup.loc[run, "CO2ppm"], CO2ppm_sd, 1))
-
-    if setup.loc[run, "Xppm_sd_type"] == "A":  # absolute
-        Xppm_sd = setup.loc[run, "Xppm_sd"]
-    else:
-        Xppm_sd = setup.loc[run, "Xppm_sd"] * setup.loc[run, "Xppm"]
-    Xppm = float(np.random.normal(setup.loc[run, "Xppm"], Xppm_sd, 1))
-
-    if setup.loc[run, "STppm_sd_type"] == "A":  # absolute
-        STppm_sd = setup.loc[run, "STppm_sd"]
-    else:
-        STppm_sd = setup.loc[run, "STppm_sd"] * setup.loc[run, "STppm"]
-    STppm = float(np.random.normal(setup.loc[run, "STppm"], STppm_sd, 1))
-
-    if setup.loc[run, "Fe3FeT_sd_type"] == "A":  # absolute
-        Fe3FeT_sd = setup.loc[run, "Fe3FeT_sd"]
-    else:
-        Fe3FeT_sd = setup.loc[run, "Fe3FeT_sd"] * setup.loc[run, "Fe3FeT"]
-    Fe3FeT = float(np.random.normal(setup.loc[run, "Fe3FeT"], Fe3FeT_sd, 1))
-
-    result = {
-        "SiO2": SiO2,
-        "TiO2": TiO2,
-        "Al2O3": Al2O3,
-        "FeOT": FeOT,
-        "MnO": MnO,
-        "MgO": MgO,
-        "CaO": CaO,
-        "Na2O": Na2O,
-        "K2O": K2O,
-        "P2O5": P2O5,
-        "H2O": H2O,
-        "CO2ppm": CO2ppm,
-        "Xppm": Xppm,
-        "STppm": STppm,
-        "Fe3FeT": Fe3FeT,
-    }
     return result
 
 
