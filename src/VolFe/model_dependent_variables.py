@@ -1812,8 +1812,7 @@ def C_CH4(PT, melt_wf, models=default_models):
 
     Model options for "methane"
     -------------
-    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71
-    https://doi.org/10.1016/j.gca.2013.03.028
+    - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028 # noqa
     - Only one option available currently, included for future development.
 
     """
