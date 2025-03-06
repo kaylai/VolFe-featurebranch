@@ -11,12 +11,12 @@ This calculation was outlined in detail `Hughes et al. (2024) <https://doi.org/1
 
 .. figure:: figures/pvsatcalc.png
 
-In this example we'll show you how to run this calculation for:
+In these examples we'll show you how to run this calculation for:
 
-- :doc:`Example 1a <Examples/1a. pvsat 1MI_df>`: One analysis entered as a dataframe using default options.
+- :doc:`Example 1a <Examples/1a. pvsat 1MI_df>`: One analysis entered as a DataFrame using default options.
 
 - :doc:`Example 1b <Examples/1b. pvsat csv>`: Analyses in a csv file using default options.
 
-- :doc:`Example 1c <Examples/1c. pvsat user_opt>`: Analyses in a csv file using user specified options. [parts in progress]
+- :doc:`Example 1c <Examples/1c. pvsat user_opt>`: Analyses in a csv file using user specified options.
 
 - :doc:`Example 1d <Examples/1d. pvsat X>`: Changing the identity of "X".
