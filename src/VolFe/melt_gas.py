@@ -2626,99 +2626,72 @@ def melt_comp(run, setup):
         dictionary of melt composition and "initial fO2" definer
 
     """
+
+    melt_wf = {}
+
     oxides = setup.columns.tolist()
-    if "SiO2" in oxides:
-        SiO2 = setup.loc[run, "SiO2"]
+
+    for x in [
+        "SiO2",
+        "TiO2",
+        "Al2O3",
+        "MgO",
+        "MnO",
+        "CaO",
+        "Na2O",
+        "K2O",
+        "P2O5",
+    ]:
+        if x in oxides:
+            value = setup.loc[run, x]
+        else:
+            value = 0.0
+        melt_wf[x] = value
+
+    for x in [
+        "CO2",
+        "X",
+        "ST",
+    ]:
+        if x + "ppm" in oxides:
+            value = setup.loc[run, x + "ppm"] / 1000000.0
+        else:
+            value = 0.0
+        melt_wf[x] = value
+
+    if "H2O" in oxides:
+        value = setup.loc[run, "H2O"] / 100.0
     else:
-        SiO2 = 0.0
-    if "TiO2" in oxides:
-        TiO2 = setup.loc[run, "TiO2"]
-    else:
-        TiO2 = 0.0
-    if "Al2O3" in oxides:
-        Al2O3 = setup.loc[run, "Al2O3"]
-    else:
-        Al2O3 = 0.0
-    if "FeOT" in oxides:
-        FeOT = setup.loc[run, "FeOT"]
-    else:
-        FeOT = float("NaN")
-    if "Fe2O3T" in oxides:
-        Fe2O3T = setup.loc[run, "Fe2O3T"]
-    else:
-        Fe2O3T = float("NaN")
-    if "FeO" in oxides:
-        FeO = setup.loc[run, "FeO"]
-    else:
-        FeO = float("NaN")
-    if "Fe2O3" in oxides:
-        Fe2O3 = setup.loc[run, "Fe2O3"]
-    else:
-        Fe2O3 = float("NaN")
-    if "MgO" in oxides:
-        MgO = setup.loc[run, "MgO"]
-    else:
-        MgO = 0.0
-    if "MnO" in oxides:
-        MnO = setup.loc[run, "MnO"]
-    else:
-        MnO = 0.0
-    if "CaO" in oxides:
-        CaO = setup.loc[run, "CaO"]
-    else:
-        CaO = 0.0
-    if "Na2O" in oxides:
-        Na2O = setup.loc[run, "Na2O"]
-    else:
-        Na2O = 0.0
-    if "K2O" in oxides:
-        K2O = setup.loc[run, "K2O"]
-    else:
-        K2O = 0.0
-    if "P2O5" in oxides:
-        P2O5 = setup.loc[run, "P2O5"]
-    else:
-        P2O5 = 0.0
-    if "logfO2" in oxides:
-        logfO2 = setup.loc[run, "logfO2"]
-    else:
-        logfO2 = float("NaN")
-    if "Fe3FeT" in oxides:
-        Fe3FeT = setup.loc[run, "Fe3FeT"]
-    else:
-        Fe3FeT = float("NaN")
-    if "DNNO" in oxides:
-        DNNO = setup.loc[run, "DNNO"]
-    else:
-        DNNO = float("NaN")
-    if "DFMQ" in oxides:
-        DFMQ = setup.loc[run, "DFMQ"]
-    else:
-        DFMQ = float("NaN")
-    if "S6ST" in oxides:
-        S6ST = setup.loc[run, "S6ST"]
-    else:
-        S6ST = float("NaN")
-    melt_wf = {
-        "SiO2": SiO2,
-        "TiO2": TiO2,
-        "Al2O3": Al2O3,
-        "FeOT": FeOT,
-        "Fe2O3T": Fe2O3T,
-        "FeO": FeO,
-        "Fe2O3": Fe2O3,
-        "MgO": MgO,
-        "MnO": MnO,
-        "CaO": CaO,
-        "Na2O": Na2O,
-        "K2O": K2O,
-        "P2O5": P2O5,
-        "logfO2_i": logfO2,
-        "Fe3FeT_i": Fe3FeT,
-        "DNNO": DNNO,
-        "DFMQ": DFMQ,
-        "S6ST_i": S6ST,
-    }
+        value = 0.0
+    melt_wf["H2OT"] = value
+
+    for x in ["FeOT", "Fe2O3T", "FeO", "Fe2O3", "DNNO", "DFMQ"]:
+        if x in oxides:
+            value = setup.loc[run, x]
+        else:
+            value = float("NaN")
+        melt_wf[x] = value
+
+    for x in ["logfO2", "Fe3FeT", "S6ST"]:
+        if x in oxides:
+            value = setup.loc[run, x]
+        else:
+            value = float("NaN")
+        melt_wf[x + "_i"] = value
+
+    for x in ["sulf_XFe", "sulf_XCu", "sulf_XNi"]:
+        if x in setup:
+            melt_wf[x] = setup.loc[run, x]
+
+    melt_wf["XT"] = melt_wf["X"]
+    melt_wf["HT"] = (melt_wf["H2OT"] / mdv.species.loc["H2O", "M"]) * mdv.species.loc[
+        "H2", "M"
+    ]
+    melt_wf["CT"] = (melt_wf["CO2"] / mdv.species.loc["CO2", "M"]) * mdv.species.loc[
+        "C", "M"
+    ]
+    melt_wf["H2"] = 0.0
+
     return melt_wf
 
 
