@@ -995,7 +995,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "SunsetCraterAlkaliBasalt_Allison19": # Sunset Crater in Table 4
-    # from Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # from Allison et al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = 16.40 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1009,7 +1009,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "SFVFBasalticAndesite_Allison19": # SFVF in Table 4 from Allison et
-    # al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = 15.02 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1023,7 +1023,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "ErebusPhonotephrite_Allison19": # Erebus in Table 4 from Allison
-    # et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # et al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = -14.65 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1037,7 +1037,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "VesuviusPhonotephrite_Allison19": # Vesuvius in Table 4 from
-    # Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # Allison et al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = 24.42 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1051,7 +1051,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "EtnaTrachybasalt_Allison19": # Etna in Table 4 from Allison et al.
-    # (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = 21.59 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1065,7 +1065,7 @@ def C_CO3(PT, melt_wf, models=default_models):
     #    else:
     #        C = A*math.exp(B)
     # elif model == "StromboliAlkaliBasalt_Allison19": # Stromboli in Table 4 from
-    # Allison et al. (2019) CMP 174:58 doi:10.1007/s00410-019-1592-4)
+    # Allison et al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #   R_ = 83.144621 # cm3 bar K−1 mol−1
     #    DV = 14.93 # cm3/mol
     #    P0 = 1000.0 # bar
@@ -1232,7 +1232,7 @@ def C_S(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.).
+        Melt composition (SiO2, TiO2, etc.)..
 
     models: pandas.DataFrame
         Minimum requirement is index of "sulfide" and column label of "option".
@@ -1256,7 +1256,7 @@ def C_S(PT, melt_wf, models=default_models):
     T = PT["T"] + 273.15  # T in K
 
     # Eq. (10.34) in O'Neill (2021) in "Magma Redox Geochemistry"
-    # doi:10.1002/9781119473206.ch10
+    # https//doi.org/10.1002/9781119473206.ch10
     def ONeill21(T, melt_comp):
         lnC = (
             8.77
@@ -1277,7 +1277,7 @@ def C_S(PT, melt_wf, models=default_models):
         return lnC
 
     # Eq. (10.34) in O'Neill (2021) in "Magma Redox Geochemistry"
-    # doi:10.1002/9781119473206.ch10
+    # https//doi.org/10.1002/9781119473206.ch10
     if model == "ONeill21":
         # Mole fractions in the melt on cationic lattice (all Fe as FeO) no volatiles
         melt_comp = mg.melt_cation_proportion(
@@ -1287,7 +1287,7 @@ def C_S(PT, melt_wf, models=default_models):
         C = math.exp(lnC)
 
     # Eq. (10.34) O'Neill (2021) in "Magma Redox Geochemistry"
-    # doi:10.1002/9781119473206.ch10
+    # https//doi.org/10.1002/9781119473206.ch10
     if model == "ONeill21dil":
         # Mole fractions in the melt on cationic lattice (all Fe as FeO) no volatiles
         melt_comp = mg.melt_cation_proportion(
@@ -1297,7 +1297,7 @@ def C_S(PT, melt_wf, models=default_models):
         C = math.exp(lnC)
 
     # Eq. (10.34, 10.49) in O'Neill (2021) in "Magma Redox Geochemistry"
-    # doi:10.1002/9781119473206.ch10
+    # https//doi.org/10.1002/9781119473206.ch10
     if model == "ONeill21hyd":
         # Mole fractions in the melt on cationic lattice (all Fe as FeO) no volatiles
         melt_comp = mg.melt_cation_proportion(
@@ -1383,7 +1383,7 @@ def C_SO4(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.).
+        Melt composition (SiO2, TiO2, etc.)..
 
     models: pandas.DataFrame
         Minimum requirement is index of "sulfate" and column label of "option".
@@ -1570,7 +1570,7 @@ def C_H2S(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.), not normally used unless
+        Melt composition (SiO2, TiO2, etc.)., not normally used unless
         model option requires melt composition.
 
     models: pandas.DataFrame
@@ -1884,7 +1884,7 @@ def C_Cl(PT, melt_wf):
 ################################################
 def SCAS(PT, melt_wf, models=default_models):
     """
-    Sulfate content at anhydrite saturation (S6+CAS)
+    Sulfate content at anhydrite saturation (S6+CAS) for the melt.
 
 
     Parameters
@@ -1893,27 +1893,23 @@ def SCAS(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.)..
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "SCAS" and column label of
-        "option"
+        Minimum requirement is index of "SCAS" and column label of "option".
 
     Returns
     -------
     float
-        S6+CAS in ppm as <class 'mpfr'>
+        S6+CAS in ppm
 
 
     Model options for SCAS
     -------------
-    - 'Liu23' Eq. (4) Liu et al. (2023) GCA 349:135-145 doi:10.1016/j.gca.2023.04.007
-    - 'Chowdhury19_pss' Chowdhury & Dasgupta (2019) using PySulfSat by Wieser and
-    Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Zajacz19_pss' Zajacz and Tsay (2019) using PySulfSat by Wieser and Gleeson (2023)
-    Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Masotta15_pss' NEEDS FIXING Masotta and Kepler (2015) using PySulfSat by Wieser
-    and Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
+    - 'Liu23' Eq. (4) Liu et al. (2023) GCA 349:135-145 https://doi.org/10.1016/j.gca.2023.04.007
+    - 'Chowdhury19_pss' Chowdhury & Dasgupta (2019) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Zajacz19_pss' Zajacz and Tsay (2019) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Masotta15_pss' Masotta and Kepler (2015) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     """
     model = models.loc["SCAS", "option"]
 
@@ -1922,7 +1918,7 @@ def SCAS(PT, melt_wf, models=default_models):
     comp = mg.melt_pysulfsat(melt_wf)
 
     # Eq. (8) using Table 5 in Chowdhury & Dasgupta (2019) Chem.Geol. 522:162-174
-    # doi:10.1016/j.chemgeo.2019.05.020
+    # https//doi.org/10.1016/j.chemgeo.2019.05.020
     # if model == "Chowdhury19":
     #    # sulfate content (ppm) at anhydrite saturation [T in K]
     #    # mole fraction melt composition including water but all Fe as FeOT
@@ -1955,7 +1951,7 @@ def SCAS(PT, melt_wf, models=default_models):
     #    Xm_SO4 = xm_SO4*(xm_SO4 + tot)
     #    S6CAS = Xm_SO4*species.loc["S","M"]*10000.0
 
-    # Eq. (8-14) Zajacz & Tsay (2019) GCA 261:288-304 doi:10.1016/j.gca.2019.07.007
+    # Eq. (8-14) Zajacz & Tsay (2019) GCA 261:288-304 https//doi.org/10.1016/j.gca.2019.07.007
     # elif model == "Zajacz19":
     #    # mole fraction melt composition including water but all Fe as FeOT
     #    # different molecular weights used to original paper
@@ -1984,7 +1980,7 @@ def SCAS(PT, melt_wf, models=default_models):
     #    Xsm_S = Ksm_SPAnh/melt_comp["CaO"]
     #    S6CAS = Xsm_S*tot*32.07*10000.
 
-    # Eq. (4) Liu et al. (2023) GCA 349:135-145 doi:10.1016/j.gca.2023.04.007
+    # Eq. (4) Liu et al. (2023) GCA 349:135-145 https//doi.org/10.1016/j.gca.2023.04.007
     if model == "Liu23":
         melt_comp = mg.melt_mole_fraction(melt_wf, models, "no", "no")
         NBOT = (
@@ -2007,7 +2003,7 @@ def SCAS(PT, melt_wf, models=default_models):
             S6CAS = math.exp(lnSCAS)
 
     # Chowdhury & Dasgupta (2019) using PySulfSat by Wieser and Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Chowdhury19_pss":
         output = ss.calculate_CD2019_SCAS(
             df=comp,
@@ -2019,7 +2015,7 @@ def SCAS(PT, melt_wf, models=default_models):
         S6CAS = float(output["SCAS6_ppm"].iloc[0])
 
     # Zajacz and Tsay (2019) using PySulfSat by Wieser and Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Zajacz19_pss":
         output = ss.calculate_ZT2019_SCAS(
             df=comp,
@@ -2031,7 +2027,7 @@ def SCAS(PT, melt_wf, models=default_models):
         S6CAS = float(output["SCAS6_ppm"].iloc[0])
 
     # Masotta and Kepler (2015) using PySulfSat by Wieser and Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Masotta15_pss":
         output = ss.calculate_MK2015_SCAS(
             df=comp,
@@ -2051,7 +2047,7 @@ def SCAS(PT, melt_wf, models=default_models):
 # sulfide content (ppm) at sulfide saturation
 def SCSS(PT, melt_wf, models=default_models):
     """
-    Sulfide content at sulfide saturation (S2-CSS)
+    Sulfide content at sulfide saturation (S2-CSS) for the melt.
 
 
     Parameters
@@ -2060,45 +2056,32 @@ def SCSS(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.). Assumes sulfide is pure FeS
-        unless specified in melt_wf
+        Melt composition (SiO2, TiO2, etc.). Assumes sulfide is pure FeS unless
+        specified in melt_wf.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "SCSS" and column label of
-        "option"
+        Minimum requirement is index of "SCSS" and column label of "option".
 
     Returns
     -------
     float
-        S2-CCS in ppm as <class 'mpfr'>
+        S2-CCS in ppm
 
 
     Model options for SCSS
     -------------
-    - 'ONeill21hyd' [default] Eq. (10.34, 10.43, 10.45, 10.46, 10.49) from O'Neill
-    (2021) in "Magma Redox Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'ONeill21' Eq. (10.34, 10.43, 10.45, 10.46) excluding water dilution from O'Neill
-    (2021) in "Magma Redox Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'ONeill21dil' Eq. (10.34, 10.43, 10.45, 10.46) including water dilution from
-    O'Neill (2021) in "Magma Redox Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'Liu07' Eq. (9) in Liu et al. (2007) GCA 71:1783-1799
-    doi:10.1016/j.gca.2007.01.004
-    - 'Fortin15_pss' Fortin et al. (2015) using PySulfSat by Wieser & Gleeson (2023)
-    Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Liu21_pss' Liu et al. (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'ONeill22_pss' O'Neill & Mavrogenes (2022) using PySulfSat by Wieser & Gleeson
-    (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'ONeill21_pss' O'Neill (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Smythe17_pss' Smythe et al. (2017) using PySulfSat by Wieser & Gleeson (2023)
-    Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Li22_pss' Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023)
-    Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Blanchard21_eq11_pss' Eq. (11) from Blanchard et al. (2021) using PySulfSat by
-    Wieser and Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
-    - 'Blanchard21_eq12_pss' Eq. (12) from Blanchard et al. (2021) using PySulfSat by
-    Wieser and Gleeson (2023) Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
+    - 'ONeill21hyd' [default] Eq. (10.34, 10.43, 10.45, 10.46, 10.49) from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'ONeill21' Eq. (10.34, 10.43, 10.45, 10.46) excluding water dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'ONeill21dil' Eq. (10.34, 10.43, 10.45, 10.46) including water dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'Liu07' Eq. (9) in Liu et al. (2007) GCA 71:1783-1799 https://doi.org/10.1016/j.gca.2007.01.004
+    - 'Fortin15_pss' Fortin et al. (2015) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Liu21_pss' Liu et al. (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'ONeill22_pss' O'Neill & Mavrogenes (2022) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'ONeill21_pss' O'Neill (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Smythe17_pss' Smythe et al. (2017) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Li22_pss' Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Blanchard21_eq11_pss' Eq. (11) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Blanchard21_eq12_pss' Eq. (12) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
 
     """
 
@@ -2122,7 +2105,7 @@ def SCSS(PT, melt_wf, models=default_models):
     else:
         sulf_XNi = None
 
-    # O'Neill (2021) in "Magma Redox Geochemistry" doi:10.1002/9781119473206.ch10
+    # O'Neill (2021) in "Magma Redox Geochemistry" https//doi.org/10.1002/9781119473206.ch10
     if model in [
         "ONeill21",
         "ONeill21dil",
@@ -2191,7 +2174,7 @@ def SCSS(PT, melt_wf, models=default_models):
             )
             SCSS = math.exp(lnS)
 
-    # Eq. (9) in Liu et al. (2007) GCA 71:1783-1799 doi:10.1016/j.gca.2007.01.004
+    # Eq. (9) in Liu et al. (2007) GCA 71:1783-1799 https//doi.org/10.1016/j.gca.2007.01.004
     elif model == "Liu07":
         # Mole fractions in the melt on cationic lattice (Fe2 and Fe3) and water
         melt_comp = mg.melt_cation_proportion(melt_wf, "water", "yes")
@@ -2223,7 +2206,7 @@ def SCSS(PT, melt_wf, models=default_models):
             )
             SCSS = math.exp(lnS)
 
-    # Eq. (7) Fortin et al. (2015) GCA 160:100-116 doi:10.1016/j.gca.2015.03.022
+    # Eq. (7) Fortin et al. (2015) GCA 160:100-116 https//doi.org/10.1016/j.gca.2015.03.022
     # elif model == "Fortin15":
     #    # Mole fractions in the melt on cationic lattice (all Fe as FeOT) and water -
     # molecular masses used are different to spreadsheet attached to paper
@@ -2237,7 +2220,7 @@ def SCSS(PT, melt_wf, models=default_models):
     #    else:
     #        SCSS = math.exp(lnS)
 
-    # Eq. (2) Liu et al. (2021) Chem.Geol. 559:119913 doi:10.1016.j.chemgeo.2020.119913
+    # Eq. (2) Liu et al. (2021) Chem.Geol. 559:119913 https//doi.org/10.1016.j.chemgeo.2020.119913
     # elif model == "Liu21":
     #    XFeS = sulf_XFe
     #    H2O = melt_wf["H2OT"]*100.
@@ -2249,7 +2232,7 @@ def SCSS(PT, melt_wf, models=default_models):
     #   104.*H2O
 
     # Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Li22_pss":
         output = ss.calculate_LiZhang2022_SCSS(
             df=comp,
@@ -2264,7 +2247,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS_Tot"].iloc[0])
 
     # Eq. (11) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023)
-    # Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # Volcanica 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Blanchard21_eq11_pss":
         output = ss.calculate_B2021_SCSS(
             df=comp,
@@ -2279,7 +2262,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm_eq11"].iloc[0])
 
     # Eq. (12) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023)
-    # Volcanica 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # Volcanica 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Blanchard21_eq12_pss":
         output = ss.calculate_B2021_SCSS(
             df=comp,
@@ -2294,7 +2277,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm_eq12"].iloc[0])
 
     # Fortin et al. (2015) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Fortin15_pss":
         output = ss.calculate_F2015_SCSS(
             df=comp,
@@ -2305,7 +2288,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm"].iloc[0])
 
     # Liu et al. (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Liu21_pss":
         output = ss.calculate_Liu2021_SCSS(
             df=comp,
@@ -2320,7 +2303,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm"].iloc[0])
 
     # O'Neill & Mavrogenes (2022) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "ONeill22_pss":
         output = ss.calculate_OM2022_SCSS(
             df=comp,
@@ -2334,7 +2317,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm"].iloc[0])
 
     # O'Neill (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127
-    # doi:10.30909/vol.06.01.107127
+    # https//doi.org/10.30909/vol.06.01.107127
     elif model == "ONeill21_pss":
         output = ss.calculate_O2021_SCSS(
             df=comp,
@@ -2348,7 +2331,7 @@ def SCSS(PT, melt_wf, models=default_models):
         SCSS = float(output["SCSS2_ppm"].iloc[0])
 
     # Smythe et al. (2017) using PySulfSat by Wieser & Gleeson (2023) Volcanica
-    # 6(1):107-127 doi:10.30909/vol.06.01.107127
+    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Smythe17_pss":
         output = ss.calculate_S2017_SCSS(
             df=comp,
@@ -2373,7 +2356,8 @@ def SCSS(PT, melt_wf, models=default_models):
 # K = fH2O/(fH2*(fO2)^0.5)
 def KHOg(PT, models=default_models):
     """
-    Equilibrium constant for H2 + 0.5O2 = H2O, K = fH2O/(fH2*(fO2)^0.5)
+    Equilibrium constant for homogeneous vapor reaction: H2(g) + 0.5O2(g) = H2O(g)
+    K = fH2O/(fH2*(fO2)^0.5)
 
 
     Parameters
@@ -2382,19 +2366,18 @@ def KHOg(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KHOg" and column label of
-        "option"
+        Minimum requirement is index of "KHOg" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KHOg
     -------------
-    - 'Ohmoto97' [default] Reaction (d) in Table 1 of Ohmoto & Kerrick (1997)
-    - Only one option available currently, included for future development.
+    - 'Ohmoto97' [default] Reaction (d) in Table 1 of Ohmoto & Kerrick (1997).
+    Only one option available currently, included for future development.
 
     """
 
@@ -2413,7 +2396,8 @@ def KHOg(PT, models=default_models):
 # K = (fH2S*(fO2)^0.5)/((fS2^0.5)*fH2O)
 def KHOSg(PT, models=default_models):
     """
-    Equilibrium constant for H2O + 0.5S2 = H2S + 0.5O2,
+    Equilibrium constant for homogeneous vapor reaction:
+    H2O(g) + 0.5S2(g) = H2S(g) + 0.5O2(g),
     K = (fH2S*(fO2)^0.5)/((fS2^0.5)*fH2O)
 
 
@@ -2423,18 +2407,17 @@ def KHOSg(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KHOSg" and column label of
-        "option"
+        Minimum requirement is ndex of "KHOSg" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KHOSg
     -------------
-    - 'Ohmoto97' [default] Reaction (h) in Table 1 of Ohmoto & Kerrick (1997)
+    - 'Ohmoto97' [default] Reaction (h) in Table 1 of Ohmoto & Kerrick (1997).
     - 'noH2S' Stops H2S forming in the vapor, K = 0.
 
     """
@@ -2456,7 +2439,8 @@ def KHOSg(PT, models=default_models):
 # K = fSO2/((fS2^0.5)*fO2)
 def KOSg(PT, models=default_models):
     """
-    Equilibrium constant for 0.5S2 + O2 = SO2, K = fSO2/((fS2^0.5)*fO2)
+    Equilibrium constant for homogeneous vapor reaction: 0.5S2(g) + O2(g) = SO2(g),
+    K = fSO2/((fS2^0.5)*fO2)
 
 
     Parameters
@@ -2465,18 +2449,17 @@ def KOSg(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KOSg" and column label of
-        "option"
+        Minimum requirement is index of "KOSg" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KOSg
     -------------
-    - 'Ohmoto97' [default] Reaction (f) in Table 1 of Ohmoto & Kerrick (1997)
+    - 'Ohmoto97' [default] Reaction (f) in Table 1 of Ohmoto & Kerrick (1997).
     - 'noSO2' Stops SO2 forming in the vapor, K = 0.
 
     """
@@ -2495,7 +2478,8 @@ def KOSg(PT, models=default_models):
 # K = fSO3/((fS2^0.5)*(fO2^1.5)
 def KOSg2(PT, models=default_models):
     """
-    Equilibrium constant for 0.5S2 + 1.5O2 = SO3, K = fSO3/((fS2^0.5)*(fO2^1.5)
+    Equilibrium constant for homogeneous vapor reaction: 0.5S2(g) + 1.5O2(g) = SO3(g),
+    K = fSO3/((fS2^0.5)*(fO2^1.5)
 
 
     Parameters
@@ -2504,19 +2488,18 @@ def KOSg2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KOsg2" and column label of
-        "option"
+        Minimum requirement is index of "KOsg2" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KOSg2
     -------------
-    - 'ONeill22' [default] Eq (6b) in O’Neill and Mavrogenes (2022)
-    - Only one option available currently, included for future development.
+    - 'ONeill22' [default] Eq (6b) in O’Neill and Mavrogenes (2022) https://doi.org/10.1016/j.gca.2022.06.020
+    Only one option available currently, included for future development.
 
     """
 
@@ -2537,7 +2520,8 @@ def KOSg2(PT, models=default_models):
 # K = fCO2/(fCO*(fO2^0.5))
 def KCOg(PT, models=default_models):
     """
-    Equilibrium constant for CO + 0.5O = CO2, K = fCO2/(fCO*(fO2^0.5))
+    Equilibrium constant for homogeneous vapor reaction: CO(g) + 0.5O2(g) = CO2(g),
+    K = fCO2/(fCO*(fO2^0.5))
 
 
     Parameters
@@ -2546,19 +2530,18 @@ def KCOg(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KCOg" and column label of
-        "option"
+        Minimum requirement is index of "KCOg" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KCOg
     -------------
-    - 'Ohmoto97' [default] Reaction (c) in Table 1 of Ohmoto & Kerrick (1997)
-    - Only one option available currently, included for future development.
+    - 'Ohmoto97' [default] Reaction (c) in Table 1 of Ohmoto & Kerrick (1997).
+    Only one option available currently, included for future development.
 
     """
 
@@ -2574,7 +2557,8 @@ def KCOg(PT, models=default_models):
 # K = (fCO2*(fH2O^2))/(fCH4*(fO2^2))
 def KCOHg(PT, models=default_models):
     """
-    Equilibrium constant for CH4 + 2O2 = CO2 + 2H2O, K = (fCO2*(fH2O^2))/(fCH4*(fO2^2))
+    Equilibrium constant for homogeneous vapor reaction:
+    CH4(g) + 2O2(g) = CO2(g) + 2H2O(g), K = (fCO2*(fH2O^2))/(fCH4*(fO2^2))
 
 
     Parameters
@@ -2583,18 +2567,17 @@ def KCOHg(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KCOHg" and column label of
-        "option"
+        Minimum requirement is index of "KCOHg" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KCOHg
     -------------
-    - 'Ohmoto97' [default] Reaction (e) in Table 1 of Ohmoto & Kerrick (1997)
+    - 'Ohmoto97' [default] Reaction (e) in Table 1 of Ohmoto & Kerrick (1997).
     - 'noCH4' Almost stops CH4 forming in the vapor, K = very large.
 
     """
@@ -2614,8 +2597,8 @@ def KCOHg(PT, models=default_models):
 
 def KOCSg(PT, models=default_models):  # OCS - depends on system
     """
-    Equilibrium constant for OCS (either K = (fCO2*fH2S)/(fOCS*fH2O) or
-    (fCO^3*fSO2)/(fCO2^2*fOCS))
+    Equilibrium constant for homogeneous vapor reaction involving OCS: either
+    K = (fCO2*fH2S)/(fOCS*fH2O) or (fCO^3*fSO2)/(fCO2^2*fOCS)
 
 
     Parameters
@@ -2624,19 +2607,18 @@ def KOCSg(PT, models=default_models):  # OCS - depends on system
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KOCSg" and "carbonylsulfide" and
-        column label of "option"
+        Minimum requirement is index of "KOCSg" and "carbonylsulfide" and column label
+        of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KOCSg
     -------------
-    - 'Moussallam19' [default] Eq. (8) in Moussallam et al. (2019) for KOCSg AND 'COS'
-    for carbonlysulfide
+    - 'Moussallam19' [default] Eq. (8) in Moussallam et al. (2019) https://doi.org/10.1016/j.epsl.2019.05.036 for KOCSg and 'COS' for carbonlysulfide
     - 'noOCS' Almost stops OCS forming in the vapor, K = very large.
 
     """
@@ -2681,7 +2663,8 @@ def KOCSg(PT, models=default_models):  # OCS - depends on system
 # Cgraphite + O2 = CO2
 def KCOs(PT, models=default_models):
     """
-    Equilibrium constant for Cgraphite + O2 = CO2
+    Equilibrium constant for heterogeneous vapor-solid reaction:
+    Cgraphite + O2(g) = CO2(g)
 
 
     Parameters
@@ -2690,19 +2673,17 @@ def KCOs(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "KCOs" and column label of
-        "option"
+        Minimum requirement is index of "KCOs" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for KCOs
     -------------
-    - 'Holloway92' [default] Eq (3) KI in Holloway et al. (1992) Eur J. Mineral.
-    4:105-114
+    - 'Holloway92' [default] Eq (3) KI in Holloway et al. (1992) Eur J. Mineral. 4:105-114
     Only one option available currently, included for future development.
 
     """
@@ -2732,7 +2713,8 @@ def KCOs(PT, models=default_models):
 # K = xOH*2/(xH2Omol*xO)
 def KHOm(PT, melt_wf, models=default_models):
     """
-    Speciation constant for H2Omol + O = 2OH- assuming ideal mixing
+    Speciation constant for homogeneous melt reaction: H2Omol(m) + O(m) = 2OH-(m)
+    assuming ideal mixing.
 
 
     Parameters
@@ -2741,30 +2723,27 @@ def KHOm(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "Hspeccomp" and column label of
-        "option"
+        Minimum requirement is index of "Hspeccomp" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for Hspeccomp
     -------------
-    - 'MORB_HughesIP' [default] Eq. SX in Hughes et al. (in prep) based on data from
-    Dixon et al. (1995)
-    - StromboliAlkaliBasalt_Lesne10": Eq. (15) Lesne et al. (2010) CMP 162:133-151
-    - VesuviusAlkaliBasalt_Lesne10: Eq. (16) Lesne et al. (2010) CMP 162:133-151
-    - EtnaAlkaliBasalt_Lesne10: Eq. (17) Lesne et al. (2010) CMP 162:133-151
-    - Andesite_Botcharnikov06: Eq (7) from Botcharnikov et al. (2006) Chem. Geol.
-    229(1-3)125-143
-    - Albite_Silver89: Fig. 8 from Silver & Stolper (1989) J.Pet 30(3)667-709
-    - Rhyolite_Zhang97: Eq. (9) from Zhang et al. (1997) GCA 61(15):3089-3100
+    - 'MORB_HughesIP' [default] Eq. SX in Hughes et al. (in prep) based on data from Dixon et al. (1995)
+    - 'StromboliAlkaliBasalt_Lesne10' Eq. (15) Lesne et al. (2010) CMP 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'VesuviusAlkaliBasalt_Lesne10' Eq. (16) Lesne et al. (2010) CMP 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'EtnaAlkaliBasalt_Lesne10' Eq. (17) Lesne et al. (2010) CMP 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'Andesite_Botcharnikov06' Eq (7) from Botcharnikov et al. (2006) Chem. Geol. 229(1-3)125-143 https://doi.org/10.1016/j.chemgeo.2006.01.016
+    - 'Albite_Silver89' Fig. 8 from Silver & Stolper (1989) J.Pet 30(3)667-709 https://doi.org/10.1093/petrology/30.3.667
+    - 'Rhyolite_Zhang97' Eq. (9) from Zhang et al. (1997) GCA 61(15):3089-3100 https://doi.org/10.1016/S0016-7037(97)00151-8
 
     """
 
@@ -2850,7 +2829,8 @@ def KHOm(PT, melt_wf, models=default_models):
 
 def KregH2O(PT, melt_wf, models=default_models):
     """
-    Speciation constant for H2Omol + O = 2OH- assuming regular mixing
+    Speciation constant for homogeneous melt reaction: H2Omol(m) + O(m) = 2OH-(m)
+    assuming regular mixing.
 
 
     Parameters
@@ -2859,30 +2839,27 @@ def KregH2O(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "Hspeccomp" and column label of
-        "option"
+        Minimum requirement is index of "Hspeccomp" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for Hspeccomp
     -------------
     - 'MORB_HughesIP' [default] WHICH IS NOT USABLE WITH THIS FUNCTION
-    - MORB_Dixon95: Table 5 of Dixon et al. (1995)
-    - AlkaliBasalt_Lesne10": Eq. (24-27) Lesne et al. (2010) CMP 162:133-151
-    - StromboliAlkaliBasalt_Lesne10": PST-9 in Table 5 from Lesne et al. (2010)
-    162:133-151
-    - VesuviusAlkaliBasalt_Lesne10: VES-9 in Table 5 from Lesne et al. (2010)
-    162:133-151
-    - EtnaAlkaliBasalt_Lesne10: ETN-1 in Table 5 from Lesne et al. (2010) 162:133-151
-    - Albite_Silver89: Silver & Stolper (1989) J.Pet 30(3)667-709
+    - 'MORB_Dixon95' Table 5 of Dixon et al. (1995) https://doi.org/10.1093/oxfordjournals.petrology.a037267
+    - 'AlkaliBasalt_Lesne10' Eq. (24-27) Lesne et al. (2010) CMP 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'StromboliAlkaliBasalt_Lesne10' PST-9 in Table 5 from Lesne et al. (2010) 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'VesuviusAlkaliBasalt_Lesne10' VES-9 in Table 5 from Lesne et al. (2010) 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'EtnaAlkaliBasalt_Lesne10' ETN-1 in Table 5 from Lesne et al. (2010) 162:133-151 https://doi.org/10.1007/s00410-010-0588-x
+    - 'Albite_Silver89' Silver & Stolper (1989) J.Pet 30(3)667-709 https://doi.org/10.1093/petrology/30.3.667
 
     """
 
@@ -2940,7 +2917,7 @@ def KregH2O(PT, melt_wf, models=default_models):
 # CO2 + O = CO3
 def KCOm(PT, melt_wf, models=default_models):  # K =
     """
-    Speciation constant for CO2 + O = CO3
+    Speciation constant for homogeneous melt reaction: CO2(m) + O(m) = CO3(m)
 
 
     Parameters
@@ -2949,28 +2926,24 @@ def KCOm(PT, melt_wf, models=default_models):  # K =
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "Cspeccomp" and column label of
-        "option"
+        Minimum requirement is index of "Cspeccomp" and column label of "option".
 
     Returns
     -------
     float
-        Equilibrium constant as <class 'mpfr'>
+        Equilibrium constant
 
 
     Model options for Cspeccomp
     -------------
-    - 'Basalt' [default] Assume all oxidised carbon in the melt is present as carbonate
-    ions.
-    - Andesite_Botcharnikov06: Eq. (8) from Botcharnikov et al. (2006) Chem. Geol.
-    229(1-3)125-143
-    - Dacite_Botcharnikov06: Eq. in the text from Botcharnikov et al. (2006), based on
-    data from Behrens et al. (2004)
-    - Rhyolite: Assume all oxidised carbon in the melt is present as molecular CO2.
+    - 'Basalt' [default] Assume all oxidised carbon in the melt is present as carbonate ions.
+    - 'Andesite_Botcharnikov06' Eq. (8) from Botcharnikov et al. (2006) Chem. Geol. 229(1-3)125-143 https://doi.org/10.1016/j.chemgeo.2006.01.016
+    - 'Dacite_Botcharnikov06' Eq. in the text from Botcharnikov et al. (2006) https://doi.org/10.1016/j.chemgeo.2006.01.016, based on data from Behrens et al. (2004)
+    - 'Rhyolite' Assume all oxidised carbon in the melt is present as molecular CO2.
 
     """
 
@@ -3017,19 +2990,19 @@ def KCOm(PT, melt_wf, models=default_models):  # K =
 def y_CORK(species, PT, models):
     """
     Fugacity coefficient using eq. (4,A1-3) from Holland & Powell (1991) CMP 109:265-273
-    10.1007/BF00306484
+    https://doi.org/10.1007/BF00306484
 
 
     Parameters
     ----------
     species: str
-        species of interest (e.g., 'H2O', 'CO2')
+        Species of interest (e.g., 'H2O', 'CO2').
 
     PT: dict
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Dataframe detailing model options
+        Model options.
 
     Returns
     -------
@@ -3074,12 +3047,11 @@ def y_CORK(species, PT, models):
 
 def y_sCORK(species, PT, models):
     """Fugacity coefficient using eq. (8) from Holland & Powell (1991) CMP 109:265-273
-    10.1007/BF00306484
+    https://doi.org/10.1007/BF00306484
 
     Args:
-        species (str): species of interest (e.g., 'H2O', 'CO2')
-        PT (dict): Dictionary of pressure-temperature conditions with pressure (bars) as
-        "P" and temperature ('C) as "T"
+        species (str): Species of interest (e.g., 'H2O', 'CO2').
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
 
     Returns:
         float: fugacity coefficient
@@ -3106,13 +3078,12 @@ def y_sCORK(species, PT, models):
 
 def parameters_Holland91(species, PT, models):
     """Parameters for (simplified) CORK equations in Holland & Powell (1991) CMP =
-    109:265-273 10.1007/BF00306484
+    109:265-273 https://doi.org/10.1007/BF00306484
 
     Args:
-        species (str): species of interest (e.g., 'H2O', 'CO2')
-        PT (dict): Dictionary of pressure-temperature conditions with pressure (bars) as
-        "P" and temperature ('C) as "T"
-        models (pandas.DataFrame): Dataframe detailing model options
+        species (str): Species of interest (e.g., 'H2O', 'CO2').
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        models (pandas.DataFrame): Model options.
 
     Returns:
         tuple(float,float,float,float,float): a, b, c, d, p0
@@ -3196,6 +3167,7 @@ def parameters_Holland91(species, PT, models):
     return a, b, c, d, p0
 
 
+# WORK IN PROGRESS
 # Flowers (1979) modified from code from MIMiC (Rasmussen et al., 2021:
 # https://github.com/DJRgeoscience/MIMiC), originally from VolatileCalc (Newman &
 # Lowenstern, 2001)
@@ -3275,7 +3247,7 @@ def MRK(PT, X_1):  # Redlich-Kwong routine to estimate endmember H2O and CO2 fug
 
 def lny_SS(PT, Pcr, Tcr, models):
     """
-    Natural log of the fugacity coefficient using Shi & Saxena (1992)
+    Natural log of the fugacity coefficient using Shi & Saxena (1992).
 
 
     Parameters
@@ -3284,13 +3256,13 @@ def lny_SS(PT, Pcr, Tcr, models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     Pcr: float
-        Critical pressure
+        Critical pressure in bars.
 
     Tcr: float
-        Critical temperature
+        Critical temperature in K.
 
     models: pandas.DataFrame
-        Dataframe detailing model options
+        Model options.
 
     Returns
     -------
@@ -3323,7 +3295,7 @@ def lny_SS(PT, Pcr, Tcr, models):
 
 def Q_SS(PT, Tr, Pcr, models):
     """
-    Modelling constants for Shi & Saxena (1992) - Table 1.
+    Modelling constants for Shi & Saxena (1992) from Table 1.
 
 
     Parameters
@@ -3332,17 +3304,17 @@ def Q_SS(PT, Tr, Pcr, models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     Pcr: float
-        Critical pressure
+        Critical pressure in bars.
 
     Tcr: float
-        Critical temperature
+        Critical temperature in K.
 
     models: pandas.DataFrame
-        Dataframe detailing model options
+        Model options.
 
     Returns
     -------
-    str
+    tuple(float,float,float,float,float,float)
         Calculated values for A, B, C, D, P0, integral0
     """
     P = PT["P"]
@@ -3454,13 +3426,13 @@ def y_SS(gas_species, PT, models=default_models):
     Parameters
     ----------
     gas_species: string
-        Name of gas species
+        Name of gas species.
 
     PT: dict
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Dataframe detailing model options
+        Model options.
 
     Returns
     -------
@@ -3500,8 +3472,8 @@ def y_H2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_H2" and "ideal_gas" and column
-        label of "option"
+        Minimum requirement is index of "y_H2" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -3513,7 +3485,7 @@ def y_H2(PT, models=default_models):
     ----------------------
     - 'Shaw64' [default] Eq. (4) from Shaw & Wones (1964) AmJSci 262:918-929
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     P = PT["P"]
     T_K = PT["T"] + 273.15
@@ -3823,7 +3795,7 @@ def y_H2(PT, models=default_models):
 
 def y_H2O(PT, models=default_models):
     """
-    Fugacity coefficient for H2O
+    Fugacity coefficient for H2O.
 
     Parameters
     ----------
@@ -3831,8 +3803,8 @@ def y_H2O(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_H2O" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_H2O" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -3842,10 +3814,9 @@ def y_H2O(PT, models=default_models):
 
     Model options for y_H2O
     -----------------------
-    - 'Holland91' [default] Eq. (4,6,A1-3) and Table 1 (T > 673 K only) from Holland &
-    Powell (1991) CMP 109:265-273 10.1007/BF00306484
+    - 'Holland91' [default] Eq. (4,6,A1-3) and Table 1 (T > 673 K only) from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     ideal_gas = models.loc["ideal_gas", "option"]
     model = models.loc["y_H2O", "option"]
@@ -3869,7 +3840,7 @@ def y_H2O(PT, models=default_models):
 
 def y_CO2(PT, models=default_models):
     """
-    Fugacity coefficient for CO2
+    Fugacity coefficient for CO2.
 
     Parameters
     ----------
@@ -3877,8 +3848,8 @@ def y_CO2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_CO2" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_CO2" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -3889,14 +3860,11 @@ def y_CO2(PT, models=default_models):
     Model options for y_CO2
     -----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
-    - 'Holland91_eq8_tab1' Eq. (8) and Table 1 from Holland & Powell (1991)
-    CMP 109:265-273 10.1007/BF00306484
-    - 'Holland91_eq4,A1-3_tab1' Eq. (4,A1-3) and Table 1 from Holland & Powell (1991)
-    CMP 109:265-273 10.1007/BF00306484
-    - 'Holland91_eq8,9_tab2' Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP
-    109:265-273 10.1007/BF00306484
+    - 'Holland91_eq8_tab1' Eq. (8) and Table 1 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
+    - 'Holland91_eq4,A1-3_tab1' Eq. (4,A1-3) and Table 1 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
+    - 'Holland91_eq8,9_tab2' Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option
     """
     ideal_gas = models.loc["ideal_gas", "option"]
     model = models.loc["y_CO2", "option"]
@@ -3928,7 +3896,7 @@ def y_CO2(PT, models=default_models):
 
 def y_O2(PT, models=default_models):
     """
-    Fugacity coefficient for O2
+    Fugacity coefficient for O2.
 
     Parameters
     ----------
@@ -3936,8 +3904,8 @@ def y_O2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_O2" and "ideal_gas" and column
-        label of "option"
+        Minimum requirement is index of "y_O2" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -3949,7 +3917,7 @@ def y_O2(PT, models=default_models):
     ----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_O2", "option"]
 
@@ -3963,7 +3931,7 @@ def y_O2(PT, models=default_models):
 
 def y_S2(PT, models=default_models):
     """
-    Fugacity coefficient for S2
+    Fugacity coefficient for S2.
 
     Parameters
     ----------
@@ -3971,8 +3939,8 @@ def y_S2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_S2" and "ideal_gas" and column
-        label of "option"
+        Minimum requirement is index of "y_S2" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -3984,7 +3952,7 @@ def y_S2(PT, models=default_models):
     ----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_S2", "option"]
 
@@ -3998,7 +3966,7 @@ def y_S2(PT, models=default_models):
 
 def y_CO(PT, models=default_models):
     """
-    Fugacity coefficient for CO
+    Fugacity coefficient for CO.
 
     Parameters
     ----------
@@ -4006,8 +3974,8 @@ def y_CO(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_CO" and "ideal_gas" and column
-        label of "option"
+        Minimum requirement is index of "y_CO" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4019,7 +3987,7 @@ def y_CO(PT, models=default_models):
     ----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_CO", "option"]
 
@@ -4033,7 +4001,7 @@ def y_CO(PT, models=default_models):
 
 def y_CH4(PT, models=default_models):
     """
-    Fugacity coefficient for CH4
+    Fugacity coefficient for CH4.
 
     Parameters
     ----------
@@ -4041,8 +4009,8 @@ def y_CH4(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_CH4" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_CH4" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4054,7 +4022,7 @@ def y_CH4(PT, models=default_models):
     -----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_CH4", "option"]
 
@@ -4068,7 +4036,7 @@ def y_CH4(PT, models=default_models):
 
 def y_OCS(PT, models=default_models):
     """
-    Fugacity coefficient for OCS
+    Fugacity coefficient for OCS.
 
     Parameters
     ----------
@@ -4076,8 +4044,8 @@ def y_OCS(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_OCS" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_OCS" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4089,7 +4057,7 @@ def y_OCS(PT, models=default_models):
     -----------------------
     - 'Shi92' [default] Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_OCS", "option"]
 
@@ -4103,7 +4071,7 @@ def y_OCS(PT, models=default_models):
 
 def y_X(PT, models=default_models):  # species X fugacity coefficient
     """
-    Fugacity coefficient for X
+    Fugacity coefficient for X.
 
     Parameters
     ----------
@@ -4111,8 +4079,8 @@ def y_X(PT, models=default_models):  # species X fugacity coefficient
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_X" and "ideal_gas" and column
-        label of "option"
+        Minimum requirement is index of "y_X" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4123,8 +4091,8 @@ def y_X(PT, models=default_models):  # species X fugacity coefficient
     Model options for y_X
     -----------------------
     - "ideal" Treat as ideal gas, y = 1 at all P.
-    - Only one option available currently, included for future development.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Only one option available currently, included for future development.
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     model = models.loc["y_X", "option"]
 
@@ -4140,7 +4108,7 @@ def y_X(PT, models=default_models):  # species X fugacity coefficient
 
 def y_SO2(PT, models=default_models):
     """
-    Fugacity coefficient for SO2
+    Fugacity coefficient for SO2,
 
     Parameters
     ----------
@@ -4148,8 +4116,8 @@ def y_SO2(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_SO2" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_SO2" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4159,11 +4127,10 @@ def y_SO2(PT, models=default_models):
 
     Model options for y_SO2
     -----------------------
-    - 'Shi92_Hughes23' [default] Fig.S1 modified from Shi & Saxena (1992) from Hughes et
-    al. (2023) JGSL 180(3) doi:10.1144/jgs2021-12
+    - 'Shi92_Hughes23' [default] Fig.S1 modified from Shi & Saxena (1992) from Hughes et al. (2023) JGSL 180(3) https://doi.org/10.1144/jgs2021-12
     - 'Shi92' Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     ideal_gas = models.loc["ideal_gas", "option"]
     model = models.loc["y_SO2", "option"]
@@ -4315,7 +4282,7 @@ def y_SO2(PT, models=default_models):
                 y = (math.exp(integral)) / P
         elif (
             models.loc["y_SO2", "option"] == "Shi92_Hughes23"
-        ):  # Fig.S1 Hughes et al. (2023) JGSL 180(3) doi:10.1144/jgs2021-12
+        ):  # Fig.S1 Hughes et al. (2023) JGSL 180(3) https//doi.org/10.1144/jgs2021-12
             Pr = 500.0 / Pcr  # calculate y at 500 bar
             if models.loc["high precision", "option"] == "True":
                 integral = (
@@ -4341,7 +4308,7 @@ def y_SO2(PT, models=default_models):
 
 def y_H2S(PT, models=default_models):
     """
-    Fugacity coefficient for H2S
+    Fugacity coefficient for H2S.
 
     Parameters
     ----------
@@ -4349,8 +4316,8 @@ def y_H2S(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "y_H2S" and "ideal_gas" and
-        column label of "option"
+        Minimum requirement is index of "y_H2S" and "ideal_gas" and column label of
+        "option".
 
     Returns
     -------
@@ -4360,11 +4327,10 @@ def y_H2S(PT, models=default_models):
 
     Model options for y_H2S
     -----------------------
-    - 'Shi92_Hughes23' [default] Fig.S1 modified from Shi & Saxena (1992) Hughes et al.
-    (2024) AmMin 109(3):422-438 doi:10.2138/am-2023-8739
+    - 'Shi92_Hughes23' [default] Fig.S1 modified from Shi & Saxena (1992) Hughes et al. (2024) AmMin 109(3):422-438 https://doi.org/10.2138/am-2023-8739
     - 'Shi92' Shi & Saxena (1992) AmMin 77(9-10):1038-1049
     - 'ideal' Treat as ideal gas, y = 1 at all P.
-    (Note: "ideal_gas" = "True" overides chosen option)
+    Note: "ideal_gas" = "True" overides chosen option.
     """
     ideal_gas = models.loc["ideal_gas", "option"]
     model = models.loc["y_H2S", "option"]
@@ -4512,7 +4478,7 @@ def y_H2S(PT, models=default_models):
                 integral0 = 0.0
 
             # Fig.S1 modified from Shi & Saxena (1992) Hughes et al. (2024)
-            # AmMin 109(3):422-438 doi:10.2138/am-2023-8739
+            # AmMin 109(3):422-438 https//doi.org/10.2138/am-2023-8739
             elif models.loc["y_H2S", "option"] == "Shi92_Hughes24":
                 P0 = 500.0  # calculate y at 500 bars
                 Pr_ = 500.0 / Pcr
@@ -4842,6 +4808,7 @@ def y_H2S(PT, models=default_models):
         return value
 
 
+# WORK IN PROGRESS
 def y_SO3(PT, models=default_models):
     return 1.0
 
@@ -4854,7 +4821,7 @@ def y_SO3(PT, models=default_models):
 # buffers
 def NNO(PT, models=default_models):
     """
-    Value of NNO buffer
+    fO2 value of the NNO buffer.
 
     Parameters
     ----------
@@ -4862,20 +4829,18 @@ def NNO(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "NNObuffer" and column label of
-        "option"
+        Minimum requirement is index of "NNObuffer" and column label of "option".
 
     Returns
     -------
     float
-        log10fO2 value of NNO buffer as <class 'mpfr'>
+        log10fO2 value of NNO buffer
 
 
     Model options for NNObuffer
     -------------
-    - 'Frost91' [default] Frost (1991) in "Oxide Minerals: Petrologic and Magnetic
-    Significance" doi:10.1515/9781501508684-004
-    - Only one option available currently, included for future development.
+    - 'Frost91' [default] Frost (1991) in "Oxide Minerals: Petrologic and Magnetic Significance" https//doi.org/10.1515/9781501508684-004
+    Only one option available currently, included for future development.
 
     """
 
@@ -4885,7 +4850,7 @@ def NNO(PT, models=default_models):
     T_K = PT["T"] + 273.15
 
     # Frost (1991) in "Oxide Minerals: Petrologic and Magnetic Significance"
-    # doi:10.1515/9781501508684-004
+    # https//doi.org/10.1515/9781501508684-004
     if model == "Frost91":
         buffer = -24930 / T_K + 9.36 + 0.046 * (P - 1.0) / T_K
     return buffer
@@ -4893,7 +4858,7 @@ def NNO(PT, models=default_models):
 
 def FMQ(PT, models=default_models):
     """
-    Value of FMQ buffer
+    fO2 value of the FMQ buffer.
 
     Parameters
     ----------
@@ -4901,19 +4866,17 @@ def FMQ(PT, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "FMQbuffer" and column label of
-        "option"
+        Minimum requirement is index of "FMQbuffer" and column label of "option".
 
     Returns
     -------
     float
-        log10fO2 value of FMQ buffer as <class 'mpfr'>
+        log10fO2 value of FMQ buffer
 
 
     Model options for FMQbuffer
     -------------
-    - 'Frost91' Frost (1991) in "Oxide Minerals: Petrologic and Magnetic Significance"
-    doi:10.1515/9781501508684-004
+    - 'Frost91' Frost (1991) in "Oxide Minerals: Petrologic and Magnetic Significance" https//doi.org/10.1515/9781501508684-004
     - 'ONeill87' O'Neill (1897) AmMin 72(1-2):67-75
 
     """
@@ -4924,7 +4887,7 @@ def FMQ(PT, models=default_models):
     T_K = PT["T"] + 273.15
 
     # Frost (1991) in "Oxide Minerals: Petrologic and Magnetic Significance"
-    # doi:10.1515/9781501508684-004
+    # https//doi.org/10.1515/9781501508684-004
     if model == "Frost91":
         buffer = -25096.3 / T_K + 8.735 + 0.11 * (P - 1.0) / T_K
 
@@ -4937,10 +4900,11 @@ def FMQ(PT, models=default_models):
 # terms for different equations
 
 
-# terms for Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 doi:10.1007/BF00307328
+# terms for Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
 def FefO2_KC91_Eq7_terms(PT, melt_wf, models=default_models):
     """
-    Terms for Kress & Carmichael (1991) equation (7) to calculate fO2-Fe3+/FeT
+    Terms for Kress & Carmichael (1991) [https//doi.org/10.1007/BF00307328] equation (7)
+    to convert between fO2 and Fe3+/FeT of the melt.
 
     Parameters
     ----------
@@ -4948,14 +4912,14 @@ def FefO2_KC91_Eq7_terms(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Dataframe of model options
+        Model options.
 
     Returns
     -------
-    str
+    tuple(float,float)
         Terms a, B
     """
 
@@ -5004,10 +4968,11 @@ def FefO2_KC91_Eq7_terms(PT, melt_wf, models=default_models):
 
 
 # terms for Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92
-# doi:10.1007/BF00307328
+# https//doi.org/10.1007/BF00307328
 def FefO2_KC91_EqA_terms(PT, melt_wf, models=default_models):
     """
-    Terms for Kress & Carmichael (1991) equation (A-5,6) to calculate fO2-Fe3+/FeT
+    Terms for Kress & Carmichael (1991) [https//doi.org/10.1007/BF00307328] equation
+    (A-5,6) to convert between fO2 and Fe3+/FeT of the melt.
 
     Parameters
     ----------
@@ -5015,14 +4980,14 @@ def FefO2_KC91_EqA_terms(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Dataframe of model options
+        Model options.
 
     Returns
     -------
-    str
+    tuple(float,float,float)
         Terms KD1, KD2, y
     """
     # XFeO1.5/XFeO = (KD1*fO2**0.25 + 2y*KD2*KD1**2y*fO2**0.5y)/(1 +
@@ -5080,10 +5045,11 @@ def FefO2_KC91_EqA_terms(PT, melt_wf, models=default_models):
 
 
 # Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162
-# doi:10.1016/j.epsl.2018.10.0020012-821X
+# https//doi.org/10.1016/j.epsl.2018.10.0020012-821X
 def FefO2_ONeill18_terms(PT, melt_wf, models=default_models):
     """
-    Terms for O'Neill et al. (2018) equation (9a) to calculate fO2-Fe3+/FeT
+    Terms for O'Neill et al. (2018) [https//doi.org/10.1016/j.epsl.2018.10.0020012-821X]
+    equation (9a) to convert between fO2 and Fe3+/FeT the melt.
 
     Parameters
     ----------
@@ -5091,14 +5057,14 @@ def FefO2_ONeill18_terms(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Dataframe of model options
+        Model options.
 
     Returns
     -------
-    str
+    tuple(float,float,float)
         Terms a, B, FMQ
     """
     # 1n(Fe3Fe2) = a*DFMQ + B
@@ -5119,9 +5085,19 @@ def FefO2_ONeill18_terms(PT, melt_wf, models=default_models):
     return a, B, FMQ
 
 
-def FefO2_Borisov18_terms(
-    PT, melt_wf, models=default_models
-):  # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+# Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
+def FefO2_Borisov18_terms(PT, melt_wf, models=default_models):
+    """Terms for Borisov et al. (2018) [https//doi.org/10.1007/s00410-018-1524-8]
+    equation (4) to convert between fO2 and Fe3+/FeT of the melt.
+
+    Args:
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        melt_wf (dict): Melt composition (SiO2, TiO2, etc.).
+        models (pandas.DataFrame, optional): Model options.. Defaults to default_models.
+
+    Returns:
+        tuple(float,float): Terms a, B
+    """
     T_K = PT["T"] + 273.15
     # Borisov et al. (2018) CMP 173
     a = 0.207
@@ -5147,7 +5123,7 @@ def FefO2_Borisov18_terms(
 
 def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe3/FeT
     """
-    Fe3+/FeT in the melt from fO2
+    Fe3+/FeT in the melt from fO2.
 
     Parameters
     ----------
@@ -5155,33 +5131,28 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "fO2" and column label of
-        "option"
+        Minimum requirement is index of "fO2" and column label of "option".
 
     Returns
     -------
     float
-        Fe3+/FeT in the melt <class 'mpfr'>
+        Fe3+/FeT in the melt
 
 
     Model options for fO2
     -------------
-    - 'Kress91A' [default] Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92
-    doi:10.1007/BF00307328
-    - 'Kress91' Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92
-    doi:10.1007/BF00307328
-    - 'ONeill18' Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162
-    doi:10.1016/j.epsl.2018.10.0020012-821X
-    - 'Borisov18' Eq. (4) from Borisov et al. (2018) CMP 173:98
-    doi:10.1007/s00410-018-1524-8
+    - 'Kress91A' [default] Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    - 'Kress91' Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    - 'ONeill18' Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162 https//doi.org/10.1016/j.epsl.2018.10.0020012-821X
+    - 'Borisov18' Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
 
     """
     model = models.loc["fO2", "option"]
 
-    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 doi:10.1007/BF00307328
+    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
     if model == "Kress91":
         a, PTterm = FefO2_KC91_Eq7_terms(PT, melt_wf, models)
         if models.loc["high precision", "option"] == "True":
@@ -5192,7 +5163,7 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
             XFe2O3XFeO = math.exp(lnXFe2O3XFeO)
         return (2.0 * XFe2O3XFeO) / ((2.0 * XFe2O3XFeO) + 1.0)
 
-    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 doi:10.1007/BF00307328
+    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
     elif model == "Kress91A":
         kd1, KD2, y = FefO2_KC91_EqA_terms(PT, melt_wf, models)
         XFeO15XFeO = (
@@ -5202,7 +5173,7 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
         return XFeO15XFeO / (XFeO15XFeO + 1.0)
 
     # Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162
-    # doi:10.1016/j.epsl.2018.10.0020012-821X
+    # https//doi.org/10.1016/j.epsl.2018.10.0020012-821X
     elif model == "ONeill18":
         a, B, FMQ = FefO2_ONeill18_terms(PT, melt_wf, models)
         if models.loc["high precision", "option"] == "True":
@@ -5213,7 +5184,7 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
         Fe3Fe2 = 10.0 ** (lnFe3Fe2)
         return Fe3Fe2 / (Fe3Fe2 + 1.0)
 
-    # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+    # Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
     elif model == "Borisov18":
         a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
         if models.loc["high precision", "option"] == "True":
@@ -5225,7 +5196,7 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
 
 def f_O2(PT, melt_wf, models=default_models):
     """
-    fO2 from Fe3+/FeT in the melt
+    fO2 from Fe3+/FeT in the melt.
 
     Parameters
     ----------
@@ -5233,28 +5204,23 @@ def f_O2(PT, melt_wf, models=default_models):
         Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "fO2" and column label of
-        "option"
+        Minimum requirement is index of "fO2" and column label of "option".
 
     Returns
     -------
     float
-        fO2 in bars <class 'mpfr'>
+        fO2 in bars
 
 
     Model options for fO2
     -------------
-    - 'Kress91A' [default] Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92
-    doi:10.1007/BF00307328
-    - 'Kress91' Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92
-    doi:10.1007/BF00307328
-    - 'ONeill18' Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162
-    doi:10.1016/j.epsl.2018.10.0020012-821X
-    - 'Borisov18' Eq. (4) from Borisov et al. (2018) CMP 173:98
-    doi:10.1007/s00410-018-1524-8
+    - 'Kress91A' [default] Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    - 'Kress91' Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    - 'ONeill18' Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162 https//doi.org/10.1016/j.epsl.2018.10.0020012-821X
+    - 'Borisov18' Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
 
     """
 
@@ -5270,12 +5236,12 @@ def f_O2(PT, melt_wf, models=default_models):
     # if model == "yes":
     #    return 10.0**(setup.loc[run,"logfO2"])
 
-    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 doi:10.1007/BF00307328
+    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
     if model == "Kress91":
         fO2 = KC91(PT, melt_wf, models)
         return fO2
 
-    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 doi:10.1007/BF00307328
+    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
     elif model == "Kress91A":
         F = mg.Fe3Fe2(melt_wf)  # XFeO1.5/XFeO
         kd1, KD2, y = FefO2_KC91_EqA_terms(PT, melt_wf, models)
@@ -5311,7 +5277,7 @@ def f_O2(PT, melt_wf, models=default_models):
         return fO2
 
     # Eq. (9a) in O'Neill et al. (2018) EPSL 504:152-162
-    # doi:10.1016/j.epsl.2018.10.0020012-821X
+    # https//doi.org/10.1016/j.epsl.2018.10.0020012-821X
     elif model == "ONeill18":
         F = mg.Fe3Fe2(melt_wf)  # Fe3+/Fe2+
         a, B, FMQ = FefO2_ONeill18_terms(PT, melt_wf, models)
@@ -5325,7 +5291,7 @@ def f_O2(PT, melt_wf, models=default_models):
     #    fO2 = mg.S6S2_2_fO2(S62,melt_wf,run,PT,setup,models)
     #    return fO2
 
-    # Eq. (4) from Borisov et al. (2018) CMP 173:98 doi:10.1007/s00410-018-1524-8
+    # Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
     elif model == "Borisov18":
         F = mg.Fe3Fe2(melt_wf)
         a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
@@ -5346,37 +5312,33 @@ def S_Nash19_terms(PT):  # Nash et al. 2019
 
 def melt_density(PT, melt_wf, models=default_models):  # g/cm3
     """
-    Melt density
+    Melt density from melt composition.
 
     Parameters
     ----------
     PT: dict
-        Dataframe of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "density" and column label of
-        "option"
+        Minimum requirement is index of "density" and column label of "option".
 
     Returns
     -------
     float
-        melt density in g/cm3 <class 'mpfr'>
+        melt density in g/cm3
 
 
     Model options for density
     -------------
-    - 'DensityX' [default] DensityX from Iacovino & Till (2019) Volcanica 2(1):1-10
-    doi:10.30909/vol.02.01.0110
-    - Only one option available currently, included for future development.
+    - 'DensityX' [default] DensityX from Iacovino & Till (2019) Volcanica 2(1):1-10 https//doi.org/10.30909/vol.02.01.0110
+    Only one option available currently, included for future development.
 
     """
     # DensityX from Iacovino & Till (2019) Volcanica 2(1):1-10
-    # doi:10.30909/vol.02.01.0110
+    # https//doi.org/10.30909/vol.02.01.0110
     if models.loc["density", "option"] == "DensityX":
         melt_comp = mg.melt_normalise_wf(melt_wf, "water", "yes")
         P = PT["P"]
@@ -5426,14 +5388,13 @@ def melt_density(PT, melt_wf, models=default_models):  # g/cm3
 
 
 def vol_CORK(species, PT, models):
-    """Appendix: Calculation of CORK volumes using eq. (4, A1) from Holland & Powell
-    (1991) CMP 109:265-273 10.1007/BF00306484
+    """Volume from 'Appendix: Calculation of CORK volumes' using eq. (4, A1) from
+    Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
 
     Args:
-        species (str): gas species of interest (e.g., 'H2O', 'CO2')
-        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
-        "P", temperature ('C) as "T"
-        models (pandas.DataFrame): Dataframe of the model options
+        species (str): Gas species of interest (e.g., 'H2O', 'CO2').
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        models (pandas.DataFrame): Model options.
 
     Returns:
         float: volume in kJ/kbar
@@ -5490,13 +5451,12 @@ def vol_CORK(species, PT, models):
 
 def vol_sCORK(species, PT, models):
     """Volume using eq. (7a) from Holland & Powell (1991) CMP 109:265-273
-    10.1007/BF00306484
+    https://doi.org/10.1007/BF00306484
 
     Args:
-        species (str): gas species of interest (e.g., 'H2O', 'CO2')
-        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
-        "P", temperature ('C) as "T"
-        models (pandas.DataFrame): Dataframe of the model options
+        species (str): Gas species of interest (e.g., 'H2O', 'CO2').
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        models (pandas.DataFrame): Model options.
 
 
     Returns:
@@ -5522,13 +5482,12 @@ def vol_sCORK(species, PT, models):
 
 
 def gas_molar_volume(species, PT, models):
-    """Calculates molar volume of a given gas species
+    """Calculates molar volume of a given gas species.
 
     Args:
-        species (str): gas species of interest (e.g., 'H2O', 'CO2')
-        PT (dict): Dictionary of pressure-temperature conditions: pressure (bars) as
-        "P", temperature ('C) as "T"
-        models (pandas.DataFrame): Dataframe of the model options
+        species (str): Gas species of interest (e.g., 'H2O', 'CO2').
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        models (pandas.DataFrame): Model options
 
     Returns:
         float: volume in kJ/kbar
@@ -5704,7 +5663,7 @@ species = species.set_index("species")
 ########################################################################################
 
 #############
-# vapor #####S
+# vapor #####
 #############
 
 
