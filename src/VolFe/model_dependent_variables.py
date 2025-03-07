@@ -7,12 +7,12 @@ import math
 import densityx as dx
 import PySulfSat as ss
 
-# import VolFe.melt_gas as mg
-
-# from VolFe.melt_gas import *
 import VolFe.melt_gas as mg
 
-# CONTENTS
+########################################################################################
+# CONTENTS##############################################################################
+########################################################################################
+
 # Models
 # Solubility constants
 # Solid/liquid saturation
@@ -29,22 +29,19 @@ import VolFe.melt_gas as mg
 
 def make_models_df(models):
     """
-    Creates the models options DataFrame
+    Creates the model options DataFrame.
 
     Parameters
     ----------
     models: list of [str, str]
-        A list of lists, where each inner list contains two elements: the model type
-        (str)
-        and the user-specified option (str) for that model type.
+        Each inner list contains two elements: the model type (str) and the
+        user-specified option (str) for that model type.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame where the first column is 'type', set as the index, and the second
-        column
-        is 'option', containing the user-specified option. Default options are not
-        added if no option is provided.
+        Index of 'type' and column of 'option' containing the user-specified option.
+        Default options are not added if no option is provided.
     """
     # Create the pandas DataFrame
     models = pd.DataFrame(models, columns=["type", "option"])
@@ -156,15 +153,13 @@ def check_default_options(models):
     Parameters
     ----------
     models: pd.DataFrame
-        Datarame with user specified model options
+        User-specified model options.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame where the first column is 'type', set as the index, and
-        the second column
-        is 'option', containing the user-specified option and default options
-        where none are speficied.
+        Index of 'type' and column of 'option', containing the user-specified option and
+        default options where none are speficied.
     """
 
     def return_options(default, name, models):
@@ -394,39 +389,34 @@ def check_default_options(models):
 
 def make_df_and_add_model_defaults(models):
     """
-
     Converts user-provided model configurations (e.g. ['carbon dioxide','MORB_Dixon95'],
     ['hydrogen sulfide','basaltic andesite'] into a structured pandas DataFrame,
-    combined with default options for anything not specified
+    combined with default options for anything not specified.
 
 
     Parameters
     ----------
     models : list of [str, str]
-        A list of lists, where each inner list contains two elements: the model type
-        (str)
-        and the user-specified option (str) for that model type.
+        Each inner list contains two elements: the model type (str) and the
+        user-specified option (str) for that model type.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame where the first column is 'type', set as the index, and the second
-        column is 'option', containing the user-specified option or the default option
-        if none is provided.
+        Index of 'type' and  column of 'option', containing the user-specified option or
+        the default option if none is provided.
 
 
     Model Parameters and Options
     ----------------------------
     The following parameters can be overridden in models.
-    Any parameter can be set to 'setup', in which case the parameter is specified in
-    the setup dataframe instead.
 
 
     ### Specifying species ###
 
     COH_species: Specifying what COH species are present in the melt and vapor.
-        - 'yes_H2_CO_CH4_melt' [default] Include H2mol (if H present), COmol (if C present) and/or CH4mol (if H and C present) as dissolved melt species.
-        - 'no_H2_CO_CH4_melt' H2, CO and/or CH4 are insoluble in the melt but they are still present in the vapor (H2 in the vapor if H present, CO in the vapor if C present, CH4 in the vapor if both H and C present).
+        - 'yes_H2_CO_CH4_melt' [default] Include H2mol (if H present), COmol (if C present), and/or CH4mol (if H and C present) as dissolved melt species.
+        - 'no_H2_CO_CH4_melt' H2, CO, and/or CH4 are insoluble in the melt but they are still present in the vapor (H2 in the vapor if H present, CO in the vapor if C present, CH4 in the vapor if both H and C present).
         - 'H2O-CO2 only' The only species present in the vapor are H2O and CO2 and in the melt are H2OT and CO2T (i.e., no CO, H2, and/or CH4 in the melt or vapor).
 
     H2S_m: Is H2S a dissolved melt species.
@@ -440,7 +430,7 @@ def make_df_and_add_model_defaults(models):
         touch!
 
     Hspeciation:
-        - 'none' [default] Oxidised H in the melt only occurs as H2O species (i.e., no OH-).
+        - 'none' [default] Oxidised H in the melt only occurs as H2OT species (i.e., no OH-).
         Only one option available currently, included for future development.
 
 
@@ -467,10 +457,10 @@ def make_df_and_add_model_defaults(models):
     hydrogen: Model for the parameterisation of the H2 solubility constant.
         See function C_H2 for options.
 
-    sulfide: Model for the parameterisation for the *S2- solubility constant (all calibrated over wide range of silicate melt compositions).
+    sulfide: Model for the parameterisation for the *S2- solubility constant.
         See function C_S for options.
 
-    sulfate: Model for the parameterisation of the S6+ solubility constant (all calibrated over wide range of silicate melt compositions).
+    sulfate: Model for the parameterisation of the S6+ solubility constant.
         See function C_SO4 for options.
 
     hydrogen sulfide: Model for the parameterisation for the H2S solubility constant.
@@ -488,7 +478,7 @@ def make_df_and_add_model_defaults(models):
     Cspeccomp: Model for the parameterisation of the speciation constant for CO2mol and CO32- in the melt.
         See function K_COm for options.
 
-    Hspeccomp: Model for the parameterisation of the speciation constant for H2Omol and OH- in the melt, either assuming ideal or regular solution models.
+    Hspeccomp: Model for the parameterisation of the speciation constant for H2Omol and OH- in the melt.
         See function K_HOm for options.
 
 
@@ -529,7 +519,7 @@ def make_df_and_add_model_defaults(models):
     y_O2: Model for the parameterisation of the O2 fugacity coefficient.
         See function y_O2 for options.
 
-    y_S2: Model for the parameterisation of the O2 fugacity coefficient.
+    y_S2: Model for the parameterisation of the S2 fugacity coefficient.
         See function y_S2 for options.
 
     y_CO: Model for the parameterisation of the CO fugacity coefficient.
@@ -550,28 +540,28 @@ def make_df_and_add_model_defaults(models):
 
     ### Equilibrium constants ###
 
-    KHOg: Model for the parameterisation of the equilibiurm constant for H2 + 0.5O2 = H2O.
+    KHOg: Model for the parameterisation of the equilibiurm constant for H2 + 0.5O2 ⇄ H2O.
         See function KHOg for options.
 
-    KHOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + H2O = H2S + 0.5O2.
+    KHOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + H2O ⇄ H2S + 0.5O2.
         See function KHOSg for options.
 
-    KOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + O2 = SO2.
+    KOSg: Model for the parameterisation of the equilibiurm constant for 0.5S2 + O2 ⇄ SO2.
         See function KOSg for options.
 
-    KOSg2: Model for the parameterisation of the equilibiurm constant for 0.5S2 + 1.5O2 = SO3.
+    KOSg2: Model for the parameterisation of the equilibiurm constant for 0.5S2 + 1.5O2 ⇄ SO3.
         See function KOSg2 for options.
 
-    KOCg: Model for the parameterisation of the equilibiurm constant for CO + 0.5O2 = CO2.
+    KOCg: Model for the parameterisation of the equilibiurm constant for CO + 0.5O2 ⇄ CO2.
         See function KOCg for options.
 
-    KCOHg: Model for the parameterisation of the equilibiurm constant for CH4 + 2O2 = CO2 + 2H2O.
+    KCOHg: Model for the parameterisation of the equilibiurm constant for CH4 + 2O2 ⇄ CO2 + 2H2O.
         See function KCOHg for options.
 
     KOCSg: Model for the parameterisation of the equilibiurm constant for OCS.
         See function KOCSg for options.
 
-    KCOs: Model for the parameterisation of the equilibiurm constant for Cgrahite + O2 = CO2.
+    KCOs: Model for the parameterisation of the equilibiurm constant for Cgrahite + O2 ⇄ CO2.
         See function KCOs for options.
 
     carbonylsulfide: Reaction equilibrium KOCSg is for.
@@ -581,23 +571,22 @@ def make_df_and_add_model_defaults(models):
 
     ### Degassing calculation ###
 
-    bulk_composition: Specifying what the inputted melt composition (i.e., dissolved volatiles and fO2-estimate) corresponds to for the degassing calculation
-        -'melt-only' [default] The inputted melt composition (i.e., dissolved volatiles) represents the bulk system - there is no vapor present. The fO2-estimate is calculated at Pvsat for this melt composition.
+    bulk_composition: Specifying what the inputted melt composition (i.e., dissolved volatiles and fO2-estimate) corresponds to for the re/degassing calculation.
+        - 'melt-only' [default] The inputted melt composition (i.e., dissolved volatiles) represents the bulk system - there is no vapor present. The fO2-estimate is calculated at Pvsat for this melt composition.
         - 'melt+vapor_wtg' The inputted melt composition (i.e., dissolved volatiles) is in equilibrium with a vapor phase. The amount of vapor as weight fraction gas (wtg) is specified in the inputs. The bulk system composition will be calculated by calculating Pvsat and the vapor composition given the input composition.
         - 'melt+vapor_initialCO2' The inputted melt composition (i.e., dissolved volatiles) is in equilibrium with a vapor phase. The initial CO2 content of the melt (i.e., before degassing) is specified in the inputs. The bulk system composition will be calculated by calculating Pvsat and the vapor composition given the input composition. The amount of vapor present is calculated using the given initial CO2.
 
-    starting_P: Determing the starting pressure for a degassing calculation.
+    starting_P: Determining the starting pressure for a re/degassing calculation.
         - 'Pvsat' [default] Calculation starts at Pvsat for the inputted melt composition (i.e., dissolved volatiles).
-        - 'set' Calculation starts at the pressure specified in the inputs (using P_bar, pressure in bars).
+        Only one option available currently, included for future development.
 
-    gassing_style: Does the bulk composition of the system (including oxygen) remain constant during the re/degassing
-    calculation.
-        - 'closed' [default] The bulk composition of the system (inc. oxygen) is constant during re/degassing calculation - vapor and melt remain in chemical equilibrium throughout.
-        - 'open' At each pressure-step, the vapor in equilibrium with the melt is removed (or added for regassing), such that the bulk composition of the system changes. This does not refer to being buffered in terms of fO2.
+    gassing_style: Does the bulk composition of the system (including oxygen) remain constant during the re/degassing calculation.
+        - 'closed' [default] The bulk composition of the system (inc. oxygen) is constant during the re/degassing calculation - vapor and melt remain in chemical equilibrium throughout.
+        - 'open' At each pressure-step, the vapor in equilibrium with the melt is removed (or added for regassing), such that the bulk composition of the system changes. This does not refer to being externally buffered in terms of fO2.
 
-    gassing_direction: Is pressure increasing or decreasing from the starting perssure.
-        - 'degas' [default] Pressure progressively decreases from starting pressure for isothermal, polybaric calculations (i.e., degassing).
-        - 'regas' Pressure progressively increases from starting pressure for isothermal, polybaric calculations (i.e., regassing).
+    gassing_direction: Is pressure increasing or decreasing from the starting pressure.
+        - 'degas' [default] Pressure progressively decreases for isothermal, polybaric calculations (i.e., degassing).
+        - 'regas' Pressure progressively increases for isothermal, polybaric calculations (i.e., regassing).
 
     P_variation: Is pressure varying during the calculation?
         - 'polybaric' [default] Pressure progressively changes during the calculation.
@@ -611,34 +600,19 @@ def make_df_and_add_model_defaults(models):
         - 'yes' [default] Iron equilibrates with fO2
         Only one option available currently, included for future development.
 
-    solve_species: What species are used to solve the equilibrium equations? This should
-    not need to be changed unless the solver is struggling.
-        - 'OCS' [default] Guess mole fractions of O2, CO, and S2 in the vapor to solve the equilibrium equations.
-        - 'OHS' Guess mole fractions of O2, H2, and S2 in the vapor to solve the equilibrium equations.
-        - 'OCH' Guess mole fractions of O2, CO, and H2 in the vapor to solve the equilibrium equations.
-
 
     ### Other ###
 
-    density: Model for parameterisation of melt density
+    density: Model for parameterisation of melt density.
         See function melt_density for options.
-
-    setup: Specifies whether model options are specified in the models or setup dataframe.
-        - 'False' [default] All model options are specified in the models dataframe.
-        - 'True' Some of the model options are specified in the setup dataframe.
 
     print status: Specifies whether some sort of status information during the calculation is outputted to let you know progress.
         - 'False' [default] No information about calculation progress is printed.
         - 'True' Some information about calculation progress is printed.
 
-    output csv: Specicies whether a csv of the outputted dataframe is saved at the end of the calculation.
-        - 'True' [default] csv is outputted
-        - 'False' csv is not outputted
-
-    high precision: Is high preicision used for calculations?
-        TRUE OR FALSE WHAT PRECISION IS IT USING
-        - 'False' [default] normal precision used for calculations
-        - 'True' high precision used
+    output csv: Specicies whether a csv of the outputted dataframe is automatically saved at the end of the calculation.
+        - 'True' [default] csv is outputted.
+        - 'False' csv is not outputted.
 
 
     ### In development ###
@@ -665,6 +639,15 @@ def make_df_and_add_model_defaults(models):
 
     sulfur_is_sat
         default: 'no'
+
+    solve_species
+        default: 'OCS'
+
+    setup
+        default: 'False'
+
+    high precision
+        default: 'False'
     """
 
     df_models = make_models_df(models)
@@ -687,36 +670,32 @@ def C_H2O(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions:
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with indexes of "Hspeciation" and "water" and
-        column label of "option"
+        Minimum requirement is indexes of "Hspeciation" and "water" and column label of
+        "option".
 
     Returns
     -------
     float
-        Solubility constant for H2O as <class 'mpfr'>
+        Solubility constant for H2O
 
 
     Model options for Hspeciation
     -------------
     - "none" [default]
-    - Only one option available currently, included for future development.
+    Only one option available currently, included for future development.
 
 
     Model options for water
     ------------------------
-    - 'Basalt_Hughes24' [default] Fig.S2 from Hughes et al. (2024) AmMin 109(3):422-438
-    doi:10.2138/am-2023-8739
-    - 'Rhyolite_HughesIP' Fig.SX from Hughes et al. (in prep) based on data in Fig. 3 of
-    Blank et al. (1993)
+    - 'Basalt_Hughes24' [default] Fig.S2 from Hughes et al. (2024) AmMin 109(3):422-438 https://doi.org/10.2138/am-2023-8739
+    - 'Rhyolite_HughesIP' Fig.SX from Hughes et al. (in prep) based on data in Fig. 3 of Blank et al. (1993)
 
     """
     model_speciation = models.loc["Hspeciation", "option"]
@@ -856,17 +835,13 @@ def C_CO3(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "carbon dioxide" and column label
-        of "option"
+        Minimum requirement is index of "carbon dioxide" and column label of "option".
 
     Returns
     -------
@@ -876,26 +851,16 @@ def C_CO3(PT, melt_wf, models=default_models):
 
     Model options for 'carbon dioxide'
     -------------
-    - 'MORB_Dixon95' [default] Bullet (5) of summary from Dixon et al. (1995) JPet
-    36(6):1607-1631 https://doi.org/10.1093/oxfordjournals.petrology.a037267
-    - 'Basalt_Dixon97' Eq. (7) from Dixon et al. (1997) AmMin 82(3-4)368-378
-    https://doi.org/10.2138/am-1997-3-415
-    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon et al. (1997) AmMin 82(3-4)368-378
-    https://doi.org/10.2138/am-1997-3-415
-    - 'Basalt_Lesne11' Eq. (25,26) from Lesne et al. (2011) CMP 162:153-168
-    https://doi.org/10.1007/s00410-010-0585-0
-    - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP
-    162:153-168 https://doi.org/10.1007/s00410-010-0585-0
-    - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP
-    162:153-168 https://doi.org/10.1007/s00410-010-0585-0
-    - 'StromboliAlkaliBasalt_Lense11' PST-9 in Table 4 from Lesne et al. (2011)
-    CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
-    - 'Basanite_Holloway94' Basanite in Table 5 from Holloway and Blank (1994) RiMG
-    30:187-230 https://doi.org/10.1515/9781501509674-012
-    - 'Leucitite_Thibault94' Leucitite from Thibault & Holloway (1994) CMP 116:216-224
-    https://doi.org/10.1007/BF00310701
-    - 'Rhyolite_Blank93' Fig.2 caption from Blank et al. (1993) EPSL 119:27-36
-    https://doi.org/10.1016/0012-821X(93)90004-S
+    - 'MORB_Dixon95' [default] Bullet (5) of summary from Dixon et al. (1995) JPet 36(6):1607-1631 https://doi.org/10.1093/oxfordjournals.petrology.a037267
+    - 'Basalt_Dixon97' Eq. (7) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'Basalt_Lesne11' Eq. (25,26) from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'StromboliAlkaliBasalt_Lense11' PST-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
+    - 'Basanite_Holloway94' Basanite in Table 5 from Holloway and Blank (1994) RiMG 30:187-230 https://doi.org/10.1515/9781501509674-012
+    - 'Leucitite_Thibault94' Leucitite from Thibault & Holloway (1994) CMP 116:216-224 https://doi.org/10.1007/BF00310701
+    - 'Rhyolite_Blank93' Fig.2 caption from Blank et al. (1993) EPSL 119:27-36 https://doi.org/10.1016/0012-821X(93)90004-S
 
     """
 
@@ -1257,42 +1222,34 @@ def C_CO3(PT, melt_wf, models=default_models):
 # C_S = wmS2-*(fO2/fS2)^0.5 (weight ppm)
 def C_S(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving S in the melt as S2- in ppmw:
-    C_S = wmS2-*(fO2/fS2)^0.5
+    Solubility constant for disolving S in the melt as S2-: C_S = wmS2-*(fO2/fS2)^0.5
+    (in ppmw and bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Dictionary of melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "sulfide" and column label of
-        "option"
+        Minimum requirement is index of "sulfide" and column label of "option".
 
     Returns
     -------
     float
-        Solubility constant for S2- as <class 'mpfr'>
+        Solubility constant for S2-
 
 
     Model options for sulfide
     -------------
-    - 'ONeill21dil' [default] Eq. (10.34) inc. H2O dilution from O'Neill (2021) in
-    "Magma Redox Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'ONeill21' Eq. (10.34) ex. H2O dilution from O'Neill (2021) in "Magma Redox
-    Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'ONeill21hyd' (hydrous) Eq. (10.34, 10.49) from O'Neill (2021) in "Magma Redox
-    Geochemistry" doi:10.1002/9781119473206.ch10
-    - 'Boulliung23_eq6' Eq. (6) from Boulliung & Wood (2023) CMP 178:56
-    doi:10.1007/s00410-023-02033-9
-    - 'Boulliung23_eq7' Eq. (7) from Boulliung & Wood (2023) CMP 178:56
-    doi:10.1007/s00410-023-02033-9
+    - 'ONeill21dil' [default] Eq. (10.34) inc. H2O dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'ONeill21' Eq. (10.34) ex. H2O dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'ONeill21hyd' (hydrous) Eq. (10.34, 10.49) from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
+    - 'Boulliung23_eq6' Eq. (6) from Boulliung & Wood (2023) CMP 178:56 https://doi.org10.1007/s00410-023-02033-9
+    - 'Boulliung23_eq7' Eq. (7) from Boulliung & Wood (2023) CMP 178:56 https://doi.org10.1007/s00410-023-02033-9
     """
     model = models.loc["sulfide", "option"]
 
@@ -1423,38 +1380,28 @@ def C_SO4(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
+        Dictionary of melt composition (SiO2, TiO2, etc.).
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "sulfate" and column label of
-        "option"
+        Minimum requirement is index of "sulfate" and column label of "option".
 
     Returns
     -------
     float
-        Solubility constant for S6+ as <class 'mpfr'>
+        Solubility constant for S6+
 
 
     Model options for sulfate
     -------------
-    - 'ONeill22dil' [default] Eq. (12a) inc. H2O dilution from O'Neill & Mavrogenes
-    (2022) GCA 334:368-382 10.1016/j.gca.2022.06.020
-    - 'ONeill22' Eq. (12a) without H2O dilution from O'Neill & Mavrogenes (2022) GCA
-    334:368-382 doi:10.1016/j.gca.2022.06.020
-    - 'Boulliung22nP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420
-    doi:10.1016/j.gca.2022.11.025
-    - 'Boulliung22wP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420
-    doi:10.1016/j.gca.2022.11.025 and Eq. (8) for P from Boulliung & Wood (2022) GCA
-    336:150-164 doi:10.1016/j.gca.2022.08.032
-    - 'Boulliung23_eq9' Eq. (9) from Boulliung & Wood (2023) CMP 178:56
-    doi:10.1007/s00410-023-02033-9
-    - 'Boulliung23_eq11' Eq. (11) from Boulliung & Wood (2023) CMP 178:56
-    doi:10.1007/s00410-023-02033-9
+    - 'ONeill22dil' [default] Eq. (12a) inc. H2O dilution from O'Neill & Mavrogenes (2022) GCA 334:368-382 https://doi.org/10.1016/j.gca.2022.06.020
+    - 'ONeill22' Eq. (12a) without H2O dilution from O'Neill & Mavrogenes (2022) GCA 334:368-382 https://doi.org/10.1016/j.gca.2022.06.020
+    - 'Boulliung22nP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420 https://doi.org/10.1016/j.gca.2022.11.025
+    - 'Boulliung22wP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420 https://doi.org/10.1016/j.gca.2022.11.025 and Eq. (8) for P from Boulliung & Wood (2022) GCA 336:150-164 https://doi.org/10.1016/j.gca.2022.08.032
+    - 'Boulliung23_eq9' Eq. (9) from Boulliung & Wood (2023) CMP 178:56 https://doi.org/10.1007/s00410-023-02033-9
+    - 'Boulliung23_eq11' Eq. (11) from Boulliung & Wood (2023) CMP 178:56 https://doi.org/10.1007/s00410-023-02033-9
 
     """
 
@@ -1614,36 +1561,31 @@ def C_SO4(PT, melt_wf, models=default_models):
 # C_H2S = wmH2S/fH2S (ppm H2S, fH2S bar)
 def C_H2S(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving H2S in the melt: C_H2S = wmH2S/fH2S (ppmw/bar)
+    Solubility constant for disolving H2S in the melt: C_H2S = wmH2S/fH2S (ppmw/bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Dictionary of melt composition (SiO2, TiO2, etc.), not normally used unless
+        model option requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "hydrogen sulfide" and column
-        label of "option"
+        Minimum requirement is ndex of "hydrogen sulfide" and column label of "option".
 
     Returns
     -------
     float
-        Solubility constant for H2S as <class 'mpfr'>
+        Solubility constant for H2S in ppmw/bar
 
 
     Model options for hydrogen sulfide
     -------------
-    - 'Basalt_Hughes24' [default] Fig.S6 from Hughes et al. (2024) based on experimental
-    data Moune et al. (2009) and calculations in Lesne et al. (2011)
-    - 'BasalticAndesite_Hughes24' Fig.S6 from Hughes et al. (2024) based on experimental
-    data Moune et al. (2009) and calculations in Lesne et al. (2011)
+    - 'Basalt_Hughes24' [default] Fig.S6 from Hughes et al. (2024) https://doi.org/10.2138/am-2023-8739, based on experimental data Moune et al. (2009) and calculations in Lesne et al. (2011).
+    - 'BasalticAndesite_Hughes24' Fig.S6 from Hughes et al. (2024) https://doi.org/10.2138/am-2023-8739, based on experimental data Moune et al. (2009) and calculations in Lesne et al. (2011).
 
     """
 
@@ -1665,36 +1607,31 @@ def C_H2S(PT, melt_wf, models=default_models):
 # C_H2 = wmH2/fH2 (wtppm)
 def C_H2(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving H2 in the melt: C_H2 = wmH2/fH2 (ppmw/bar)
+    Solubility constant for disolving H2 in the melt: C_H2 = wmH2/fH2 (ppmw/bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "hydrogen" and column label of
-        "option"
+        Minimum requirement is index of "hydrogen" and column label of "option".
 
     Returns
     -------
     float
-        Solubility constant for H2 as <class 'mpfr'>
+        Solubility constant for H2 in ppmw/bar
 
 
     Model options for hydrogen
     -------------
-    - 'Basalt_Hughes24' [default] Basalt in Table S4 from Hughes et al. (2024) based on
-    experimetnal data from Hirschmann et al. (2012)
-    - 'Andesite_Hughes24' Andesite in Table S4 from Hughes et al. (2024) based on
-    experimental data from Hirschmann et al. (2012)
+    - 'Basalt_Hughes24' [default] Basalt in Table S4 from Hughes et al. (2024) https://doi.org/10.2138/am-2023-8739, based on experimental data from Hirschmann et al. (2012).
+    - 'Andesite_Hughes24' Andesite in Table S4 from Hughes et al. (2024) https://doi.org/10.2138/am-2023-8739, based on experimental data from Hirschmann et al. (2012).
 
     """
 
@@ -1733,23 +1670,20 @@ def C_H2(PT, melt_wf, models=default_models):
 # C_CH4 = wmCH4/fCH4 (ppm)
 def C_CH4(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving CH4 in the melt: C_CH4 = wmCH4/fCH4 (ppmw/bar)
+    Solubility constant for disolving CH4 in the melt: C_CH4 = wmCH4/fCH4 (ppmw/bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "methane" and column label of
-        "option"
+        Minimum requirement is index of "methane" and column label of "option".
 
     Returns
     -------
@@ -1760,7 +1694,7 @@ def C_CH4(PT, melt_wf, models=default_models):
     Model options for "methane"
     -------------
     - 'Basalt_Ardia13' [default] Eq. (7a) from Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028
-    - Only one option available currently, included for future development.
+    Only one option available currently, included for future development.
 
     """
 
@@ -1791,23 +1725,20 @@ def C_CH4(PT, melt_wf, models=default_models):
 # C_CO = wmCO/fCO (ppm)
 def C_CO(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving CO in the melt: C_CO = wmCO/fCO (ppmw/bar)
+    Solubility constant for disolving CO in the melt: C_CO = wmCO/fCO (ppmw/bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "carbon monoxide" and column
-        label of "option"
+        Minimum requirement is index of "carbon monoxide" and column label of "option".
 
     Returns
     -------
@@ -1817,8 +1748,8 @@ def C_CO(PT, melt_wf, models=default_models):
 
     Model options for 'carbon monoxide'
     -------------
-    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) AmMin 109:422-438 https://doi.org/10.2138/am-2023-8739. Based on data from Armstrong et al. (2015), Stanley et al. (2014), and Wetzel et al. (2013)
-    - Only one option available currently, included for future development.
+    - 'Basalt_Hughes24' [default] CO in Table S4 from Hughes et al. (2024) https://doi.org/10.2138/am-2023-8739, based on data from Armstrong et al. (2015), Stanley et al. (2014), and Wetzel et al. (2013).
+    Only one option available currently, included for future development.
 
     """
 
@@ -1847,37 +1778,35 @@ def C_CO(PT, melt_wf, models=default_models):
 # C_X = wmX/fX (ppm)
 def C_X(PT, melt_wf, models=default_models):
     """
-    Solubility constant for disolving X in the melt: C_X = wmX/fX (ppmw/bar)
+    Solubility constant for disolving X in the melt: C_X = wmX/fX (ppmw/bar).
 
 
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of melt composition (SiO2, TiO2, etc.)
-        Not normally used unless model option requires melt composition.
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
 
     models: pandas.DataFrame
-        Minimum requirement is dataframe with index of "species X solubility" and column
-        label of "option"
+        Minimum requirement is index of "species X solubility" and column label of
+        "option".
 
     Returns
     -------
     float
-        Solubility constant for X as <class 'mpfr'>
+        Solubility constant for X in ppmw/bar
 
 
     Model options for species X solubility
     -------------
-    - 'Ar_Basalt_HughesIP' [default] Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
-    - Ar_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
-    - Ne_Basalt_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
-    - Ne_Rhyolite_HughesIP: Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157 # noqa
-    - [user specified number]: User can type a number that will be used instead (i.e., a constant value) # noqa
+    - 'Ar_Basalt_HughesIP' [default] Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ar_Rhyolite_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ne_Basalt_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ne_Rhyolite_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - [float: user specified number] User can type a number that will be used instead (i.e., a constant value)
 
     """
 
@@ -1961,9 +1890,7 @@ def SCAS(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -2130,9 +2057,7 @@ def SCSS(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.). Assumes sulfide is pure FeS
@@ -2454,9 +2379,7 @@ def KHOg(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KHOg" and column label of
@@ -2497,9 +2420,7 @@ def KHOSg(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KHOSg" and column label of
@@ -2541,9 +2462,7 @@ def KOSg(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KOSg" and column label of
@@ -2582,9 +2501,7 @@ def KOSg2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KOsg2" and column label of
@@ -2626,9 +2543,7 @@ def KCOg(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KCOg" and column label of
@@ -2665,9 +2580,7 @@ def KCOHg(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KCOHg" and column label of
@@ -2708,9 +2621,7 @@ def KOCSg(PT, models=default_models):  # OCS - depends on system
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KOCSg" and "carbonylsulfide" and
@@ -2776,9 +2687,7 @@ def KCOs(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "KCOs" and column label of
@@ -2829,9 +2738,7 @@ def KHOm(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -2949,9 +2856,7 @@ def KregH2O(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -3041,9 +2946,7 @@ def KCOm(PT, melt_wf, models=default_models):  # K =
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -3123,9 +3026,7 @@ def y_CORK(species, PT, models):
         species of interest (e.g., 'H2O', 'CO2')
 
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Dataframe detailing model options
@@ -3380,9 +3281,7 @@ def lny_SS(PT, Pcr, Tcr, models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     Pcr: float
         Critical pressure
@@ -3430,9 +3329,7 @@ def Q_SS(PT, Tr, Pcr, models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     Pcr: float
         Critical pressure
@@ -3560,9 +3457,7 @@ def y_SS(gas_species, PT, models=default_models):
         Name of gas species
 
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Dataframe detailing model options
@@ -3602,9 +3497,7 @@ def y_H2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_H2" and "ideal_gas" and column
@@ -3935,9 +3828,7 @@ def y_H2O(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_H2O" and "ideal_gas" and
@@ -3983,9 +3874,7 @@ def y_CO2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_CO2" and "ideal_gas" and
@@ -4044,9 +3933,7 @@ def y_O2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_O2" and "ideal_gas" and column
@@ -4081,9 +3968,7 @@ def y_S2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_S2" and "ideal_gas" and column
@@ -4118,9 +4003,7 @@ def y_CO(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_CO" and "ideal_gas" and column
@@ -4155,9 +4038,7 @@ def y_CH4(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_CH4" and "ideal_gas" and
@@ -4192,9 +4073,7 @@ def y_OCS(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_OCS" and "ideal_gas" and
@@ -4229,9 +4108,7 @@ def y_X(PT, models=default_models):  # species X fugacity coefficient
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_X" and "ideal_gas" and column
@@ -4268,9 +4145,7 @@ def y_SO2(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_SO2" and "ideal_gas" and
@@ -4471,9 +4346,7 @@ def y_H2S(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "y_H2S" and "ideal_gas" and
@@ -4986,9 +4859,7 @@ def NNO(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "NNObuffer" and column label of
@@ -5027,9 +4898,7 @@ def FMQ(PT, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     models: pandas.DataFrame
         Minimum requirement is dataframe with index of "FMQbuffer" and column label of
@@ -5076,9 +4945,7 @@ def FefO2_KC91_Eq7_terms(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -5145,9 +5012,7 @@ def FefO2_KC91_EqA_terms(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -5223,9 +5088,7 @@ def FefO2_ONeill18_terms(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -5289,9 +5152,7 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
@@ -5369,9 +5230,7 @@ def f_O2(PT, melt_wf, models=default_models):
     Parameters
     ----------
     PT: dict
-        Dictionary of pressure-temperature conditions
-        pressure (bars) as "P"
-        temperature ('C) as "T"
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
         Dictionary of melt composition (SiO2, TiO2, etc.)
