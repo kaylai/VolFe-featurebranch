@@ -441,13 +441,13 @@ def Dbuffer2fO2(PT, D, buffer, model):
 
 def S6S2_2_fO2(S62, melt_wf, PT, models):
     """
-    Converts S6+/ST in the melt to fO2.
+    Converts S6+/S2- in the melt to fO2.
 
 
     Parameters
     ----------
     S62: float
-        S6+/ST in melt.
+        S6+/S2- in melt.
 
     melt_wf: dict
         Melt composition in weight fraction (SiO2, TiO2, etc.).
