@@ -12,15 +12,15 @@ import VolFe.calculations as c
 
 def set_system(melt_wf, models):
     """
-    Identify which volatiles are present in the system
+    Identify which volatiles are present in the system.
 
     Parameters
     ----------
     melt_wf: dictionary
-        Dictionary of weight fraction of melt composition
+        Melt composition in weight fraction.
 
     models: pandas.DataFrame
-        Dataframe of models option.
+        Model options.
 
 
     Returns
@@ -59,34 +59,33 @@ def set_system(melt_wf, models):
 
 def initial_guesses(run, PT, melt_wf, setup, models, system):
     """
-    Calculate initial guesses for the degassing calculation
+    Calculate initial guesses for the degassing calculation.
 
     Parameters
     ----------
     run: float
-        index of row that is being used in calculation
+        index of row that is being used in calculation.
 
     PT: dict
-        Dictionary of pressure-temperature conditions: pressure (bars) as "P" and
-        temperature ('C) as "T".
+        Pressure (bars) as "P" and temperature ('C) as "T".
 
     melt_wf: dict
-        Dictionary of weight fraction of melt composition
+        Melt composition in weight fraction.
 
     setup: pandas.DataFrame
-        Input dataframe of melt composition(s)
+        Input of melt composition(s).
 
     models: pandas.DataFrame
-        Dataframe of models option.
+        Model options.
 
     system: str
-        String inficating volatiles in the system
+        String indicating volatiles in the system
 
 
     Returns
     -------
     dict
-        dictionary of initial guesses
+        initial guesses
     """
     starting_P = models.loc["starting_P", "option"]
     # xenia = models.loc["xenia","option"]
@@ -185,7 +184,7 @@ def initial_guesses(run, PT, melt_wf, setup, models, system):
 
 
 def mg_equilibrium(PT, melt_wf, bulk_wf, models, nr_step, nr_tol, guesses):
-    """Calculates the equilibrium concentration and speciation of the melt and vapor
+    """Calculates the equilibrium concentration and speciation of the melt and vapor.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
@@ -1019,8 +1018,8 @@ def eq_CH_melt(PT, melt_wf, models, nr_step, nr_tol, guesses):
         guesses (dict): Initial guesses for solver
 
     Returns:
-        tuple(float,float,tuple(),tuple()): Mole fraction CO2; Mole fraction H2O; Melt
-        composition; Mass balance
+        tuple(float,float,tuple(),tuple()): Mole fraction CO2 in melt; Mole fraction H2O
+        in melt; Melt composition; Mass balance
     """
     wt_C = melt_wf["CT"]
     wt_H = melt_wf["HT"]
@@ -1173,9 +1172,9 @@ def eq_HS_melt(PT, melt_wf, models, nr_step, nr_tol):  # not sure this is right?
         guesses (dict): Initial guesses for solver
 
     Returns:
-        tuple(float,float,float,float,float,float): Mole fraction H2O, weight fraction
-        H2O, weight fraction H2, weight fraction S2-, weight fraction S6+, weight
-        fraction H2S
+        tuple(float,float,float,float,float,float): In the melt: Mole fraction H2O,
+        weight fraction H2O, weight fraction H2, weight fraction S2-, weight fraction
+        S6+, weight fraction H2S
     """
     wt_S = melt_wf["ST"]
     wt_H = melt_wf["HT"]
@@ -1697,7 +1696,7 @@ def eq_CHS_melt(PT, melt_wf, models, nr_step, nr_tol, guesses):
 
 def melt_speciation(PT, melt_wf, models, nr_step, nr_tol):
     """Calculate equilibrium speciation in the melt for a given bulk composition and P
-    and T
+    and T.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
@@ -2218,7 +2217,7 @@ def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=1000):
 
 
 def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
-    """_summary_
+    """Jacobian matrix/Newton-Raphson approach in 3D.
 
     Args:
         x0 (float): Initial guess for parameter x
@@ -2397,7 +2396,7 @@ def eq_COFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -2561,7 +2560,7 @@ def eq_HOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -2714,22 +2713,9 @@ def eq_HOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
 ####################
 
 
+# WORK IN PROGRESS
 def eq_HOFe_xenia(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
-    """Equilibrium speciation between melt and gas for HOFe system for Xenia's system.
 
-    Args:
-        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
-        bulk_wf (dict): Bulk composition in weight fraction
-        melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
-        nr_step (float): Step-size for solver
-        nr_tol (float): Tolerance for solver
-        guesses (dict): Initial guesses for solver
-
-    Returns:
-        tuple(float,tuple(),tuple(),tuple()): Mole fraction O2 in vapor; Melt and gas
-        composition; Weight fraction gas; Mass balance
-    """
     P = PT["P"]
     wt_O = bulk_wf["O"]
     wt_H = bulk_wf["H"]
@@ -2878,7 +2864,7 @@ def eq_SOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -3039,7 +3025,7 @@ def eq_SHOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -3314,7 +3300,7 @@ def eq_SHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -3636,7 +3622,6 @@ def eq_SHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
 #############
 
 
-# not finished
 def eq_SCOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
     """Equilibrium speciation between melt and gas for SCOFe system.
 
@@ -3644,7 +3629,7 @@ def eq_SCOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -3953,7 +3938,7 @@ def eq_COXFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -4166,7 +4151,7 @@ def eq_HOXFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -4375,7 +4360,7 @@ def eq_CHOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -4620,7 +4605,7 @@ def eq_CHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -4922,7 +4907,7 @@ def eq_CH(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses):  # H2O
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -5015,7 +5000,7 @@ def eq_CHOXFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_spec
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -5364,7 +5349,7 @@ def eq_SCHOFe(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_spec
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -6194,7 +6179,7 @@ def eq_SCHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -6869,7 +6854,7 @@ def eq_SCHOFe_3(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         bulk_wf (dict): Bulk composition in weight fraction
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for solver
         nr_tol (float): Tolerance for solver
         guesses (dict): Initial guesses for solver
@@ -7182,7 +7167,9 @@ def eq_SCHOFe_3(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
             wm_CH4_,
             wm_CO_,
         ) = mg_SCHOFe(xg_O2_, xg_A, xg_B)
-        mba, mbb, mbc, wt_g_O, wt_g_C, wt_g_H, wt_g_S = f_SCHOFe(xg_O2_, xg_A, xg_B)  # noqa
+        mba, mbb, mbc, wt_g_O, wt_g_C, wt_g_H, wt_g_S = f_SCHOFe(
+            xg_O2_, xg_A, xg_B
+        )  # noqa
         wt_g = (wt_g_O + wt_g_H + wt_g_C + wt_g_S) / 4.0
         wt_H_ = (
             2.0
