@@ -4,7 +4,7 @@
 
 To add a new parameterisation for Fe\ :sup:`3+`\ /Fe\ :sub:`T` to *f*\ \ :sub:`O2` dependence involves creating a new “terms” function, which details how any parameters depend on pressure, temperature, melt composition, etc.
 
-Here is an example for Borisov et al. (2018) in ``model_dependent_variables.py`` looks:
+Here is an example for Borisov et al. (2018) in ``model_dependent_variables.py``:
 
 .. code-block:: python
 
@@ -33,7 +33,7 @@ Here is an example for Borisov et al. (2018) in ``model_dependent_variables.py``
         )
         return a, B
 
-Then, the new parameterisation must be added to the functions ``fO22Fe3FeT`` and ``f_O2`` in the ``model_dependent_variables.py`` file, which is shown here for Borisov et al. (2018):
+Then, the new parameterisation must be added to the functions ``fO22Fe3FeT()`` and ``f_O2()`` in ``model_dependent_variables.py``, which is shown here for Borisov et al. (2018):
 
 .. code-block:: python
 
