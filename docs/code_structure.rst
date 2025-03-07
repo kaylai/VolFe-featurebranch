@@ -13,7 +13,7 @@ Melt gas
 
 ``melt_gas.py`` hosts functions for calculating properties of the melt and gas at a set of conditions (e.g., *P* and *T*): so these are the forward calculations. Broadly, this includes things like:
 
-- Fugacities (*f*\ :sub:`i`), partial pressures (*p*\ :sub:`i`), and mole fraction in the vapor (*x*\ :sup:`g` \ :sub:`i`) of vapor species given *P*, *T*, and volatile concentration in the melt.
+- Fugacities (*f*\ :sub:`i`), partial pressures (*p*\ :sub:`i`), and mole fraction in the vapor (*x*\ :sup:`g` :sub:`i`) of vapor species given *P*, *T*, and volatile concentration in the melt.
 
 - Coverting melt composition between mass and mole fractions, based on cations, oxides, single oxygen, etc.
 
@@ -42,7 +42,7 @@ Equilibrium and differential equations
 These are iterative calculations, which are solved using Jacobian matrix/Newton-Raphson approach (solvers and initial guesses are also in this file).
 
 The associated differential equations required for the solver are contained in ``differential_equations.py``, with symbolic differentiation using SymPy (Meurer et al., 2017).
-It is a long file because there are separate functions for different combinations of species in the melt and vapor (e.g., only carbon species in the system; the full COHS system; only H\ :sub:`2` O-CO\ :sub:`2` in the melt and vapor, etc.)
+It is a long file because there are separate functions for different combinations of species in the melt and vapor (e.g., only carbon species in the system; the full COHS system; only H\ :sub:`2`O-CO\ :sub:`2` in the melt and vapor, etc.)
 
 Calculations
 -----
@@ -59,20 +59,20 @@ Firstly, there are functions for calculating properties about the system, such a
 
 Secondly, there are calculation types that do not necessarily have independent variables of *P*, *T*, and bulk composition (as in ``equilibrium_equations.py``), such as:
 
-- *T*, melt composition (including *f*\ :sub:`O2` estimate), vapor-saturated: calculate *P*\ :sup:`v` \ :sub:`sat` and the melt/vapor composition and speciation.
+- *T*, melt composition (including *f*\ :sub:`O2` estimate), vapor-saturated: calculate *P*\ :sup:`v` :sub:`sat` and the melt/vapor composition and speciation.
 
 - *T*, melt composition, vapor+sulfide+anhydrite-saturated, ± *P*: calculate *f*\ :sub:`O2` ± *P* and the melt/vapor composition and speciation.
 
 - *T*, melt composition, vapor+(sulfide or anhydrite)-saturated, ± *P*: calculate *f*\ :sub:`O2` ± *P* and the melt/vapor composition and speciation.
 
-- *T*, *P*, *f*\ :sub:`O2`, CO\ :sub:`2`-eq, H\ :sub:`2` O-eq, vapor±(sulfide and/or anhydrite)-saturation: calculate how much sulfur can dissolve in the melt.
+- *T*, *P*, *f*\ :sub:`O2`, CO\ :sub:`2`-eq, H\ :sub:`2`O-eq, vapor±(sulfide and/or anhydrite)-saturation: calculate how much sulfur can dissolve in the melt.
 
-- *T*, *P*, volatile-free composition, assuming only H\ :sub:`2` O and CO\ :sub:`2`: calculate concentrations of H\ :sub:`2` O and CO\ :sub:`2` in the melt (i.e., isobars).
+- *T*, *P*, volatile-free composition, assuming only H\ :sub:`2`O and CO\ :sub:`2`: calculate concentrations of H\ :sub:`2`O and CO\ :sub:`2` in the melt (i.e., isobars).
 
 
 Batch calculations
 -----
 
 ``batch_calculations.py`` joins calculations together to enable them to be run for multiple conditions.
-This might be to create a degassing calculations (i.e., run over multiple *P*) or *P*\ :sup:`v` \ :sub:`sat` for a whole spreadsheet of melt compositions.
+This might be to create a degassing calculations (i.e., run over multiple *P*) or *P*\ :sup:`v` :sub:`sat` for a whole spreadsheet of melt compositions.
 More details can be found in the Worked Examples section.
