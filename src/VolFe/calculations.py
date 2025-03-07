@@ -22,7 +22,7 @@ def P_sat(PT, melt_wf, models, Ptol, nr_step, nr_tol):
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         Ptol (float): Tolerance for total pressure convergence
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
@@ -161,7 +161,7 @@ def P_sat_H2O_CO2(
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         Ptol (float): Tolerance for total pressure convergence
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
@@ -273,8 +273,8 @@ def bulk_composition(run, PT, melt_wf, setup, models):
         run (float): Row number of input data
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        setup (pandas.Dataframe): Input data
-        models (pandas.Dataframe): Model options
+        setup (pandas.DataFrame): Input data
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: Bulk composition of the system
@@ -499,7 +499,7 @@ def new_bulk_regas_open(PT, melt_wf, bulk_wf, gas_mf, dwtg, models):
         bulk_wf (dict): Bulk composition of the system in weight fraction
         gas_mf (dict): Gas composition in mole fraction
         dwtg (float): Weight fraction of gas to add into the system
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: New bulk composition of the system
@@ -532,7 +532,7 @@ def gas_comp_all_open(xg, xg_all, models):
     Args:
         xg (dict): Gas composition in mole fraction at given conditions
         xg_all (dict): Cumulative gas composition in mole fraction to this point
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: New cumulative gas composition in mole fraction
@@ -678,7 +678,7 @@ def sulfur_saturation(PT, melt_wf, models):  # melt weight fraction of ST and S6
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: Values of SCSS, STCSS, SCAS, STCAS, ST, and whether the melt is sulfide
@@ -731,12 +731,12 @@ def fO2_P_VSA(PT, melt_wf, models, nr_step, nr_tol, Ptol):
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
         Ptol (float): Tolerance for total pressure convergence
 
-    Results
+    Results:
         tuple(float,dict,dict): Pressure of vapor-saturation, Concentration of melt
         species in weight fraction, Ratios of melt species
     """
@@ -807,7 +807,7 @@ def P_VSA(PT, melt_wf, models, nr_step, nr_tol, Ptol):
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
         Ptol (float): Tolerance for total pressure convergence
@@ -880,7 +880,7 @@ def P_sat_sulf_anh(PT, melt_wf, models, Ptol, nr_step, nr_tol):
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         Ptol (float): Tolerance for total pressure convergence
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
@@ -1025,13 +1025,13 @@ def P_sat_sulf_anh(PT, melt_wf, models, Ptol, nr_step, nr_tol):
 
 
 # check graphite saturation
-def graphite_saturation(PT, melt_wf, models):  # needs finishing
-    """Evaluates if the system is graphite saturated
+def graphite_saturation(PT, melt_wf, models):
+    """Evaluates if the system is graphite saturated.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         str: whether or not the system is graphite saturated
@@ -1051,13 +1051,13 @@ def graphite_saturation(PT, melt_wf, models):  # needs finishing
 
 
 def fO2_range_from_S(PT, melt_wf, models):
-    """Calculated range in fO2 assuming sulfide and anhydrite saturation for given melt
-    composition (particularly S)
+    """Calculated range in fO2 assuming sulfide and anhydrite saturation (if possible)
+    for given melt composition (particularly S).
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: Results of range in fO2 calculation from sulfur content of melt
@@ -1126,7 +1126,7 @@ def mass_vol_rho(PT, melt_wf, gas_mf, bulk_wf, models):
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
         gas_mf (dict): Gas composition in molefraction
         bulk_wf (dict): Bulk composition in weight fraction
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: Melt, gas, and bulk density and volume
@@ -1161,11 +1161,11 @@ def mass_vol_rho(PT, melt_wf, gas_mf, bulk_wf, models):
 
 def mf_S_species_old(melt_wf, gas_mf):
     """Calculates weight fraction of each sulfur species in the melt and vapor wrt to
-    total sulfur in the system
+    total sulfur in the system.
 
     Args:
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        gas_mf (dict): Gas composition in molefraction
+        gas_mf (dict): Gas composition in mole fraction
 
     Returns:
         dict: Weight fraction of sulfur in each sulfur species
@@ -1427,12 +1427,13 @@ def mf_H_species(comp):
 
 
 def fO2_silm_sulf_anh(PT, melt_wf, models):
-    """Calculates the fO2 for melt saturated with both sulfide and anhydrite
+    """Calculates the fO2 and sulfur content for melt saturated with both sulfide and
+    anhydrite.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         dict: fO2, S6+/ST, total S, SCAS, SCSS
@@ -1456,12 +1457,12 @@ def fO2_silm_sulf_anh(PT, melt_wf, models):
 
 def S_given_T_P_fO2_C_H(PT, melt_wf, models, nr_step, nr_tol):  # no dissolved H2S
     """Calculates the sulfur content of a melt of given CO2, H2O, P and T to cause vapor
-    saturation (no H2S in the melt)
+    saturation (no H2S in the melt).
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
         nr_step (float): Step-size for Newton-Raphson solver
         nr_tol (float): Tolerance for Newton-Raphson solver
 
@@ -1532,12 +1533,12 @@ def S_given_T_P_fO2_C_H(PT, melt_wf, models, nr_step, nr_tol):  # no dissolved H
 
 def conc_insolubles(PT, melt_wf, models):
     """Calculates the concentration of H2, CO, CH4, and H2S in a melt at the given
-    conditions and the melt species ratios
+    conditions and the melt species ratios.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
         tuple(dict,dict): Concentration of melt species, volatile ratios of melt species
@@ -1562,7 +1563,9 @@ def conc_insolubles(PT, melt_wf, models):
     S2m = melt_wf["S2-"]  # weight fraction of S2-
     S6p = (
         mg.C_SO4(PT, melt_wf, models) * mdv.f_O2(PT, melt_wf, models) ** 2 * S2m
-    ) / mg.C_S(PT, melt_wf, models)  # weight fraction S6+
+    ) / mg.C_S(
+        PT, melt_wf, models
+    )  # weight fraction S6+
     H2S = (
         mg.C_H2S(PT, melt_wf, models) * mg.f_H2S(PT, melt_wf, models)
     ) / 1000000.0  # weight fraction H2S
@@ -1614,11 +1617,12 @@ def conc_insolubles(PT, melt_wf, models):
 
 
 def compositions_within_error(run, setup):
-    """Calculates a random composition within error of the given composition
+    """Calculates a random composition within error of the given composition assuming
+    Guassian distribution of uncertainty.
 
     Args:
         run (int): Row number of input data
-        setup (pandas.Dataframe): Input data
+        setup (pandas.DataFrame): Input data
 
     Returns:
         dict: Random composition within error of given composition
@@ -1665,15 +1669,16 @@ def compositions_within_error(run, setup):
 
 
 def calc_isobar_CO2H2O(PT, melt_wf, models):
-    """Calculates CO2-H2O isobar at given P and T
+    """Calculates CO2-H2O isobar at given P and T assuming only CO2-H2O in the melt and
+    vapor.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
-        pandas.Dataframe: H2O-CO2 concentrations for vapor saturation at given P and T
+        pandas.DataFrame: H2O-CO2 concentrations for vapor saturation at given P and T
     """
     M_H2O = mdv.species.loc["H2O", "M"]
     M_CO2 = mdv.species.loc["CO2", "M"]
@@ -1719,15 +1724,15 @@ def calc_isobar_CO2H2O(PT, melt_wf, models):
 
 
 def calc_pure_solubility(PT, melt_wf, models):
-    """Calculates pure solubility of H2O and CO2 at given P and T
+    """Calculates pure solubility of H2O and CO2 at given P and T and melt composition.
 
     Args:
         PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
         melt_wf (dict): Melt composition (SiO2, TiO2, etc. including volatiles)
-        models (pandas.Dataframe): Model options
+        models (pandas.DataFrame): Model options
 
     Returns:
-        pandas.Dataframe: Solubility of H2O and CO2 at given P and T
+        pandas.DataFrame: Solubility of H2O and CO2 at given P and T
     """
     M_H2O = mdv.species.loc["H2O", "M"]
     M_CO2 = mdv.species.loc["CO2", "M"]
@@ -1766,7 +1771,7 @@ def calc_isotopes(PT, comp, R, models, nr_step, nr_tol, run=0.0):
 
 def check_mass_balance(xg, melt, melt_and_gas):
     """Checks the mass balance by comparing melt and gas composition to bulk composition
-    given masses of the phases
+    given masses of the phases.
 
     Args:
         xg (dict): Gas composition in mole fraction
@@ -1887,9 +1892,3 @@ def check_mass_balance(xg, melt, melt_and_gas):
     mb = {"C": mb_C, "O": mb_O, "H": mb_H, "S": mb_S}
 
     return mb
-
-
-# WORK IN PROGRESS
-###########################################################################
-# P given S content of melt after degassing given conditions of pvsat #####
-###########################################################################
