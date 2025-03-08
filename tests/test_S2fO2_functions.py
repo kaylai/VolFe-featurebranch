@@ -33,10 +33,10 @@ def test_S2fO2_df_pvsat():
 
     result1 = vf.calc_melt_S_oxybarometer(my_analysis)
 
-    assert result1.loc[0, "P (bar) sulf"] == pytest.approx(3216.995411053818)
-    assert result1.loc[0, "DFMQ-sulfide"] == pytest.approx(0.8793892827704433)
-    assert result1.loc[0, "P (bar) anh"] == ""
-    assert result1.loc[0, "DFMQ-sulfate"] == ""
+    assert result1.loc[0, "P_bar_sulf"] == pytest.approx(3216.995411053818)
+    assert result1.loc[0, "fO2_DFMQ_sulf"] == pytest.approx(0.8793892827704433)
+    assert result1.loc[0, "P_bar_anh"] == ""
+    assert result1.loc[0, "fO2_DFMQ_anh"] == ""
 
 
 def test_S2fO2_df_P():
@@ -70,10 +70,10 @@ def test_S2fO2_df_P():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis)
 
-    assert result.loc[0, "P (bar) sulf"] == pytest.approx(1000.0)
-    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(1.130552073633682)
-    assert result.loc[0, "P (bar) anh"] == pytest.approx(1000.0)
-    assert result.loc[0, "DFMQ-sulfate"] == ""
+    assert result.loc[0, "P_bar_sulf"] == pytest.approx(1000.0)
+    assert result.loc[0, "fO2_DFMQ_sulf"] == pytest.approx(1.130552073633682)
+    assert result.loc[0, "P_bar_anh"] == pytest.approx(1000.0)
+    assert result.loc[0, "fO2_DFMQ_anh"] == ""
 
 
 def test_S2fO2_df_Xsulf():
@@ -109,10 +109,10 @@ def test_S2fO2_df_Xsulf():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis)
 
-    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3229.2146516472353)
-    assert result.loc[0, "DFMQ-sulfide"] == pytest.approx(0.9965038816421421)
-    assert result.loc[0, "P (bar) anh"] == ""
-    assert result.loc[0, "DFMQ-sulfate"] == ""
+    assert result.loc[0, "P_bar_sulf"] == pytest.approx(3229.2146516472353)
+    assert result.loc[0, "fO2_DFMQ_sulf"] == pytest.approx(0.9965038816421421)
+    assert result.loc[0, "P_bar_anh"] == ""
+    assert result.loc[0, "fO2_DFMQ_anh"] == ""
 
 
 def test_S2fO2_df_useropt():
@@ -157,7 +157,7 @@ def test_S2fO2_df_useropt():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis, models=my_models)
 
-    assert result.loc[0, "P (bar) sulf"] == pytest.approx(3532.3257414292784)
-    assert result.loc[0, "DFMQ-sulfide"] == ""
-    assert result.loc[0, "P (bar) anh"] == ""
-    assert result.loc[0, "DFMQ-sulfate"] == ""
+    assert result.loc[0, "P_bar_sulf"] == pytest.approx(3532.3257414292784)
+    assert result.loc[0, "fO2_DFMQ_sulf"] == ""
+    assert result.loc[0, "P_bar_anh"] == ""
+    assert result.loc[0, "fO2_DFMQ_anh"] == ""
