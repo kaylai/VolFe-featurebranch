@@ -717,7 +717,7 @@ def C_H2O(PT, melt_wf, models=default_models):
         elif model_solubility == "Basalt_Hughes24":
             C = 4.6114e-6
 
-        # WORK IN PROGRESS
+        # WORK IN PROGRESS BELOW HERE
 
         # modified general model from Lesne et al. (2011) 162:133-151
         elif model_solubility == "Lesne11mod":
@@ -761,6 +761,16 @@ def C_H2O(PT, melt_wf, models=default_models):
         # like 1000 ppm H2O at 730 bar
         elif model_solubility == "test3":
             C = 6.22885e-09
+
+        # Fitted to data from Tamic et al. (2001) and Blank et al. (1993) using Ptot
+        elif model_solubility == "Rhyolite_Ptot":
+            C = 5.95096442058296e-06
+        # Fitted to data from Behrens et al. (2004) using Ptot
+        elif model_solubility == "Dacite_Ptot":
+            C = 6.80332975540805e-06
+        # Fitted to data from Botcharnikov et al. (2006) using Ptot
+        elif model_solubility == "Andesite_Ptot":
+            C = 7.99243458788883e-06
 
     # C_H2O = xmH2O/fH2O (mole fraction)
     # like AllisonDataComp... I think.
@@ -1177,14 +1187,41 @@ def C_CO3(PT, melt_wf, models=default_models):
             C = A * gp.exp(B)
         else:
             C = A * math.exp(B)
-    elif model == "dacite":  # Fit to Behrens et al. (2004) using Ptot
-        DV = 36.5  # cm3/mol
+    elif model == "Dacite_Ptot":  # Fit to Behrens et al. (2004) using Ptot
+        DV = 35.8  # cm3/mol
         P0 = 1.0  # bar
+        lnC = -14.31
         if models.loc["high precision", "option"] == "True":
-            A = gp.exp(-14.3)
+            A = gp.exp(lnC)
         else:
-            A = math.exp(-14.3)
-        B = (-DV * (P - P0)) / (R * (1250.0 + 273.15))
+            A = math.exp(lnC)
+        B = (-DV * (P - P0)) / (R * T_K)
+        if models.loc["high precision", "option"] == "True":
+            C = A * gp.exp(B)
+        else:
+            C = A * math.exp(B)
+    elif model == "Andesite_Ptot":  # Fit to Botcharnikov et al. (2006) using Ptot
+        DV = 22.7  # cm3/mol
+        P0 = 1.0  # bar
+        lnC = -14.38
+        if models.loc["high precision", "option"] == "True":
+            A = gp.exp(lnC)
+        else:
+            A = math.exp(lnC)
+        B = (-DV * (P - P0)) / (R * T_K)
+        if models.loc["high precision", "option"] == "True":
+            C = A * gp.exp(B)
+        else:
+            C = A * math.exp(B)
+    elif model == "Rhyolite_Ptot":  # Fit to Botcharnikov et al. (2006) using Ptot
+        DV = 28.9  # cm3/mol
+        P0 = 1.0  # bar
+        lnC = -14.71
+        if models.loc["high precision", "option"] == "True":
+            A = gp.exp(lnC)
+        else:
+            A = math.exp(lnC)
+        B = (-DV * (P - P0)) / (R * T_K)
         if models.loc["high precision", "option"] == "True":
             C = A * gp.exp(B)
         else:
