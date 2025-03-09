@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 import math as math
 import warnings
+import tqdm
 
 import VolFe.melt_gas as mg
 import VolFe.equilibrium_equations as eq
@@ -74,7 +75,7 @@ def results_table_melt_comp_etc(PT, melt_comp, conc, frac, melt_wf):
     frac: dict
         Ratios of each species over volatile element
 
-    melt_wf: dict:
+    melt_wf: dict
         Melt composition (specifically for sulfide composition)
 
 
@@ -213,12 +214,13 @@ def results_table_model_options(models):
     Parameters
     ----------
     models: pandas.DataFrame
-        Mdel options used in calculations
+        Model options used in calculations
 
     Returns
     -------
     tuple(pandas.DataFrame,pandas.DataFrame)
-        Headers and values for model options used in calculations and datetime of calculation
+        Headers and values for model options used in calculations and datetime of
+        calculation
     """
     results_headers = pd.DataFrame(
         [
@@ -916,8 +918,7 @@ def calc_Pvsat(
     volatile-free melt composition, volatile content, temperature, and an fO2 estimate.
 
     Args:
-        setup (pandas.DataFrame): Melt compositions to be used, requires following headers: Sample; T_C;
-        DNNO or DFMQ or logfO2 or (Fe2O3 and FeO) or Fe3FeT or S6ST; SiO2, TiO2, Al2O3, (Fe2O3T or FeOT unless Fe2O3 and FeO given), MnO, MgO, CaO, Na2O, K2O, P2O5; H2O and/or CO2ppm and/or STppm and/or Xppm. Note: concentrations (unless otherwise stated) are in wt%
+        setup (pandas.DataFrame): Melt compositions to be used, requires following headers: Sample; T_C; DNNO or DFMQ or logfO2 or (Fe2O3 and FeO) or Fe3FeT or S6ST; SiO2, TiO2, Al2O3, (Fe2O3T or FeOT unless Fe2O3 and FeO given), MnO, MgO, CaO, Na2O, K2O, P2O5; H2O and/or CO2ppm and/or STppm and/or Xppm. Note: concentrations (unless otherwise stated) are in wt%
         models (_type_pandas.DataFrame, optional): Model options. Defaults to mdv.default_models.
         first_row (int, optional): Integer of the first row in the setup file to run (note the first row under the headers is row 0). Defaults to 0.
         last_row (float, optional): Integer of the last row in the setup file to run (note the first row under the headers is row 0). Defaults to None.
@@ -1182,6 +1183,7 @@ def calc_gassing(
             "wm_S2m": 0.0,
             "wm_S6p": 0.0,
             "ST": 0.0,
+            "Fe3FeT": melt_wf["Fe3FeT_i"],
         }
         frac = c.melt_species_ratios(conc)
     else:
@@ -1574,631 +1576,652 @@ def calc_gassing(
 
     # run over different pressures #
     number_of_step = 0.0
+    if models.loc["gassing_direction", "option"] == "degas":
+        max_number_of_step = initial
+    elif models.loc["gassing_direction", "option"] == "regas":
+        max_number_of_step = final - initial
 
     PT["P"] = initial
     last_successful_P = math.floor(PT["P"])
-    while PT["P"] > 1.0:
-        # for i in range(initial,final,step): # P is pressure in bars or T is
-        # temperature in 'C
-        number_of_step = number_of_step + 1.0
-        eq_Fe = models.loc["eq_Fe", "option"]
-        # guesses_original = guesses # store original guesses in case the calculation
-        # needs to be restarted
-        original_guessx, original_guessy, original_guessz, original_guessw = (
-            guesses["guessx"],
-            guesses["guessy"],
-            guesses["guessz"],
-            guesses["guessw"],
-        )
 
-        if dp_step_choice == "auto":
-            if models.loc["gassing_style", "option"] == "open":
-                dp_step = 1.0
-            else:
-                if PT["P"] > 5000.0:
-                    dp_step = 500.0
-                elif PT["P"] > 200.0:
-                    dp_step = 100.0
-                elif PT["P"] > 50.0:
-                    dp_step = 10.0
+    with tqdm.tqdm(total=max_number_of_step) as tqdmsteps:
+        while PT["P"] > 1.0:
+            # for i in range(initial,final,step): # P is pressure in bars or T is
+            # temperature in 'C
+            number_of_step = number_of_step + 1.0
+            eq_Fe = models.loc["eq_Fe", "option"]
+            # guesses_original = guesses # store original guesses in case the
+            # calculation needs to be restarted
+            original_guessx, original_guessy, original_guessz, original_guessw = (
+                guesses["guessx"],
+                guesses["guessy"],
+                guesses["guessz"],
+                guesses["guessw"],
+            )
+
+            if dp_step_choice == "auto":
+                if models.loc["gassing_style", "option"] == "open":
+                    dp_step = 1.0
                 else:
-                    dp_step = 1.0
-
-        if number_of_step == 1.0:
-            if dp_step_choice == "user":
-                dp_step_user = dp_step
-            dp_step = 0.0
-
-        if models.loc["gassing_direction", "option"] == "regas":
-            dp_step = -1.0 * dp_step
-
-        if models.loc["P_variation", "option"] == "polybaric":
-            # P = i - dp_step
-            P = PT["P"] - dp_step
-            if P < dp_step or P < 1.0:
-                P = 1.0
-            PT["P"] = P
-        elif models.loc["T_variation", "option"] == "polythermal":
-            T = initial - dp_step
-            PT["T"] = T
-
-        if (
-            models.loc["gassing_style", "option"] == "open"
-        ):  # check melt is still vapor-saturated
-            PT_ = {"P": PT["P"], "T": PT["T"]}
-            if models.loc["COH_species", "option"] == "H2O-CO2 only":
-                P_sat_, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
-                    PT_, melt_wf, models, psat_tol, nr_step, nr_tol
-                )
-                conc = {
-                    "wm_H2O": P_sat_H2O_CO2_result["wm_H2O"],
-                    "wm_CO2": P_sat_H2O_CO2_result["wm_CO2"],
-                    "wm_H2": 0.0,
-                    "wm_CO": 0.0,
-                    "wm_CH4": 0.0,
-                    "wm_H2S": 0.0,
-                    "wm_S2m": 0.0,
-                    "wm_S6p": 0.0,
-                    "ST": 0.0,
-                }
-                frac = c.melt_species_ratios(conc)
-            else:
-                P_sat_, conc, frac = c.P_sat(
-                    PT_, melt_wf, models, psat_tol, nr_step, nr_tol
-                )
-            if models.loc["gassing_direction", "option"] == "degas":
-                checkingP = PT["P"]
-                while P_sat_ < checkingP:
-                    checkingP = checkingP - dp_step
-                    PT_["P"] = checkingP
-                    if models.loc["COH_species", "option"] == "H2O-CO2 only":
-                        P_sat_, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
-                            PT_, melt_wf, models, psat_tol, nr_step, nr_tol
-                        )
-                        conc = {
-                            "wm_H2O": P_sat_H2O_CO2_result["wm_H2O"],
-                            "wm_CO2": P_sat_H2O_CO2_result["wm_CO2"],
-                            "wm_H2": 0.0,
-                            "wm_CO": 0.0,
-                            "wm_CH4": 0.0,
-                            "wm_H2S": 0.0,
-                            "wm_S2m": 0.0,
-                            "wm_S6p": 0.0,
-                            "ST": 0.0,
-                        }
-                        frac = c.melt_species_ratios(conc)
+                    if PT["P"] > 5000.0:
+                        dp_step = 500.0
+                    elif PT["P"] > 200.0:
+                        dp_step = 100.0
+                    elif PT["P"] > 50.0:
+                        dp_step = 10.0
                     else:
-                        P_sat_, conc, frac = c.P_sat(
-                            PT_, melt_wf, models, psat_tol, nr_step, nr_tol
-                        )
-                PT["P"] = checkingP
+                        dp_step = 1.0
 
-        if P_sat_ > PT["P"] or models.loc["gassing_direction", "option"] == "regas":
-            # work out equilibrium partitioning between melt and gas phase
-            with warnings.catch_warnings():
-                warnings.simplefilter(
-                    "ignore" if suppress_warnings else "default",
-                    category=RuntimeWarning,
-                )
-                (
-                    xg,
-                    conc,
-                    melt_and_gas,
-                    guesses,
-                    new_models,
-                    solve_species,
-                    mass_balance,
-                ) = eq.mg_equilibrium(
-                    PT, melt_wf, bulk_wf, models, nr_step_eq, nr_tol, guesses
-                )
-            models = new_models
-            # if xg["xg_O2"] == 1.0:
-            #    print('tried resetting guesses')
-            #    guesses = eq.initial_guesses(run,PT,melt_wf,setup,models,system)
-            #    xg, conc, melt_and_gas, guesses, new_models, solve_species,
-            #    mass_balance = eq.mg_equilibrium(PT,melt_wf,bulk_wf,models,nr_step_eq,
-            #    nr_tol,guesses)
-            #    models = new_models
-            if models.loc["gassing_style", "option"] == "closed":
+            if number_of_step == 1.0:
+                if dp_step_choice == "user":
+                    dp_step_user = dp_step
+                dp_step = 0.0
+
+            if models.loc["gassing_direction", "option"] == "regas":
+                dp_step = -1.0 * dp_step
+
+            if models.loc["P_variation", "option"] == "polybaric":
+                # P = i - dp_step
+                P = PT["P"] - dp_step
+                if P < dp_step or P < 1.0:
+                    P = 1.0
+                PT["P"] = P
+            elif models.loc["T_variation", "option"] == "polythermal":
+                T = initial - dp_step
+                PT["T"] = T
+
+            if (
+                models.loc["gassing_style", "option"] == "open"
+            ):  # check melt is still vapor-saturated
+                PT_ = {"P": PT["P"], "T": PT["T"]}
+                if models.loc["COH_species", "option"] == "H2O-CO2 only":
+                    P_sat_, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
+                        PT_, melt_wf, models, psat_tol, nr_step, nr_tol
+                    )
+                    conc = {
+                        "wm_H2O": P_sat_H2O_CO2_result["wm_H2O"],
+                        "wm_CO2": P_sat_H2O_CO2_result["wm_CO2"],
+                        "wm_H2": 0.0,
+                        "wm_CO": 0.0,
+                        "wm_CH4": 0.0,
+                        "wm_H2S": 0.0,
+                        "wm_S2m": 0.0,
+                        "wm_S6p": 0.0,
+                        "ST": 0.0,
+                    }
+                    frac = c.melt_species_ratios(conc)
+                else:
+                    P_sat_, conc, frac = c.P_sat(
+                        PT_, melt_wf, models, psat_tol, nr_step, nr_tol
+                    )
+                if models.loc["gassing_direction", "option"] == "degas":
+                    checkingP = PT["P"]
+                    while P_sat_ < checkingP:
+                        checkingP = checkingP - dp_step
+                        PT_["P"] = checkingP
+                        if models.loc["COH_species", "option"] == "H2O-CO2 only":
+                            P_sat_, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
+                                PT_, melt_wf, models, psat_tol, nr_step, nr_tol
+                            )
+                            conc = {
+                                "wm_H2O": P_sat_H2O_CO2_result["wm_H2O"],
+                                "wm_CO2": P_sat_H2O_CO2_result["wm_CO2"],
+                                "wm_H2": 0.0,
+                                "wm_CO": 0.0,
+                                "wm_CH4": 0.0,
+                                "wm_H2S": 0.0,
+                                "wm_S2m": 0.0,
+                                "wm_S6p": 0.0,
+                                "ST": 0.0,
+                            }
+                            frac = c.melt_species_ratios(conc)
+                        else:
+                            P_sat_, conc, frac = c.P_sat(
+                                PT_, melt_wf, models, psat_tol, nr_step, nr_tol
+                            )
+                    PT["P"] = checkingP
+
+            if P_sat_ > PT["P"] or models.loc["gassing_direction", "option"] == "regas":
+                # work out equilibrium partitioning between melt and gas phase
+                with warnings.catch_warnings():
+                    warnings.simplefilter(
+                        "ignore" if suppress_warnings else "default",
+                        category=RuntimeWarning,
+                    )
+                    (
+                        xg,
+                        conc,
+                        melt_and_gas,
+                        guesses,
+                        new_models,
+                        solve_species,
+                        mass_balance,
+                    ) = eq.mg_equilibrium(
+                        PT, melt_wf, bulk_wf, models, nr_step_eq, nr_tol, guesses
+                    )
+                models = new_models
                 # if xg["xg_O2"] == 1.0:
-                #    current_melt = {'SiO2': melt_wf["SiO2"], 'TiO2': melt_wf["TiO2"],
-                #    'Al2O3': melt_wf["Al2O3"], 'FeOT': melt_wf["FeOT"], 'Fe2O3T':
-                #    melt_wf["Fe2O3T"], 'FeO': melt_wf["FeO"], 'Fe2O3':
-                #    melt_wf["Fe2O3"], 'MgO': melt_wf["MgO"], 'MnO': melt_wf["MnO"],
-                #    'CaO': melt_wf["CaO"], 'Na2O': melt_wf["Na2O"], 'K2O':
-                #    melt_wf["K2O"], 'P2O5': melt_wf["P2O5"], 'logfO2_i':
-                #    melt_wf["logfO2_i"], 'Fe3FeT_i': melt_wf["Fe3FeT_i"], 'DNNO':
-                #    melt_wf["DNNO"], 'DFMQ': melt_wf["DFMQ"], 'S6ST_i':
-                #    melt_wf["S6ST_i"], "ST":melt_wf["ST"],"CO2":melt_wf["CO2"],
-                #    "H2OT":melt_wf["H2OT"],"HT":melt_wf["HT"],"CT":melt_wf["CT"],
-                #    "XT":melt_wf["XT"]}
-                #    P_sat_, conc, frac = c.P_sat(PT,current_melt,models,psat_tol,
-                #    nr_step,nr_tol)
-                if xg["xg_O2"] == 1.0:
-                    guesses = {
-                        "guessx": original_guessx,
-                        "guessy": original_guessy,
-                        "guessz": original_guessz,
-                        "guessw": original_guessw,
-                    }
-                    if dp_step < 1.0 or dp_step == 1.0:
-                        if PT["P"] <= 10.0:
-                            PT["P"] = 1.0
-                            with warnings.catch_warnings():
-                                warnings.simplefilter(
-                                    "ignore" if suppress_warnings else "default",
-                                    category=RuntimeWarning,
-                                )
-                                (
-                                    xg,
-                                    conc,
-                                    melt_and_gas,
-                                    guesses,
-                                    new_models,
-                                    solve_species,
-                                    mass_balance,
-                                ) = eq.mg_equilibrium(
-                                    PT,
-                                    melt_wf,
-                                    bulk_wf,
-                                    models,
-                                    nr_step_eq,
-                                    nr_tol,
-                                    guesses,
-                                )
-                            models = new_models
-                            if xg["xg_O2"] == 1.0:
-                                results.columns = results.iloc[0]
-                                results = results[1:]
-                                results.reset_index(drop=True, inplace=True)
-                                if models.loc["output csv", "option"] == "True":
-                                    results.to_csv(
-                                        "results_gassing_chemistry.csv",
-                                        index=False,
-                                        header=True,
+                #    print('tried resetting guesses')
+                #    guesses = eq.initial_guesses(run,PT,melt_wf,setup,models,system)
+                #    xg, conc, melt_and_gas, guesses, new_models, solve_species,
+                #    mass_balance = eq.mg_equilibrium(PT,melt_wf,bulk_wf,models,
+                #    nr_step_eq, nr_tol,guesses)
+                #    models = new_models
+                if models.loc["gassing_style", "option"] == "closed":
+                    # if xg["xg_O2"] == 1.0:
+                    #    current_melt = {'SiO2': melt_wf["SiO2"], 'TiO2': melt_wf
+                    #    ["TiO2"],
+                    #    'Al2O3': melt_wf["Al2O3"], 'FeOT': melt_wf["FeOT"], 'Fe2O3T':
+                    #    melt_wf["Fe2O3T"], 'FeO': melt_wf["FeO"], 'Fe2O3':
+                    #    melt_wf["Fe2O3"], 'MgO': melt_wf["MgO"], 'MnO': melt_wf["MnO"],
+                    #    'CaO': melt_wf["CaO"], 'Na2O': melt_wf["Na2O"], 'K2O':
+                    #    melt_wf["K2O"], 'P2O5': melt_wf["P2O5"], 'logfO2_i':
+                    #    melt_wf["logfO2_i"], 'Fe3FeT_i': melt_wf["Fe3FeT_i"], 'DNNO':
+                    #    melt_wf["DNNO"], 'DFMQ': melt_wf["DFMQ"], 'S6ST_i':
+                    #    melt_wf["S6ST_i"], "ST":melt_wf["ST"],"CO2":melt_wf["CO2"],
+                    #    "H2OT":melt_wf["H2OT"],"HT":melt_wf["HT"],"CT":melt_wf["CT"],
+                    #    "XT":melt_wf["XT"]}
+                    #    P_sat_, conc, frac = c.P_sat(PT,current_melt,models,psat_tol,
+                    #    nr_step,nr_tol)
+                    if xg["xg_O2"] == 1.0:
+                        guesses = {
+                            "guessx": original_guessx,
+                            "guessy": original_guessy,
+                            "guessz": original_guessz,
+                            "guessw": original_guessw,
+                        }
+                        if dp_step < 1.0 or dp_step == 1.0:
+                            if PT["P"] <= 10.0:
+                                PT["P"] = 1.0
+                                with warnings.catch_warnings():
+                                    warnings.simplefilter(
+                                        "ignore" if suppress_warnings else "default",
+                                        category=RuntimeWarning,
                                     )
-                                print(
-                                    "solver failed, calculation aborted at P = ",
-                                    PT["P"],
-                                    datetime.datetime.now(),
-                                )
-                                return results
+                                    (
+                                        xg,
+                                        conc,
+                                        melt_and_gas,
+                                        guesses,
+                                        new_models,
+                                        solve_species,
+                                        mass_balance,
+                                    ) = eq.mg_equilibrium(
+                                        PT,
+                                        melt_wf,
+                                        bulk_wf,
+                                        models,
+                                        nr_step_eq,
+                                        nr_tol,
+                                        guesses,
+                                    )
+                                models = new_models
+                                if xg["xg_O2"] == 1.0:
+                                    results.columns = results.iloc[0]
+                                    results = results[1:]
+                                    results.reset_index(drop=True, inplace=True)
+                                    if models.loc["output csv", "option"] == "True":
+                                        results.to_csv(
+                                            "results_gassing_chemistry.csv",
+                                            index=False,
+                                            header=True,
+                                        )
+                                    print(
+                                        "solver failed, calculation aborted at P = ",
+                                        PT["P"],
+                                        datetime.datetime.now(),
+                                    )
+                                    return results
+                            print(
+                                "solver failed at P = ",
+                                PT["P"],
+                                "with dp_step = ",
+                                dp_step,
+                                ", increasing step size by factor 10",
+                            )
+                            dp_step = dp_step * 10.0
+                        else:
+                            print(
+                                "solver failed at P = ",
+                                PT["P"],
+                                "with dp_step = ",
+                                dp_step,
+                                ", decreasing step size by factor 10",
+                            )
+                            dp_step = dp_step / 10.0
+                        newP = last_successful_P - dp_step
+                        if newP < 1.0:
+                            newP = 1.0
+                        PT["P"] = newP
+                        guesses = {
+                            "guessx": original_guessx,
+                            "guessy": original_guessy,
+                            "guessz": original_guessz,
+                            "guessw": original_guessw,
+                        }
+                        with warnings.catch_warnings():
+                            warnings.simplefilter(
+                                "ignore" if suppress_warnings else "default",
+                                category=RuntimeWarning,
+                            )
+                            (
+                                xg,
+                                conc,
+                                melt_and_gas,
+                                guesses,
+                                new_models,
+                                solve_species,
+                                mass_balance,
+                            ) = eq.mg_equilibrium(
+                                PT,
+                                melt_wf,
+                                bulk_wf,
+                                models,
+                                nr_step_eq,
+                                nr_tol,
+                                guesses,
+                            )
+                        models = new_models
+                if xg["xg_O2"] == 1.0:
+                    if dp_step > 1.0:
                         print(
                             "solver failed at P = ",
                             PT["P"],
                             "with dp_step = ",
                             dp_step,
-                            ", increasing step size by factor 10",
+                            ", decreasing step size to 1 bar",
                         )
-                        dp_step = dp_step * 10.0
-                    else:
-                        print(
-                            "solver failed at P = ",
-                            PT["P"],
-                            "with dp_step = ",
-                            dp_step,
-                            ", decreasing step size by factor 10",
+                        dp_step = 1.0
+                        newP = last_successful_P - dp_step
+                        PT["P"] = newP
+                        guesses = {
+                            "guessx": original_guessx,
+                            "guessy": original_guessy,
+                            "guessz": original_guessz,
+                            "guessw": original_guessw,
+                        }
+                        with warnings.catch_warnings():
+                            warnings.simplefilter(
+                                "ignore" if suppress_warnings else "default",
+                                category=RuntimeWarning,
+                            )
+                            (
+                                xg,
+                                conc,
+                                melt_and_gas,
+                                guesses,
+                                new_models,
+                                solve_species,
+                                mass_balance,
+                            ) = eq.mg_equilibrium(
+                                PT,
+                                melt_wf,
+                                bulk_wf,
+                                models,
+                                nr_step_eq,
+                                nr_tol,
+                                guesses,
+                            )
+                        models = new_models
+                if xg["xg_O2"] == 1.0:
+                    results.columns = results.iloc[0]
+                    results = results[1:]
+                    results.reset_index(drop=True, inplace=True)
+                    if models.loc["output csv", "option"] == "True":
+                        results.to_csv(
+                            "results_gassing_chemistry.csv", index=False, header=True
                         )
-                        dp_step = dp_step / 10.0
-                    newP = last_successful_P - dp_step
-                    if newP < 1.0:
-                        newP = 1.0
-                    PT["P"] = newP
-                    guesses = {
-                        "guessx": original_guessx,
-                        "guessy": original_guessy,
-                        "guessz": original_guessz,
-                        "guessw": original_guessw,
-                    }
-                    with warnings.catch_warnings():
-                        warnings.simplefilter(
-                            "ignore" if suppress_warnings else "default",
-                            category=RuntimeWarning,
-                        )
-                        (
-                            xg,
-                            conc,
-                            melt_and_gas,
-                            guesses,
-                            new_models,
-                            solve_species,
-                            mass_balance,
-                        ) = eq.mg_equilibrium(
-                            PT, melt_wf, bulk_wf, models, nr_step_eq, nr_tol, guesses
-                        )
-                    models = new_models
-            if xg["xg_O2"] == 1.0:
-                if dp_step > 1.0:
                     print(
-                        "solver failed at P = ",
+                        "solver failed, calculation aborted at P = ",
                         PT["P"],
-                        "with dp_step = ",
-                        dp_step,
-                        ", decreasing step size to 1 bar",
+                        datetime.datetime.now(),
                     )
-                    dp_step = 1.0
-                    newP = last_successful_P - dp_step
-                    PT["P"] = newP
-                    guesses = {
-                        "guessx": original_guessx,
-                        "guessy": original_guessy,
-                        "guessz": original_guessz,
-                        "guessw": original_guessw,
-                    }
-                    with warnings.catch_warnings():
-                        warnings.simplefilter(
-                            "ignore" if suppress_warnings else "default",
-                            category=RuntimeWarning,
-                        )
-                        (
-                            xg,
-                            conc,
-                            melt_and_gas,
-                            guesses,
-                            new_models,
-                            solve_species,
-                            mass_balance,
-                        ) = eq.mg_equilibrium(
-                            PT, melt_wf, bulk_wf, models, nr_step_eq, nr_tol, guesses
-                        )
-                    models = new_models
-            if xg["xg_O2"] == 1.0:
-                results.columns = results.iloc[0]
-                results = results[1:]
-                results.reset_index(drop=True, inplace=True)
-                if models.loc["output csv", "option"] == "True":
-                    results.to_csv(
-                        "results_gassing_chemistry.csv", index=False, header=True
-                    )
-                print(
-                    "solver failed, calculation aborted at P = ",
-                    PT["P"],
-                    datetime.datetime.now(),
-                )
-                return results
-            # gas composition
-            gas_mf = {
-                "O2": xg["xg_O2"],
-                "CO": xg["xg_CO"],
-                "S2": xg["xg_S2"],
-                "CO2": xg["xg_CO2"],
-                "H2O": xg["xg_H2O"],
-                "H2": xg["xg_H2"],
-                "CH4": xg["xg_CH4"],
-                "SO2": xg["xg_SO2"],
-                "H2S": xg["xg_H2S"],
-                "OCS": xg["xg_OCS"],
-                "X": xg["xg_X"],
-                "Xg_t": xg["Xg_t"],
-                "wt_g": melt_and_gas["wt_g"],
-            }
-        # else: # NEEDS SORTING ###
-        # conc = eq.melt_speciation(PT,melt_wf,models,nr_step,nr_tol)
-        # frac = c.melt_species_ratios(conc)
-        # wm_ST_ = wm_S_ + wm_S6p_
-        # S62 = S6T/S2m_ST
-        # Fe3T = melt_wf["Fe3FeT"]
-        # Fe32 = mg.overtotal2ratio(Fe3T)
-        # xg = {"xg_O2":0., "xg_H2":0., "xg_S2":0., "xg_H2O":0., "xg_CO":0.,
-        #      "xg_CO2":0., "xg_SO2":0., "xg_CH4":0., "xg_H2S":0., "xg_OCS":0.,
-        #      "xg_X":0., "Xg_t":0.}
-        # if number_of_step == 1:
-        #    melt_and_gas = {}
-        # melt_and_gas["wt_g_O"],melt_and_gas["wt_g_C"],melt_and_gas["wt_g_H"],
-        # melt_and_gas["wt_g_S"],melt_and_gas["wt_g_X"],melt_and_gas["wt_g"] =
-        # 0.,0.,0.,0.,0.
-        # guesses = eq.initial_guesses(run,PT,melt_wf,setup,models,system)
-        # solve_species = "na"
-        # gas_mf = {"O2":xg["xg_O2"],"CO":xg["xg_CO"],"S2":xg["xg_S2"],
-        #          "CO2":xg["xg_CO2"],"H2O":xg["xg_H2O"],"H2":xg["xg_H2"],
-        #          "CH4":xg["xg_CH4"],"SO2":xg["xg_SO2"],"H2S":xg["xg_H2S"],
-        #          "OCS":xg["xg_OCS"],"X":xg["xg_X"],"Xg_t":xg["Xg_t"],
-        #          "wt_g":melt_and_gas["wt_g"]}
+                    return results
+                # gas composition
+                gas_mf = {
+                    "O2": xg["xg_O2"],
+                    "CO": xg["xg_CO"],
+                    "S2": xg["xg_S2"],
+                    "CO2": xg["xg_CO2"],
+                    "H2O": xg["xg_H2O"],
+                    "H2": xg["xg_H2"],
+                    "CH4": xg["xg_CH4"],
+                    "SO2": xg["xg_SO2"],
+                    "H2S": xg["xg_H2S"],
+                    "OCS": xg["xg_OCS"],
+                    "X": xg["xg_X"],
+                    "Xg_t": xg["Xg_t"],
+                    "wt_g": melt_and_gas["wt_g"],
+                }
+            # else: # NEEDS SORTING ###
+            # conc = eq.melt_speciation(PT,melt_wf,models,nr_step,nr_tol)
+            # frac = c.melt_species_ratios(conc)
+            # wm_ST_ = wm_S_ + wm_S6p_
+            # S62 = S6T/S2m_ST
+            # Fe3T = melt_wf["Fe3FeT"]
+            # Fe32 = mg.overtotal2ratio(Fe3T)
+            # xg = {"xg_O2":0., "xg_H2":0., "xg_S2":0., "xg_H2O":0., "xg_CO":0.,
+            #      "xg_CO2":0., "xg_SO2":0., "xg_CH4":0., "xg_H2S":0., "xg_OCS":0.,
+            #      "xg_X":0., "Xg_t":0.}
+            # if number_of_step == 1:
+            #    melt_and_gas = {}
+            # melt_and_gas["wt_g_O"],melt_and_gas["wt_g_C"],melt_and_gas["wt_g_H"],
+            # melt_and_gas["wt_g_S"],melt_and_gas["wt_g_X"],melt_and_gas["wt_g"] =
+            # 0.,0.,0.,0.,0.
+            # guesses = eq.initial_guesses(run,PT,melt_wf,setup,models,system)
+            # solve_species = "na"
+            # gas_mf = {"O2":xg["xg_O2"],"CO":xg["xg_CO"],"S2":xg["xg_S2"],
+            #          "CO2":xg["xg_CO2"],"H2O":xg["xg_H2O"],"H2":xg["xg_H2"],
+            #          "CH4":xg["xg_CH4"],"SO2":xg["xg_SO2"],"H2S":xg["xg_H2S"],
+            #          "OCS":xg["xg_OCS"],"X":xg["xg_X"],"Xg_t":xg["Xg_t"],
+            #          "wt_g":melt_and_gas["wt_g"]}
 
-        if P_sat_ > PT["P"] or models.loc["gassing_direction", "option"] == "regas":
+            if P_sat_ > PT["P"] or models.loc["gassing_direction", "option"] == "regas":
+                if (
+                    models.loc["gassing_style", "option"] == "open"
+                    and models.loc["gassing_direction", "option"] == "degas"
+                ):
+                    if number_of_step == 1:
+                        gas_mf_all = gas_mf
+                    else:
+                        gas_mf_all = c.gas_comp_all_open(gas_mf, gas_mf_all, models)
+                if models.loc["COH_species", "option"] == "H2O-CO2 only":
+                    Fe3T = melt_wf["Fe3FeT"]
+
+            # set melt composition for forward calculation
+            melt_wf["CO2"] = conc["wm_CO2"]
+            melt_wf["H2OT"] = conc["wm_H2O"]
+            melt_wf["H2"] = conc["wm_H2"]
+            melt_wf["CO"] = conc["wm_CO"]
+            melt_wf["CH4"] = conc["wm_CH4"]
+            melt_wf["H2S"] = conc["wm_H2S"]
+            melt_wf["S6+"] = (
+                conc["wm_SO3"] / mdv.species.loc["SO3", "M"]
+            ) * mdv.species.loc["S", "M"]
+            melt_wf["S2-"] = conc["wm_S2m"]
+            melt_wf["ST"] = conc["wm_ST"]
+            melt_wf["XT"] = conc["wm_X"]
+            melt_wf["Fe3FeT"] = conc["Fe3T"]
+            if P_sat_ < PT["P"]:
+                bulk_comp = c.bulk_composition(run, PT, melt_wf, setup, models)
+
+            # check for sulfur saturation and display warning in outputs
+            sulf_sat_result = c.sulfur_saturation(PT, melt_wf, models)
+            if sulf_sat_result["sulfide_sat"] == "yes":
+                warning = "WARNING: sulfide-saturated"
+            elif sulf_sat_result["sulfate_sat"] == "yes":
+                warning = "WARNING: sulfate-saturated"
+            else:
+                warning = ""
+
+            # calculate fO2
+            if eq_Fe == "yes":
+                fO2_ = mdv.f_O2(PT, melt_wf, models)
+            elif eq_Fe == "no":
+                fO2_ = gas_mf["O2"] * mdv.y_O2(PT, models) * PT["P"]
+
+            wm_CO2eq, wm_H2Oeq = mg.melt_H2O_CO2_eq(melt_wf)
+            melt_comp = mg.melt_normalise_wf(melt_wf, "yes", "no")
+            frac = c.melt_species_ratios(conc)
+
+            # store results
+            results_headers_table_sample_name, results_values_table_sample_name = (
+                results_table_sample_name(setup, run)
+            )
+            results_headers_table_melt_comp_etc, results_values_table_melt_comp_etc = (
+                results_table_melt_comp_etc(PT, melt_comp, conc, frac, melt_wf)
+            )
+            results_headers_table_model_options, results_values_table_model_options = (
+                results_table_model_options(models)
+            )
+            (
+                results_headers_table_f_p_xg_y_M_C_K_d,
+                results_values_table_f_p_xg_y_M_C_K_d,
+            ) = results_table_f_p_xg_y_M_C_K_d(PT, melt_wf, models)
+            results_headers_table_sat, results_values_table_sat = results_table_sat(
+                sulf_sat_result, PT, melt_wf, models
+            )
+            results_values_table_melt_vol = pd.DataFrame(
+                [
+                    [
+                        wm_H2Oeq * 100.0,
+                        wm_CO2eq * 1000000.0,
+                        conc["wm_ST"] * 1000000.0,
+                        melt_wf["XT"] * 1000000.0,
+                    ]
+                ]
+            )
+            results_values_table_wtg_etc = pd.DataFrame(
+                [
+                    [
+                        melt_and_gas["wt_g"] * 100.0,
+                        melt_and_gas["wt_g_O"],
+                        melt_and_gas["wt_g_C"],
+                        melt_and_gas["wt_g_H"],
+                        melt_and_gas["wt_g_S"],
+                        melt_and_gas["wt_g_X"],
+                        melt_and_gas["wt_O"] * 100.0,
+                        melt_and_gas["wt_C"] * 100.0,
+                        melt_and_gas["wt_H"] * 100.0,
+                        melt_and_gas["wt_S"] * 100.0,
+                        melt_and_gas["wt_X"] * 100.0,
+                        solve_species,
+                        mass_balance["C"],
+                        mass_balance["O"],
+                        mass_balance["H"],
+                        mass_balance["S"],
+                    ]
+                ]
+            )
             if (
                 models.loc["gassing_style", "option"] == "open"
                 and models.loc["gassing_direction", "option"] == "degas"
             ):
-                if number_of_step == 1:
-                    gas_mf_all = gas_mf
-                else:
-                    gas_mf_all = c.gas_comp_all_open(gas_mf, gas_mf_all, models)
-            if models.loc["COH_species", "option"] == "H2O-CO2 only":
-                Fe3T = melt_wf["Fe3FeT"]
-
-        # set melt composition for forward calculation
-        melt_wf["CO2"] = conc["wm_CO2"]
-        melt_wf["H2OT"] = conc["wm_H2O"]
-        melt_wf["H2"] = conc["wm_H2"]
-        melt_wf["CO"] = conc["wm_CO"]
-        melt_wf["CH4"] = conc["wm_CH4"]
-        melt_wf["H2S"] = conc["wm_H2S"]
-        melt_wf["S6+"] = (
-            conc["wm_SO3"] / mdv.species.loc["SO3", "M"]
-        ) * mdv.species.loc["S", "M"]
-        melt_wf["S2-"] = conc["wm_S2m"]
-        melt_wf["ST"] = conc["wm_ST"]
-        melt_wf["XT"] = conc["wm_X"]
-        melt_wf["Fe3FeT"] = conc["Fe3T"]
-        if P_sat_ < PT["P"]:
-            bulk_comp = c.bulk_composition(run, PT, melt_wf, setup, models)
-
-        # check for sulfur saturation and display warning in outputs
-        sulf_sat_result = c.sulfur_saturation(PT, melt_wf, models)
-        if sulf_sat_result["sulfide_sat"] == "yes":
-            warning = "WARNING: sulfide-saturated"
-        elif sulf_sat_result["sulfate_sat"] == "yes":
-            warning = "WARNING: sulfate-saturated"
-        else:
-            warning = ""
-
-        # calculate fO2
-        if eq_Fe == "yes":
-            fO2_ = mdv.f_O2(PT, melt_wf, models)
-        elif eq_Fe == "no":
-            fO2_ = gas_mf["O2"] * mdv.y_O2(PT, models) * PT["P"]
-
-        wm_CO2eq, wm_H2Oeq = mg.melt_H2O_CO2_eq(melt_wf)
-        melt_comp = mg.melt_normalise_wf(melt_wf, "yes", "no")
-        frac = c.melt_species_ratios(conc)
-
-        # store results
-        results_headers_table_sample_name, results_values_table_sample_name = (
-            results_table_sample_name(setup, run)
-        )
-        results_headers_table_melt_comp_etc, results_values_table_melt_comp_etc = (
-            results_table_melt_comp_etc(PT, melt_comp, conc, frac, melt_wf)
-        )
-        results_headers_table_model_options, results_values_table_model_options = (
-            results_table_model_options(models)
-        )
-        (
-            results_headers_table_f_p_xg_y_M_C_K_d,
-            results_values_table_f_p_xg_y_M_C_K_d,
-        ) = results_table_f_p_xg_y_M_C_K_d(PT, melt_wf, models)
-        results_headers_table_sat, results_values_table_sat = results_table_sat(
-            sulf_sat_result, PT, melt_wf, models
-        )
-        results_values_table_melt_vol = pd.DataFrame(
-            [
-                [
-                    wm_H2Oeq * 100.0,
-                    wm_CO2eq * 1000000.0,
-                    conc["wm_ST"] * 1000000.0,
-                    melt_wf["XT"] * 1000000.0,
-                ]
-            ]
-        )
-        results_values_table_wtg_etc = pd.DataFrame(
-            [
-                [
-                    melt_and_gas["wt_g"] * 100.0,
-                    melt_and_gas["wt_g_O"],
-                    melt_and_gas["wt_g_C"],
-                    melt_and_gas["wt_g_H"],
-                    melt_and_gas["wt_g_S"],
-                    melt_and_gas["wt_g_X"],
-                    melt_and_gas["wt_O"] * 100.0,
-                    melt_and_gas["wt_C"] * 100.0,
-                    melt_and_gas["wt_H"] * 100.0,
-                    melt_and_gas["wt_S"] * 100.0,
-                    melt_and_gas["wt_X"] * 100.0,
-                    solve_species,
-                    mass_balance["C"],
-                    mass_balance["O"],
-                    mass_balance["H"],
-                    mass_balance["S"],
-                ]
-            ]
-        )
-        if (
-            models.loc["gassing_style", "option"] == "open"
-            and models.loc["gassing_direction", "option"] == "degas"
-        ):
-            results_values_table_open_all_gas = pd.DataFrame(
-                [
+                results_values_table_open_all_gas = pd.DataFrame(
                     [
-                        gas_mf_all["O2"],
-                        gas_mf_all["H2"],
-                        gas_mf_all["H2O"],
-                        gas_mf_all["S2"],
-                        gas_mf_all["SO2"],
-                        gas_mf_all["H2S"],
-                        gas_mf_all["CO2"],
-                        gas_mf_all["CO"],
-                        gas_mf_all["CH4"],
-                        gas_mf_all["OCS"],
-                        gas_mf_all["X"],
-                        mg.gas_CS_alt(gas_mf_all),
+                        [
+                            gas_mf_all["O2"],
+                            gas_mf_all["H2"],
+                            gas_mf_all["H2O"],
+                            gas_mf_all["S2"],
+                            gas_mf_all["SO2"],
+                            gas_mf_all["H2S"],
+                            gas_mf_all["CO2"],
+                            gas_mf_all["CO"],
+                            gas_mf_all["CH4"],
+                            gas_mf_all["OCS"],
+                            gas_mf_all["X"],
+                            mg.gas_CS_alt(gas_mf_all),
+                        ]
                     ]
-                ]
-            )
-            results1 = pd.concat(
-                [
-                    results_values_table_sample_name,
-                    results_values_table_melt_comp_etc,
-                    results_values_table_melt_vol,
-                    results_values_table_sat,
-                    results_values_table_f_p_xg_y_M_C_K_d,
-                    results_values_table_wtg_etc,
-                    results_values_table_open_all_gas,
-                    results_values_table_model_options,
-                ],
-                axis=1,
-            )
-        else:
-            results1 = pd.concat(
-                [
-                    results_values_table_sample_name,
-                    results_values_table_melt_comp_etc,
-                    results_values_table_melt_vol,
-                    results_values_table_sat,
-                    results_values_table_f_p_xg_y_M_C_K_d,
-                    results_values_table_wtg_etc,
-                    results_values_table_model_options,
-                ],
-                axis=1,
-            )
-        results = pd.concat([results, results1])
-
-        # equilibrium isotope fractionation
-        if models.loc["isotopes", "option"] == "yes":
-            raise TypeError("This is not currently supported")
-            if models.loc["H2S", "option"] == "yes":
-                print("not currently possible")
-            # A, B = iso.i2s6("S", PT, R_i, melt_wf, gas_mf, i_nr_step, i_nr_tol,
-            # guessx)
-            # RS_Sm, RS_H2S, RS_SO4, RS_S2, RS_SO2, RS_OCS = A
-            # RS_m, RS_g = B
-            a_H2S_S_, a_SO4_S_, a_S2_S_, a_SO2_S_, a_OCS_S_ = iso.i2s6_S_alphas(PT)
-            # xg_SO3_ = 0.0
-            results2 = pd.DataFrame(
-                [
+                )
+                results1 = pd.concat(
                     [
-                        PT["P"],
+                        results_values_table_sample_name,
+                        results_values_table_melt_comp_etc,
+                        results_values_table_melt_vol,
+                        results_values_table_sat,
+                        results_values_table_f_p_xg_y_M_C_K_d,
+                        results_values_table_wtg_etc,
+                        results_values_table_open_all_gas,
+                        results_values_table_model_options,
+                    ],
+                    axis=1,
+                )
+            else:
+                results1 = pd.concat(
+                    [
+                        results_values_table_sample_name,
+                        results_values_table_melt_comp_etc,
+                        results_values_table_melt_vol,
+                        results_values_table_sat,
+                        results_values_table_f_p_xg_y_M_C_K_d,
+                        results_values_table_wtg_etc,
+                        results_values_table_model_options,
+                    ],
+                    axis=1,
+                )
+            results = pd.concat([results, results1])
+
+            # equilibrium isotope fractionation
+            if models.loc["isotopes", "option"] == "yes":
+                raise TypeError("This is not currently supported")
+                if models.loc["H2S", "option"] == "yes":
+                    print("not currently possible")
+                # A, B = iso.i2s6("S", PT, R_i, melt_wf, gas_mf, i_nr_step, i_nr_tol,
+                # guessx)
+                # RS_Sm, RS_H2S, RS_SO4, RS_S2, RS_SO2, RS_OCS = A
+                # RS_m, RS_g = B
+                a_H2S_S_, a_SO4_S_, a_S2_S_, a_SO2_S_, a_OCS_S_ = iso.i2s6_S_alphas(PT)
+                # xg_SO3_ = 0.0
+                results2 = pd.DataFrame(
+                    [
+                        [
+                            PT["P"],
+                            PT["T"],
+                            # xg_O2_,
+                            # xg_CO_,
+                            # xg_CO2_,
+                            # xg_H2_,
+                            # xg_H2O_,
+                            # xg_CH4_,
+                            # xg_S2_,
+                            # xg_SO2_,
+                            # xg_SO3_,
+                            # xg_H2S_,
+                            # xg_OCS_,
+                            # wt_g,
+                            # wm_CO2_,
+                            # wm_H2O_,
+                            # wm_H2_,
+                            # wm_S_,
+                            # wm_SO3_,
+                            # wm_ST_,
+                            Fe3T,
+                            # S6T,
+                            mg.fO22Dbuffer(PT, fO2_, "FMQ"),
+                            mg.fO22Dbuffer(PT, fO2_, "NNO"),
+                            # SCSS_,
+                            # sulfide_sat,
+                            # SCAS_,
+                            # sulfate_sat,
+                            # RS_Sm,
+                            # RS_SO4,
+                            # RS_H2S,
+                            # RS_SO2,
+                            # RS_S2,
+                            # RS_OCS,
+                            # RS_m,
+                            # RS_g,
+                            # ratio2delta("VCDT", RS_Sm),
+                            # ratio2delta("VCDT", RS_SO4),
+                            # ratio2delta("VCDT", RS_H2S),
+                            # ratio2delta("VCDT", RS_SO2),
+                            # ratio2delta("VCDT", RS_S2),
+                            # ratio2delta("VCDT", RS_OCS),
+                            # ratio2delta("VCDT", RS_m),
+                            # ratio2delta("VCDT", RS_g),
+                            a_H2S_S_,
+                            a_SO4_S_,
+                            a_S2_S_,
+                            a_SO2_S_,
+                            a_OCS_S_,
+                            # RS_g / RS_m,
+                        ]
+                    ]
+                )
+                results_isotopes = pd.concat(
+                    [results_isotopes, results2], ignore_index=True
+                )
+                if models.loc["output csv", "option"] == "True":
+                    results_isotopes.to_csv(
+                        "results_gassing_isotopes.csv", index=False, header=False
+                    )
+
+            if models.loc["print status", "option"] == "True":
+                if number_of_step % 100 == 0:
+                    print(
                         PT["T"],
-                        # xg_O2_,
-                        # xg_CO_,
-                        # xg_CO2_,
-                        # xg_H2_,
-                        # xg_H2O_,
-                        # xg_CH4_,
-                        # xg_S2_,
-                        # xg_SO2_,
-                        # xg_SO3_,
-                        # xg_H2S_,
-                        # xg_OCS_,
-                        # wt_g,
-                        # wm_CO2_,
-                        # wm_H2O_,
-                        # wm_H2_,
-                        # wm_S_,
-                        # wm_SO3_,
-                        # wm_ST_,
-                        Fe3T,
-                        # S6T,
-                        mg.fO22Dbuffer(PT, fO2_, "FMQ"),
-                        mg.fO22Dbuffer(PT, fO2_, "NNO"),
-                        # SCSS_,
-                        # sulfide_sat,
-                        # SCAS_,
-                        # sulfate_sat,
-                        # RS_Sm,
-                        # RS_SO4,
-                        # RS_H2S,
-                        # RS_SO2,
-                        # RS_S2,
-                        # RS_OCS,
-                        # RS_m,
-                        # RS_g,
-                        # ratio2delta("VCDT", RS_Sm),
-                        # ratio2delta("VCDT", RS_SO4),
-                        # ratio2delta("VCDT", RS_H2S),
-                        # ratio2delta("VCDT", RS_SO2),
-                        # ratio2delta("VCDT", RS_S2),
-                        # ratio2delta("VCDT", RS_OCS),
-                        # ratio2delta("VCDT", RS_m),
-                        # ratio2delta("VCDT", RS_g),
-                        a_H2S_S_,
-                        a_SO4_S_,
-                        a_S2_S_,
-                        a_SO2_S_,
-                        a_OCS_S_,
-                        # RS_g / RS_m,
-                    ]
-                ]
-            )
-            results_isotopes = pd.concat(
-                [results_isotopes, results2], ignore_index=True
-            )
-            if models.loc["output csv", "option"] == "True":
-                results_isotopes.to_csv(
-                    "results_gassing_isotopes.csv", index=False, header=False
-                )
+                        PT["P"],
+                        mg.fO22Dbuffer(PT, fO2_, "FMQ", models),
+                        warning,
+                        datetime.datetime.now(),
+                    )
 
-        if models.loc["print status", "option"] == "True":
-            if number_of_step % 100 == 0:
-                print(
-                    PT["T"],
-                    PT["P"],
-                    mg.fO22Dbuffer(PT, fO2_, "FMQ", models),
-                    warning,
-                    datetime.datetime.now(),
-                )
-
-        # recalculate bulk composition if needed
-        if models.loc["gassing_style", "option"] == "open":
-            results_me = mg.melt_elements(melt_wf, bulk_wf, gas_mf)
-            if models.loc["gassing_direction", "option"] == "degas":
-                Wt_ = bulk_wf["Wt"]
-                if results_me["wm_C"] < 1.0e-6:  # 1 ppm C
-                    results_me["wm_C"] = 0.0
-                if results_me["wm_H"] < 1.0e-6:  # 1 ppm H
-                    results_me["wm_H"] = 0.0
-                if results_me["wm_S"] < 1.0e-6:  # 1 ppm S
-                    results_me["wm_S"] = 0.0
-                if results_me["wm_X"] < 1.0e-6:  # 1 ppm X
-                    results_me["wm_X"] = 0.0
+            # recalculate bulk composition if needed
+            if models.loc["gassing_style", "option"] == "open":
+                results_me = mg.melt_elements(melt_wf, bulk_wf, gas_mf)
+                if models.loc["gassing_direction", "option"] == "degas":
+                    Wt_ = bulk_wf["Wt"]
+                    if results_me["wm_C"] < 1.0e-6:  # 1 ppm C
+                        results_me["wm_C"] = 0.0
+                    if results_me["wm_H"] < 1.0e-6:  # 1 ppm H
+                        results_me["wm_H"] = 0.0
+                    if results_me["wm_S"] < 1.0e-6:  # 1 ppm S
+                        results_me["wm_S"] = 0.0
+                    if results_me["wm_X"] < 1.0e-6:  # 1 ppm X
+                        results_me["wm_X"] = 0.0
+                    bulk_wf = {
+                        "C": results_me["wm_C"],
+                        "H": results_me["wm_H"],
+                        "O": results_me["wm_O"],
+                        "S": results_me["wm_S"],
+                        "X": results_me["wm_X"],
+                        "Fe": results_me["wm_Fe"],
+                        "Wt": (Wt_ * (1.0 - melt_and_gas["wt_g"])),
+                    }
+                    melt_wf["CT"] = results_me["wm_C"]
+                    melt_wf["HT"] = results_me["wm_H"]
+                    melt_wf["ST"] = results_me["wm_S"]
+                    melt_wf["XT"] = results_me["wm_X"]
+                    system = eq.set_system(melt_wf, models)
+                elif models.loc["gassing_direction", "option"] == "regas":
+                    results_nbro = c.new_bulk_regas_open(
+                        PT, melt_wf, bulk_wf, gas_mf, dwtg, models
+                    )
+                    bulk_wf = {
+                        "C": results_nbro["wt_C"],
+                        "H": results_nbro["wt_H"],
+                        "O": results_nbro["wt_O"],
+                        "S": results_nbro["wt_S"],
+                        "X": results_nbro["wt_X"],
+                        "Fe": results_nbro["wt_Fe"],
+                        "Wt": results_nbro["Wt"],
+                    }
+                    # melt_wf["CT"] = results_nbro["wm_C"]
+                    # melt_wf["HT"] = results_nbro["wm_H"]
+                    # melt_wf["ST"] = results_nbro["wm_S"]
+                    # melt_wf["XT"] = results_nbro["wm_X"]
+            if models.loc["crystallisation", "option"] == "yes":
+                wt_C_ = bulk_wf["C"]
+                wt_H_ = bulk_wf["H"]
+                wt_O_ = bulk_wf["O"]
+                wt_S_ = bulk_wf["S"]
+                wt_X_ = bulk_wf["X"]
+                wt_Fe_ = bulk_wf["Fe"]
+                wt_ = bulk_wf["Wt"]
+                Xst = setup.loc[run, "crystallisation_pc"] / 100.0
                 bulk_wf = {
-                    "C": results_me["wm_C"],
-                    "H": results_me["wm_H"],
-                    "O": results_me["wm_O"],
-                    "S": results_me["wm_S"],
-                    "X": results_me["wm_X"],
-                    "Fe": results_me["wm_Fe"],
-                    "Wt": (Wt_ * (1.0 - melt_and_gas["wt_g"])),
+                    "C": wt_C_ * (1.0 / (1.0 - Xst)),
+                    "H": wt_H_ * (1.0 / (1.0 - Xst)),
+                    "O": wt_O_ * (1.0 / (1.0 - Xst)),
+                    "S": wt_S_ * (1.0 / (1.0 - Xst)),
+                    "X": wt_X_ * (1.0 / (1.0 - Xst)),
+                    "Fe": wt_Fe_ * (1.0 / (1.0 - Xst)),
+                    "Wt": wt_ * (1.0 - Xst),
                 }
-                melt_wf["CT"] = results_me["wm_C"]
-                melt_wf["HT"] = results_me["wm_H"]
-                melt_wf["ST"] = results_me["wm_S"]
-                melt_wf["XT"] = results_me["wm_X"]
-                system = eq.set_system(melt_wf, models)
-            elif models.loc["gassing_direction", "option"] == "regas":
-                results_nbro = c.new_bulk_regas_open(
-                    PT, melt_wf, bulk_wf, gas_mf, dwtg, models
-                )
-                bulk_wf = {
-                    "C": results_nbro["wt_C"],
-                    "H": results_nbro["wt_H"],
-                    "O": results_nbro["wt_O"],
-                    "S": results_nbro["wt_S"],
-                    "X": results_nbro["wt_X"],
-                    "Fe": results_nbro["wt_Fe"],
-                    "Wt": results_nbro["Wt"],
-                }
-                # melt_wf["CT"] = results_nbro["wm_C"]
-                # melt_wf["HT"] = results_nbro["wm_H"]
-                # melt_wf["ST"] = results_nbro["wm_S"]
-                # melt_wf["XT"] = results_nbro["wm_X"]
-        if models.loc["crystallisation", "option"] == "yes":
-            wt_C_ = bulk_wf["C"]
-            wt_H_ = bulk_wf["H"]
-            wt_O_ = bulk_wf["O"]
-            wt_S_ = bulk_wf["S"]
-            wt_X_ = bulk_wf["X"]
-            wt_Fe_ = bulk_wf["Fe"]
-            wt_ = bulk_wf["Wt"]
-            Xst = setup.loc[run, "crystallisation_pc"] / 100.0
-            bulk_wf = {
-                "C": wt_C_ * (1.0 / (1.0 - Xst)),
-                "H": wt_H_ * (1.0 / (1.0 - Xst)),
-                "O": wt_O_ * (1.0 / (1.0 - Xst)),
-                "S": wt_S_ * (1.0 / (1.0 - Xst)),
-                "X": wt_X_ * (1.0 / (1.0 - Xst)),
-                "Fe": wt_Fe_ * (1.0 / (1.0 - Xst)),
-                "Wt": wt_ * (1.0 - Xst),
-            }
 
-        if models.loc["gassing_direction", "option"] == "regas":
-            if (PT["P"] + dp_step) >= final:
-                break
+            tqdmsteps.update(dp_step)
 
-        if number_of_step == 1.0:
-            if dp_step_choice == "user":
-                dp_step = dp_step_user
+            if models.loc["gassing_direction", "option"] == "regas":
+                if (PT["P"] + dp_step) >= final:
+                    break
 
-        last_successful_P = PT["P"]
+            if number_of_step == 1.0:
+                if dp_step_choice == "user":
+                    dp_step = dp_step_user
+
+            last_successful_P = PT["P"]
 
     results.columns = results.iloc[0]
     results = results[1:]
@@ -2681,11 +2704,11 @@ def calc_melt_S_oxybarometer(
     Args:
         setup (pandas.DataFrame): Melt compositions to be used, requires following headers: Sample, T_C, SiO2, TiO2, Al2O3, (Fe2O3T or FeOT unless Fe2O3 and FeO given), MnO, MgO, CaO, Na2O, K2O, P2O5, H2O and/or CO2ppm and/or STppm and/or Xppm. Note: concentrations (unless otherwise stated) are in wt%. Optional: P_bar is pressure is given (otherwise calculation is at Pvsat). Fe3FeT if P_bar is specified.
         models (pandas.DataFrame, optional): Model options
-    first_row (int, optional): First row in the setup file to run (note the first row under the headers is row 0). Default = 0
-    last_row: (int, optional): Last row in the setup file to run (note the first row under the headers is row 0). Default = None
-    p_tol (float, optional): Required tolerance for convergence of Pvsat in bars. Default = 1.e-1
-    nr_step (float, optional): Step size for Newton-Raphson solver for melt speciation (this can be made smaller if there are problems with convergence.). Default = 1
-    nr_tol (float, optional): Tolerance for the Newton-Raphson solver for melt speciation in weight fraction (this can be made larger if there are problems with convergence). Default = 1.e-9
+        first_row (int, optional): First row in the setup file to run (note the first row under the headers is row 0). Default = 0
+        last_row: (int, optional): Last row in the setup file to run (note the first row under the headers is row 0). Default = None
+        p_tol (float, optional): Required tolerance for convergence of Pvsat in bars. Default = 1.e-1
+        nr_step (float, optional): Step size for Newton-Raphson solver for melt speciation (this can be made smaller if there are problems with convergence.). Default = 1
+        nr_tol (float, optional): Tolerance for the Newton-Raphson solver for melt speciation in weight fraction (this can be made larger if there are problems with convergence). Default = 1.e-9
 
     Returns:
         pandas.DataFrame: Results of fO2 range from melt sulfur content calculation
