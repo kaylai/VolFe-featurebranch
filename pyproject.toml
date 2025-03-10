@@ -25,6 +25,7 @@ dependencies = [
     "pandas==2.2.3",
     "PySulfSat==1.0.6",
     "scipy",
+    "tqdm==4.67.1",
 ]
 
 [project.optional-dependencies]
