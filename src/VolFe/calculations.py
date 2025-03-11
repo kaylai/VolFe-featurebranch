@@ -200,7 +200,10 @@ def P_sat_H2O_CO2(
             delta1 = Pdiff(guess0, melt_wf, models)
             guess0 = p_tot_H2O_CO2(PT, melt_wf, models)
             guess0 = float(guess0)
+            if guess0 > 1.0e9:
+                guess0 = 1.0
             PT["P"] = guess0
+
         else:
             P_sat = guess0
             xg_H2O_ = mg.xg_H2O(PT, melt_wf, models)
