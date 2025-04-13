@@ -2768,26 +2768,26 @@ def calc_melt_S_oxybarometer(
         results_values_table_melt_vol = pd.DataFrame(
             [
                 [
-                    setup.loc[run, "H2O"],
-                    setup.loc[run, "CO2ppm"],
-                    setup.loc[run, "STppm"],
-                    setup.loc[run, "Xppm"],
+                    melt_wf["H2OT"] * 100.0,
+                    melt_wf["CO2"] * 1000000.0,
+                    melt_wf["ST"] * 1000000.0,
+                    melt_wf["X"] * 1000000.0,
                 ]
             ]
         )
         results_headers_table_sulfsat = pd.DataFrame(
             [
                 [
-                    "P_bar_sulf",
                     "SCSS_ppm",
                     "sulfide saturated",
+                    "P_bar_sulf",
                     "fO2_DFMQ_sulf",
                     "fO2_bar_sulf",
                     "Fe3+/FeT_sulf",
                     "S6+/ST_sulf",
-                    "P_bar_anh",
                     "SCAS_ppm",
                     "anhydrite saturated",
+                    "P_bar_anh",
                     "fO2_DFMQ_anh",
                     "fO2_bar_anh",
                     "Fe3+/FeT_anh",
@@ -2798,16 +2798,16 @@ def calc_melt_S_oxybarometer(
         results_values_table_sulfsat = pd.DataFrame(
             [
                 [
-                    sulfsat_results["P_sat_sulf"],
                     sulfsat_results["SCSS"],
                     sulfsat_results["sulf_sat"],
+                    sulfsat_results["P_sat_sulf"],
                     sulfsat_results["DFMQ_sulf"],
                     sulfsat_results["fO2_sulf"],
                     sulfsat_results["Fe3T_sulf"],
                     sulfsat_results["S6T_sulf"],
-                    sulfsat_results["P_sat_anh"],
                     sulfsat_results["SCAS"],
                     sulfsat_results["anh_sat"],
+                    sulfsat_results["P_sat_anh"],
                     sulfsat_results["DFMQ_anh"],
                     sulfsat_results["fO2_anh"],
                     sulfsat_results["Fe3T_anh"],
@@ -2968,12 +2968,12 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
 
     sd[Fe_opt] = setup.loc[run, Fe_opt + "_sd"]
     if Fe_opt + "_sd_type" in setup:
-        sd_type[Fe_opt] = setup.loc[run, Fe_opt + "_sd+type"]
+        sd_type[Fe_opt] = setup.loc[run, Fe_opt + "_sd_type"]
     else:
         sd_type[Fe_opt] = "A"
     sd[fO2_opt] = setup.loc[run, fO2_opt + "_sd"]
     if fO2_opt + "_sd_type" in setup:
-        sd_type[fO2_opt] = setup.loc[run, fO2_opt + "_sd+type"]
+        sd_type[fO2_opt] = setup.loc[run, fO2_opt + "_sd_type"]
     else:
         sd_type[fO2_opt] = "A"
 
@@ -2998,7 +2998,7 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
         else:
             sd[x] = ""
         if x + "_sd_type" in setup:
-            sd_type[x] = setup.loc[run, Fe_opt + "_sd+type"]
+            sd_type[x] = setup.loc[run, Fe_opt + "_sd_type"]
         else:
             if x + "_sd" in setup:
                 sd_type[x] = "A"
@@ -3199,13 +3199,40 @@ def calc_comp_error_function(
             elif x == "Date":
                 av_results[x] = result.loc[0, x]
             elif is_number(result.loc[0, x]) is False:
-                if result.loc[0, x] == "False" or result.loc[0, x] == "True":
-                    if "False" in result[x] and "True" in result[x]:
+                if result.loc[0, x] == "False" or result.loc[0, x] == "possible":
+                    if (
+                        "False" in result[x].tolist()
+                        and "possible" in result[x].tolist()
+                    ):
                         av_results[x] = "Both"
                     else:
                         av_results[x] = result.loc[0, x]
                 else:
                     av_results[x] = result.loc[0, x]
+            elif x in [
+                "P_bar_sulf",
+                "fO2_DFMQ_sulf",
+                "fO2_bar_sulf",
+                "Fe3+/FeT_sulf",
+                "S6+/ST_sulf",
+            ]:
+                if av_results["sulfide saturated"] == "Both":
+                    result[x] = result[x].apply(pd.to_numeric, errors="coerce")
+                av_results[x] = result[x].mean()
+                av_results[x + "_sd"] = result[x].std()
+            elif x in [
+                "P_bar_anh",
+                "fO2_DFMQ_anh",
+                "fO2_bar_anh",
+                "Fe3+/FeT_anh",
+                "S6+/ST_anh",
+            ]:
+                if av_results["anhydrite saturated"] == "Both":
+                    av_results[x] = ""
+                    av_results[x + "_sd"] = ""
+                else:
+                    av_results[x] = result[x].mean()
+                    av_results[x + "_sd"] = result[x].std()
             else:
                 av_results[x] = result[x].mean()
                 av_results[x + "_sd"] = result[x].std()

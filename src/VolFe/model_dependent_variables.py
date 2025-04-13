@@ -1018,20 +1018,20 @@ def C_CO3(PT, melt_wf, models=default_models):
     #        C = A*gp.exp(B)
     #    else:
     #        C = A*math.exp(B)
-    # elif model == "SFVFBasalticAndesite_Allison19": # SFVF in Table 4 from Allison et
-    # al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
-    #    R_ = 83.144621 # cm3 bar K−1 mol−1
-    #    DV = 15.02 # cm3/mol
-    #    P0 = 1000.0 # bar
-    #    if models.loc["high precision","option"] == "True":
-    #        A = gp.exp(-14.87)
-    #    else:
-    #        A = math.exp(-14.87)
-    #    B = -((DV/(R_*T_K))*(P-P0))
-    #    if models.loc["high precision","option"] == "True":
-    #        C = A*gp.exp(B)
-    #    else:
-    #        C = A*math.exp(B)
+    elif model == "SFVFBasalticAndesite_Allison19":  # SFVF in Table 4 from Allison et
+        # al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
+        R_ = 83.144621  # cm3 bar K−1 mol−1
+        DV = 15.02  # cm3/mol
+        P0 = 1000.0  # bar
+        if models.loc["high precision", "option"] == "True":
+            A = gp.exp(-14.87)
+        else:
+            A = math.exp(-14.87)
+        B = -((DV / (R_ * T_K)) * (P - P0))
+        if models.loc["high precision", "option"] == "True":
+            C = A * gp.exp(B)
+        else:
+            C = A * math.exp(B)
     # elif model == "ErebusPhonotephrite_Allison19": # Erebus in Table 4 from Allison
     # et al. (2019) CMP 174:58 https//doi.org/10.1007/s00410-019-1592-4)
     #    R_ = 83.144621 # cm3 bar K−1 mol−1

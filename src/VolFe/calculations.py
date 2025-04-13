@@ -99,7 +99,7 @@ def P_sat(PT, melt_wf, models, Ptol, nr_step, nr_tol):
         difference = abs(guess - mg.p_tot(PT, melt_wf, models))
         return difference
 
-    guess0 = 40000.0  # initial guess for pressure
+    guess0 = 1.0  # initial guess for pressure
     PT["P"] = guess0
     melt_wf1["Fe3FeT"] = mg.Fe3FeT_i(PT, melt_wf1, models)
     melt_wf2["Fe3FeT"] = mg.Fe3FeT_i(PT, melt_wf2, models)
@@ -193,17 +193,16 @@ def P_sat_H2O_CO2(
         }
 
     else:
-        guess0 = 40000.0  # initial guess for pressure
+        guess0 = 1.0  # initial guess for pressure
         PT["P"] = guess0
         delta1 = Pdiff(guess0, melt_wf, models)
         while delta1 > Ptol:
             delta1 = Pdiff(guess0, melt_wf, models)
             guess0 = p_tot_H2O_CO2(PT, melt_wf, models)
             guess0 = float(guess0)
-            if guess0 > 1.0e9:
-                guess0 = 1.0
+            # if guess0 > 1.0e7:
+            #    guess0 = 1.0
             PT["P"] = guess0
-
         else:
             P_sat = guess0
             xg_H2O_ = mg.xg_H2O(PT, melt_wf, models)
@@ -911,96 +910,74 @@ def P_sat_sulf_anh(PT, melt_wf, models, Ptol, nr_step, nr_tol):
         S62 = S6p / S2m
         S6T = S6p / ST
         if S62 < 0.0:
-            return "not possible", "", "", "", Ssat
+            is_sat = "False"
+            fO2 = ""
+            Fe3T = ""
+            DFMQ = ""
+            S6T = ""
         else:
+            is_sat = "possible"
             fO2 = mg.S6S2_2_fO2(S62, melt_wf, PT, models)
             Fe3T = mdv.fO22Fe3FeT(fO2, PT, melt_wf, models)
             DFMQ = mg.fO22Dbuffer(PT, fO2, "FMQ", models)
-            return Fe3T, fO2, S6T, DFMQ, Ssat
+        return is_sat, Fe3T, fO2, S6T, DFMQ, Ssat
 
-    guess0 = 40000.0  # initial guess for pressure
-    PT["P"] = guess0
+    for phase in ["sulf", "anh"]:
+        guess0 = 1.0  # initial guess for pressure
+        PT["P"] = guess0
+        melt_wf["Fe3FeT"] = 0.1
 
-    # assume it is sulfide saturated
-    melt_wf["Fe3FeT"] = 0.1
-    Fe3T_sulf, fO2_sulf, S6T_sulf, DFMQ_sulf, SCSS_ = S62_2_Fe3T(
-        PT, melt_wf, models, "sulf"
-    )
-    if Fe3T_sulf == "not possible":
-        P_sat_sulf = ""
-        Fe3T_sulf = ""
-        sulfide_sat = "False"
-    else:
-        melt_wf["Fe3FeT"] = Fe3T_sulf
-        ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
-        melt_wf["H2OT"] = ms_conc["wm_H2O"]
-        melt_wf["CO2"] = ms_conc["wm_CO2"]
-        melt_wf["S2-"] = ms_conc["wm_S2m"]
-        melt_wf["ST"] = ST
-        delta1 = Pdiff(guess0, melt_wf, models)
-        while delta1 > Ptol:
-            delta1 = Pdiff(guess0, melt_wf, models)
-            guess0 = mg.p_tot(PT, melt_wf, models)
-            guess0 = float(guess0)
-            PT["P"] = guess0
-            Fe3T_sulf, fO2_sulf, S6T_sulf, DFMQ_sulf, SCSS_ = S62_2_Fe3T(
-                PT, melt_wf, models, "sulf"
-            )
-            if Fe3T_sulf == "not possible":
-                P_sat_sulf = ""
-                Fe3T_sulf = ""
-                sulfide_sat = "False"
-            else:
-                melt_wf["Fe3FeT"] = Fe3T_sulf
-                ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
-                melt_wf["H2OT"] = ms_conc["wm_H2O"]
-                melt_wf["CO2"] = ms_conc["wm_CO2"]
-                melt_wf["S2-"] = ms_conc["wm_S2m"]
+        is_sat, Fe3T, fO2, S6T, DFMQ, Ssat = S62_2_Fe3T(PT, melt_wf, models, phase)
+        if is_sat == "False":
+            P_sat = ""
         else:
-            P_sat_sulf = guess0
-            Fe3T_sulf, fO2_sulf, S6T_sulf, DFMQ_sulf, SCSS_ = S62_2_Fe3T(
-                PT, melt_wf, models, "sulf"
-            )
-            sulfide_sat = "True"
-
-    # assume it is anhydrite saturated
-    Fe3T_anh, fO2_anh, S6T_anh, DFMQ_anh, SCAS_ = S62_2_Fe3T(PT, melt_wf, models, "anh")
-    if Fe3T_anh == "not possible":
-        P_sat_anh = ""
-        Fe3T_anh = ""
-        anhydrite_sat = "False"
-    else:
-        melt_wf["Fe3FeT"] = Fe3T_anh
-        ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
-        melt_wf["H2OT"] = ms_conc["wm_H2O"]
-        melt_wf["CO2"] = ms_conc["wm_CO2"]
-        melt_wf["S2-"] = ms_conc["wm_S2m"]
-        melt_wf["ST"] = ST
-        delta1 = Pdiff(guess0, melt_wf, models)
-        while delta1 > Ptol:
+            melt_wf["Fe3FeT"] = Fe3T
+            ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
+            melt_wf["H2OT"] = ms_conc["wm_H2O"]
+            melt_wf["CO2"] = ms_conc["wm_CO2"]
+            melt_wf["S2-"] = ms_conc["wm_S2m"]
+            melt_wf["ST"] = ST
             delta1 = Pdiff(guess0, melt_wf, models)
-            guess0 = mg.p_tot(PT, melt_wf, models)
-            guess0 = float(guess0)
-            PT["P"] = guess0
-            Fe3T_anh, fO2_anh, S6T_anh, DFMQ_anh, SCAS_ = S62_2_Fe3T(
-                PT, melt_wf, models, "anh"
-            )
-            if Fe3T_anh == "not possible":
-                P_sat_anh = ""
-                Fe3T_anh = ""
-                anhydrite_sat = "False"
+            while delta1 > Ptol:
+                delta1 = Pdiff(guess0, melt_wf, models)
+                guess0 = mg.p_tot(PT, melt_wf, models)
+                guess0 = float(guess0)
+                PT["P"] = guess0
+                is_sat, Fe3T, fO2, S6T, DFMQ, Ssat = S62_2_Fe3T(
+                    PT, melt_wf, models, phase
+                )
+                if is_sat == "False":
+                    P_sat = ""
+                else:
+                    melt_wf["Fe3FeT"] = Fe3T
+                    ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
+                    melt_wf["H2OT"] = ms_conc["wm_H2O"]
+                    melt_wf["CO2"] = ms_conc["wm_CO2"]
+                    melt_wf["S2-"] = ms_conc["wm_S2m"]
             else:
-                melt_wf["Fe3FeT"] = Fe3T_anh
-                ms_conc = eq.melt_speciation(PT, melt_wf, models, nr_step, nr_tol)
-                melt_wf["H2OT"] = ms_conc["wm_H2O"]
-                melt_wf["CO2"] = ms_conc["wm_CO2"]
-                melt_wf["S2-"] = ms_conc["wm_S2m"]
-        else:
-            P_sat_anh = guess0
-            Fe3T_anh, fO2_anh, S6T_anh, DFMQ_anh, SCAS_ = S62_2_Fe3T(
-                PT, melt_wf, models, "anh"
-            )
-            anhydrite_sat = "True"
+                if is_sat == "False":
+                    P_sat = ""
+                else:
+                    P_sat = guess0
+                    is_sat, Fe3T, fO2, S6T, DFMQ, Ssat = S62_2_Fe3T(
+                        PT, melt_wf, models, phase
+                    )
+        if phase == "sulf":
+            P_sat_sulf = P_sat
+            SCSS_ = Ssat
+            sulfide_sat = is_sat
+            DFMQ_sulf = DFMQ
+            Fe3T_sulf = Fe3T
+            fO2_sulf = fO2
+            S6T_sulf = S6T
+        elif phase == "anh":
+            P_sat_anh = P_sat
+            SCAS_ = Ssat
+            anhydrite_sat = is_sat
+            DFMQ_anh = DFMQ
+            Fe3T_anh = Fe3T
+            fO2_anh = fO2
+            S6T_anh = S6T
 
     result = {
         "P_sat_sulf": P_sat_sulf,
@@ -1664,6 +1641,14 @@ def compositions_within_error(run, setup):
             else:
                 sd = setup.loc[run, x + "_sd"]
             value = float(np.random.normal(setup.loc[run, x], sd, 1))
+
+            if x in ["Fe3FeT", "S6ST"]:
+                if value < 0.001:
+                    value = 0.001
+                if value > 0.999:
+                    value = 0.999
+            if value < 0.0:
+                value = 0.0
             result[x] = value
         else:
             result[x] = 0.0
