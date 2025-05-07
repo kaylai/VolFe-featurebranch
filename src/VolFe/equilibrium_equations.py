@@ -2240,7 +2240,6 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
     diff1, diff2, diff3, wtg1, wtg2, wtg3, wtg4 = eqs(x0, y0, z0)
     results1 = pd.DataFrame([[x0, y0, z0, diff1, diff2, diff3, step]])
     results = pd.concat([results, results1], ignore_index=True)
-    n = 0.0
 
     def F(eqs, x, y, z):
         a = eqs(x, y, z)
@@ -2287,10 +2286,23 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
     x00, y00, z00 = x0, y0, z0
     step0 = step
 
+    n = 0.0
     for iter in range(maxiter):
         n = n + 1.0
         deriv_ = deriv(x0, y0, z0, constants)
         guessx, guessy, guessz, J = x3jac(step, deriv_, eqs, x0, y0, z0, constants)
+        try:
+            temp1 = int(guessx)
+            temp2 = int(guessy)
+            temp3 = int(guessz)
+        except:
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, guessz, J = x3jac(
+                    step, deriv_, eqs, x0, y0, z0, constants
+                )
         if (
             guessx < 0.0
             or guessy < 0.0
@@ -2299,8 +2311,25 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
             or guessy > 1.0
             or guessz > 1.0
         ):
-            step = step / 10.0
-            guessx, guessy, guessz, J = x3jac(step, deriv_, eqs, x0, y0, z0, constants)
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, guessz, J = x3jac(
+                    step, deriv_, eqs, x0, y0, z0, constants
+                )
+        try:
+            temp1 = int(guessx)
+            temp2 = int(guessy)
+            temp3 = int(guessz)
+        except:
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, guessz, J = x3jac(
+                    step, deriv_, eqs, x0, y0, z0, constants
+                )
         if (
             guessx < 0.0
             or guessy < 0.0
@@ -2308,7 +2337,6 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
             or guessx > 1.0
             or guessy > 1.0
             or guessz > 1.0
-            and step
         ):
             break
         diff1, diff2, diff3, wtg1, wtg2, wtg3, wtg4 = eqs(guessx, guessy, guessz)
@@ -2347,12 +2375,27 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
     #    results.to_csv('results_jacnewton3.csv', index=False, header=False)
 
     x0, y0, z0 = x00, y00, z00
-    step = step - (step0 / 10.0)
+    step = step0 - (step0 / 10.0)
     for iter in range(9):
+        n = 0.0
+        step_0 = step
         for iter in range(maxiter):
+            n = n + 1.0
             deriv_ = deriv(x0, y0, z0, constants)
             guessx, guessy, guessz, J = x3jac(step, deriv_, eqs, x0, y0, z0, constants)
-            while (
+            try:
+                temp1 = int(guessx)
+                temp2 = int(guessy)
+                temp3 = int(guessz)
+            except:
+                if step < 0.01:
+                    break
+                else:
+                    step = step / 10.0
+                    guessx, guessy, guessz, J = x3jac(
+                        step, deriv_, eqs, x0, y0, z0, constants
+                    )
+            if (
                 guessx < 0.0
                 or guessy < 0.0
                 or guessz < 0.0
@@ -2377,8 +2420,9 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
                 [[guessx, guessy, guessz, diff1, diff2, diff3, step]]
             )
             results = pd.concat([results, results1], ignore_index=True)
-            results.to_csv("results_jacnewton3.csv", index=False, header=False)
-        step = step - (step0 / 10.0)
+            if n % 50 == 0:
+                results.to_csv("results_jacnewton3.csv", index=False, header=False)
+        step = step_0 - (step0 / 10.0)
 
     guessx, guessy, guessz = 1.0, 1.0, 1.0
     return guessx, guessy, guessz
@@ -6817,12 +6861,21 @@ def eq_SCHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
 
     if xg_O2_ == 1.0:  # go to original solve species
         if solve_species == "OCS":
+            print(
+                PT["P"], ": Switching solve species from OCS to OCH (back to original)"
+            )
             solve_species = "OCH"
             models.loc["solve_species", "option"] = "OCH"
         elif solve_species == "OHS":
+            print(
+                PT["P"], ": Switching solve species from OHS to OCS (back to original)"
+            )
             solve_species = "OCS"
             models.loc["solve_species", "option"] = "OCS"
         elif solve_species == "OCH":
+            print(
+                PT["P"], ": Switching solve species from OCH to OHS (back to original)"
+            )
             solve_species = "OHS"
             models.loc["solve_species", "option"] = "OHS"
 

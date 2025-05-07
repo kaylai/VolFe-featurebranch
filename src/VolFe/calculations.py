@@ -1647,8 +1647,14 @@ def compositions_within_error(run, setup):
                     value = 0.001
                 if value > 0.999:
                     value = 0.999
-            if value < 0.0:
-                value = 0.0
+            if (x != "DFMQ") is True and (x != "DNNO") is True:
+                if value < 0.0:
+                    value = 0.0
+            if x == "STppm":
+                if value == 0.0:
+                    if "S6ST" in setup:
+                        value = 1.0
+
             result[x] = value
         else:
             result[x] = 0.0

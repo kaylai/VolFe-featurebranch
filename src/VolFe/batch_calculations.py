@@ -1732,6 +1732,7 @@ def calc_gassing(
                         }
                         if dp_step < 1.0 or dp_step == 1.0:
                             if PT["P"] <= 10.0:
+                                print("P < 10 bar, trying P = 1 bar")
                                 PT["P"] = 1.0
                                 with warnings.catch_warnings():
                                     warnings.simplefilter(
@@ -1768,7 +1769,7 @@ def calc_gassing(
                                         )
                                     print(
                                         "solver failed, calculation aborted at P = ",
-                                        PT["P"],
+                                        last_successful_P,
                                         datetime.datetime.now(),
                                     )
                                     return results
@@ -1873,7 +1874,7 @@ def calc_gassing(
                         )
                     print(
                         "solver failed, calculation aborted at P = ",
-                        PT["P"],
+                        last_successful_P,
                         datetime.datetime.now(),
                     )
                     return results
@@ -3177,7 +3178,7 @@ def calc_comp_error_function(
             return False
 
     if last_row is None:
-        last_row = len(setup) - 1
+        last_row = len(setup)
 
     for n in range(first_row, last_row, 1):
         run = n
@@ -3198,15 +3199,9 @@ def calc_comp_error_function(
                 av_results[x] = setup.loc[run, "Sample"]
             elif x == "Date":
                 av_results[x] = result.loc[0, x]
-            elif is_number(result.loc[0, x]) is False:
-                if result.loc[0, x] == "False" or result.loc[0, x] == "possible":
-                    if (
-                        "False" in result[x].tolist()
-                        and "possible" in result[x].tolist()
-                    ):
-                        av_results[x] = "Both"
-                    else:
-                        av_results[x] = result.loc[0, x]
+            elif x == "sulfide saturated" or x == "anhydrite saturated":
+                if "False" in result[x].tolist() and "possible" in result[x].tolist():
+                    av_results[x] = "Both"
                 else:
                     av_results[x] = result.loc[0, x]
             elif x in [
@@ -3216,10 +3211,14 @@ def calc_comp_error_function(
                 "Fe3+/FeT_sulf",
                 "S6+/ST_sulf",
             ]:
-                if av_results["sulfide saturated"] == "Both":
-                    result[x] = result[x].apply(pd.to_numeric, errors="coerce")
-                av_results[x] = result[x].mean()
-                av_results[x + "_sd"] = result[x].std()
+                if av_results["sulfide saturated"] == "False":
+                    av_results[x] = result.loc[0, x]
+                    av_results[x + "_sd"] = ""
+                else:
+                    if av_results["sulfide saturated"] == "Both":
+                        result[x] = result[x].apply(pd.to_numeric, errors="coerce")
+                    av_results[x] = result[x].mean()
+                    av_results[x + "_sd"] = result[x].std()
             elif x in [
                 "P_bar_anh",
                 "fO2_DFMQ_anh",
@@ -3227,13 +3226,18 @@ def calc_comp_error_function(
                 "Fe3+/FeT_anh",
                 "S6+/ST_anh",
             ]:
-                if av_results["anhydrite saturated"] == "Both":
-                    av_results[x] = ""
+                if av_results["anhydrite saturated"] == "False":
+                    av_results[x] = result.loc[0, x]
                     av_results[x + "_sd"] = ""
                 else:
+                    if av_results["anhydrite saturated"] == "Both":
+                        result[x] = result[x].apply(pd.to_numeric, errors="coerce")
                     av_results[x] = result[x].mean()
                     av_results[x + "_sd"] = result[x].std()
+            elif is_number(result.loc[0, x]) is False:
+                av_results[x] = result.loc[0, x]
             else:
+                result[x] = result[x].apply(pd.to_numeric, errors="coerce")
                 av_results[x] = result[x].mean()
                 av_results[x + "_sd"] = result[x].std()
             av_results["iterations"] = iterations
