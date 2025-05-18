@@ -284,6 +284,51 @@ def check_default_options(models):
     solve_species = return_options(
         default_models.loc["solve_species", "option"], "solve_species", models
     )
+    # isotopes
+    beta_factors = return_options(
+        default_models.loc["beta_factors", "option"], "beta_factors", models
+    )
+    alpha_H_CH4v_CH4m = return_options(
+        default_models.loc["alpha_H_CH4v_CH4m", "option"], "alpha_H_CH4v_CH4m", models
+    )
+    alpha_H_H2v_H2m = return_options(
+        default_models.loc["alpha_H_H2v_H2m", "option"], "alpha_H_H2v_H2m", models
+    )
+    alpha_H_H2Ov_OHmm = return_options(
+        default_models.loc["alpha_H_H2Ov_OHmm", "option"], "alpha_H_H2Ov_OHmm", models
+    )
+    alpha_H_H2Ov_H2Om = return_options(
+        default_models.loc["alpha_H_H2Ov_H2Om", "option"], "alpha_H_H2Ov_H2Om", models
+    )
+    alpha_H_H2Sv_H2Sm = return_options(
+        default_models.loc["alpha_H_H2Sv_H2Sm", "option"], "alpha_H_H2Sv_H2Sm", models
+    )
+    alpha_C_CH4v_CH4m = return_options(
+        default_models.loc["alpha_C_CH4v_CH4m", "option"], "alpha_C_CH4v_CH4m", models
+    )
+    alpha_C_COv_COm = return_options(
+        default_models.loc["alpha_C_COv_COm", "option"], "alpha_C_COv_COm", models
+    )
+    alpha_C_CO2v_CO2T = return_options(
+        default_models.loc["alpha_C_CO2v_CO2T", "option"], "alpha_C_CO2v_CO2T", models
+    )
+    alpha_C_CO2v_CO2m = return_options(
+        default_models.loc["alpha_C_CO2v_CO2m", "option"], "alpha_C_CO2v_CO2m", models
+    )
+    alpha_C_CO2v_CO32mm = return_options(
+        default_models.loc["alpha_C_CO2v_CO32mm", "option"],
+        "alpha_C_CO2v_CO32mm",
+        models,
+    )
+    alpha_S_H2Sv_H2Sm = return_options(
+        default_models.loc["alpha_S_H2Sv_H2Sm", "option"], "alpha_S_H2Sv_H2Sm", models
+    )
+    alpha_SO2_SO4 = return_options(
+        default_models.loc["alpha_SO2_SO4", "option"], "alpha_SO2_SO4", models
+    )
+    alpha_H2S_S = return_options(
+        default_models.loc["alpha_H2S_S", "option"], "alpha_H2S_S", models
+    )
     # other
     density = return_options(default_models.loc["density", "option"], "density", models)
     isotopes = return_options(
@@ -368,6 +413,20 @@ def check_default_options(models):
         ["eq_Fe", eq_Fe],
         ["solve_species", solve_species],
         ["density", density],
+        ["beta_factors", beta_factors],
+        ["alpha_H_CH4v_CH4m", alpha_H_CH4v_CH4m],
+        ["alpha_H_H2v_H2m", alpha_H_H2v_H2m],
+        ["alpha_H_H2Ov_OHmm", alpha_H_H2Ov_OHmm],
+        ["alpha_H_H2Ov_H2Om", alpha_H_H2Ov_H2Om],
+        ["alpha_H_H2Sv_H2Sm", alpha_H_H2Sv_H2Sm],
+        ["alpha_C_CH4v_CH4m", alpha_C_CH4v_CH4m],
+        ["alpha_C_COv_COm", alpha_C_COv_COm],
+        ["alpha_C_CO2v_CO2T", alpha_C_CO2v_CO2T],
+        ["alpha_C_CO2v_CO2m", alpha_C_CO2v_CO2m],
+        ["alpha_C_CO2v_CO32mm", alpha_C_CO2v_CO32mm],
+        ["alpha_S_H2Sv_H2Sm", alpha_S_H2Sv_H2Sm],
+        ["alpha_SO2_SO4", alpha_SO2_SO4],
+        ["alpha_H2S_S", alpha_H2S_S],
         ["isotopes", isotopes],
         ["T_variation", T_variation],
         ["crystallisation", crystallisation],

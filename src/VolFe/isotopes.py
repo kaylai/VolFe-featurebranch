@@ -36,7 +36,10 @@ def delta_standard(standard, isotope, element):
 
 def ratio2delta(standard, isotope, element, ratio):
     reference = delta_standard(standard, isotope, element)
-    d = ((ratio - reference) / reference) * 1000.0
+    if ratio == "":
+        d = ""
+    else:
+        d = ((ratio - reference) / reference) * 1000.0
     return d
 
 
@@ -452,17 +455,63 @@ def rename_output(element, input, comp):
 
 
 def i2s9(element, PT, comp, R, models, nr_step, nr_tol):
+    comp.reset_index(drop=True, inplace=True)
     if element == "S":
+        if comp.loc[0, "ST_ppmw"] == 0.0:
+            result1 = {}
+            result1["A"] = ""
+            result1["B"] = ""
+            result1["C"] = ""
+            result1["D"] = ""
+            result1["E"] = ""
+            result1["F"] = ""
+            result1["G"] = ""
+            renamed_result1 = rename_output(element, result1, comp)
+            result2 = {}
+            result2["R_m"] = ""
+            result2["R_g"] = ""
+            return renamed_result1, result2
         alphas = alphas_S(PT, comp, models)
         species_distribution = c.mf_S_species(comp)
         R_i = R["S"]
         guessx = iso_initial_guesses(element, R, comp)
     elif element == "C":
+        if comp.loc[0, "CO2T-eq_ppmw"] == 0.0:
+            result1 = {}
+            result1["A"] = ""
+            result1["B"] = ""
+            result1["C"] = ""
+            result1["D"] = ""
+            result1["E"] = ""
+            result1["F"] = ""
+            result1["G"] = ""
+            result1["H"] = ""
+            renamed_result1 = rename_output(element, result1, comp)
+            result2 = {}
+            result2["R_m"] = ""
+            result2["R_g"] = ""
+            return renamed_result1, result2
         alphas = alphas_C(PT, comp, models)
         species_distribution = c.mf_C_species(comp)
         R_i = R["C"]
         guessx = iso_initial_guesses(element, R, comp)
     elif element == "H":
+        if comp.loc[0, "H2OT-eq_wtpc"] == 0.0:
+            result1 = {}
+            result1["A"] = ""
+            result1["B"] = ""
+            result1["C"] = ""
+            result1["D"] = ""
+            result1["E"] = ""
+            result1["F"] = ""
+            result1["G"] = ""
+            result1["H"] = ""
+            result1["I"] = ""
+            renamed_result1 = rename_output(element, result1, comp)
+            result2 = {}
+            result2["R_m"] = ""
+            result2["R_g"] = ""
+            return renamed_result1, result2
         alphas = alphas_H(PT, comp, models)
         species_distribution = c.mf_H_species(comp)
         R_i = R["H"]

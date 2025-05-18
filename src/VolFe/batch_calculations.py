@@ -2154,13 +2154,13 @@ def calc_gassing(
                 results_me = mg.melt_elements(melt_wf, bulk_wf, gas_mf)
                 if models.loc["gassing_direction", "option"] == "degas":
                     Wt_ = bulk_wf["Wt"]
-                    if results_me["wm_C"] < 1.0e-6:  # 1 ppm C
+                    if results_me["wm_C"] < 1.0e-7:  # 0.1 ppm C
                         results_me["wm_C"] = 0.0
-                    if results_me["wm_H"] < 1.0e-6:  # 1 ppm H
+                    if results_me["wm_H"] < 1.0e-7:  # 0.1 ppm H
                         results_me["wm_H"] = 0.0
-                    if results_me["wm_S"] < 1.0e-6:  # 1 ppm S
+                    if results_me["wm_S"] < 1.0e-7:  # 0.1 ppm S
                         results_me["wm_S"] = 0.0
-                    if results_me["wm_X"] < 1.0e-6:  # 1 ppm X
+                    if results_me["wm_X"] < 1.0e-7:  # 0.1 ppm X
                         results_me["wm_X"] = 0.0
                     bulk_wf = {
                         "C": results_me["wm_C"],
@@ -3589,6 +3589,11 @@ def calc_isotopes_gassing(
             results = pd.concat([all_headers, all_values])
         else:
             results = pd.concat([results, all_values])
+
+        if models.loc["gassing_style", "option"] == "open":
+            R_i["C"] = R_m_g_C["R_m"]
+            R_i["H"] = R_m_g_H["R_m"]
+            R_i["S"] = R_m_g_S["R_m"]
 
     results.columns = results.iloc[0]
     results = results[1:]
