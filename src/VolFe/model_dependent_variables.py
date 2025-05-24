@@ -5198,9 +5198,7 @@ def FefO2_Borisov18_terms(PT, melt_wf, models=default_models):
     # Borisov et al. (2018) CMP 173
     a = 0.207
     # melt mole fraction with no volatiles and all Fe as FeOT
-    melt_comp = mg.melt_mole_fraction(
-        melt_wf, models, "no", "no", molmass="ONeill22", majors="ONeill22"
-    )
+    melt_comp = mg.melt_mole_fraction(melt_wf, models, "no", "no")
     B = (
         4633.3 / T_K
         - 0.445 * melt_comp["SiO2"]
