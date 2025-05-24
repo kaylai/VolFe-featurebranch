@@ -2297,7 +2297,7 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
             temp1 = int(guessx)
             temp2 = int(guessy)
             temp3 = int(guessz)
-        except:
+        except:  # noqa: E722
             if step < 0.01:
                 break
             else:
@@ -2324,7 +2324,7 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
             temp1 = int(guessx)
             temp2 = int(guessy)
             temp3 = int(guessz)
-        except:
+        except:  # noqa: E722
             if step < 0.01:
                 break
             else:
@@ -2386,10 +2386,10 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
             deriv_ = deriv(x0, y0, z0, constants)
             guessx, guessy, guessz, J = x3jac(step, deriv_, eqs, x0, y0, z0, constants)
             try:
-                temp1 = int(guessx)
-                temp2 = int(guessy)
-                temp3 = int(guessz)
-            except:
+                temp1 = int(guessx)  # noqa: F841
+                temp2 = int(guessy)  # noqa: F841
+                temp3 = int(guessz)  # noqa: F841
+            except:  # noqa: E722
                 if step < 0.01:
                     break
                 else:
