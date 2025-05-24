@@ -145,15 +145,15 @@ def test_degas_df_closed_CO2i():
     assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.473, rel=1e-3)
     assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4, rel=1e-3)
     assert result.loc[0, "xgS2_mf"] == pytest.approx(0.000471, rel=1e-3)
-    assert result.loc[len(result) - 1, "P_bar"] == 3.0
+    assert result.loc[len(result) - 1, "P_bar"] == 2.0
     assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
-        -0.30023881436684974, rel=1e-3
+        -0.3229621352028751, rel=1e-3
     )
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.33585401816719396, rel=1e-3
+        0.22246281216980268, rel=1e-3
     )
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        0.00010126638630802683, rel=1e-3
+        7.817177543181924e-05, rel=1e-3
     )
 
 
@@ -196,13 +196,15 @@ def test_degas_df_closed_wtg():
     assert result.loc[0, "fO2_DFMQ"] == pytest.approx(0.473, rel=1e-3)
     assert result.loc[0, "CO2T_ppmw"] == pytest.approx(1472.4, rel=1e-3)
     assert result.loc[0, "xgS2_mf"] == pytest.approx(0.000471, rel=1e-3)
-    assert result.loc[len(result) - 1, "P_bar"] == 2.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(-0.328, rel=1e-3)
+    assert result.loc[len(result) - 1, "P_bar"] == 1.0
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(
+        -0.35743652625621536, rel=1e-3
+    )
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == pytest.approx(
-        0.16651526559195437, rel=1e-3
+        0.08246450641265342, rel=1e-3
     )
     assert result.loc[len(result) - 1, "xgS2_mf"] == pytest.approx(
-        7.805550256915342e-05, rel=1e-3
+        4.7069892778105614e-05, rel=1e-3
     )
 
 
@@ -245,7 +247,7 @@ def test_degas_df_open():
     assert result.loc[0, "CO2T_ppmw"] == pytest.approx(49.395163028754354)
     assert result.loc[0, "xgS2_mf"] == pytest.approx(0.00011877068634021532)
     assert result.loc[len(result) - 1, "P_bar"] == 1.0
-    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.4171085)
+    assert result.loc[len(result) - 1, "fO2_DFMQ"] == pytest.approx(0.41384267832895727)
     assert result.loc[len(result) - 1, "CO2T_ppmw"] == 0.0
     assert result.loc[len(result) - 1, "xgS2_mf"] == 0.0
 

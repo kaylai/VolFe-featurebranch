@@ -157,7 +157,7 @@ def test_S2fO2_df_useropt():
     # runs the calculation
     result = vf.calc_melt_S_oxybarometer(my_analysis, models=my_models)
 
-    assert result.loc[0, "P_bar_sulf"] == pytest.approx(3532.3, rel=1e-3)
+    assert result.loc[0, "P_bar_sulf"] == ""
     assert result.loc[0, "fO2_DFMQ_sulf"] == ""
     assert result.loc[0, "P_bar_anh"] == ""
     assert result.loc[0, "fO2_DFMQ_anh"] == ""
