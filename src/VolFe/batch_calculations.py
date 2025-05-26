@@ -2212,7 +2212,7 @@ def calc_gassing(
                     "Wt": wt_ * (1.0 - Xst),
                 }
 
-            tqdmsteps.update(dp_step)
+            tqdmsteps.update(abs(dp_step))
 
             if models.loc["gassing_direction", "option"] == "regas":
                 if (PT["P"] + dp_step) >= final:
@@ -3180,74 +3180,79 @@ def calc_comp_error_function(
     if last_row is None:
         last_row = len(setup)
 
-    for n in range(first_row, last_row, 1):
-        run = n
-        comp = calc_comp_error(setup, run, iterations=iterations, models=models)
-        if function == "calc_Pvsat":
-            result = calc_Pvsat(
-                comp, models=models, first_row=4, last_row=len(comp) - 1
-            )
+    with tqdm.tqdm(total=(last_row - first_row)) as tqdmsteps:
+        for n in range(first_row, last_row, 1):
+            run = n
+            comp = calc_comp_error(setup, run, iterations=iterations, models=models)
+            if function == "calc_Pvsat":
+                result = calc_Pvsat(
+                    comp, models=models, first_row=4, last_row=len(comp) - 1
+                )
 
-        elif function == "calc_melt_S_oxybarometer":
-            result = calc_melt_S_oxybarometer(
-                comp, first_row=4, last_row=len(comp) - 1, models=models
-            )
-        av_results = {}
-        headers = result.columns.tolist()
-        for x in headers:
-            if x == "sample":
-                av_results[x] = setup.loc[run, "Sample"]
-            elif x == "Date":
-                av_results[x] = result.loc[0, x]
-            elif x == "sulfide saturated" or x == "anhydrite saturated":
-                if "False" in result[x].tolist() and "possible" in result[x].tolist():
-                    av_results[x] = "Both"
-                else:
+            elif function == "calc_melt_S_oxybarometer":
+                result = calc_melt_S_oxybarometer(
+                    comp, first_row=4, last_row=len(comp) - 1, models=models
+                )
+            av_results = {}
+            headers = result.columns.tolist()
+            for x in headers:
+                if x == "sample":
+                    av_results[x] = setup.loc[run, "Sample"]
+                elif x == "Date":
                     av_results[x] = result.loc[0, x]
-            elif x in [
-                "P_bar_sulf",
-                "fO2_DFMQ_sulf",
-                "fO2_bar_sulf",
-                "Fe3+/FeT_sulf",
-                "S6+/ST_sulf",
-            ]:
-                if av_results["sulfide saturated"] == "False":
+                elif x == "sulfide saturated" or x == "anhydrite saturated":
+                    if (
+                        "False" in result[x].tolist()
+                        and "possible" in result[x].tolist()
+                    ):
+                        av_results[x] = "Both"
+                    else:
+                        av_results[x] = result.loc[0, x]
+                elif x in [
+                    "P_bar_sulf",
+                    "fO2_DFMQ_sulf",
+                    "fO2_bar_sulf",
+                    "Fe3+/FeT_sulf",
+                    "S6+/ST_sulf",
+                ]:
+                    if av_results["sulfide saturated"] == "False":
+                        av_results[x] = result.loc[0, x]
+                        av_results[x + "_sd"] = ""
+                    else:
+                        if av_results["sulfide saturated"] == "Both":
+                            result[x] = result[x].apply(pd.to_numeric, errors="coerce")
+                        av_results[x] = result[x].mean()
+                        av_results[x + "_sd"] = result[x].std()
+                elif x in [
+                    "P_bar_anh",
+                    "fO2_DFMQ_anh",
+                    "fO2_bar_anh",
+                    "Fe3+/FeT_anh",
+                    "S6+/ST_anh",
+                ]:
+                    if av_results["anhydrite saturated"] == "False":
+                        av_results[x] = result.loc[0, x]
+                        av_results[x + "_sd"] = ""
+                    else:
+                        if av_results["anhydrite saturated"] == "Both":
+                            result[x] = result[x].apply(pd.to_numeric, errors="coerce")
+                        av_results[x] = result[x].mean()
+                        av_results[x + "_sd"] = result[x].std()
+                elif is_number(result.loc[0, x]) is False:
                     av_results[x] = result.loc[0, x]
-                    av_results[x + "_sd"] = ""
                 else:
-                    if av_results["sulfide saturated"] == "Both":
-                        result[x] = result[x].apply(pd.to_numeric, errors="coerce")
+                    result[x] = result[x].apply(pd.to_numeric, errors="coerce")
                     av_results[x] = result[x].mean()
                     av_results[x + "_sd"] = result[x].std()
-            elif x in [
-                "P_bar_anh",
-                "fO2_DFMQ_anh",
-                "fO2_bar_anh",
-                "Fe3+/FeT_anh",
-                "S6+/ST_anh",
-            ]:
-                if av_results["anhydrite saturated"] == "False":
-                    av_results[x] = result.loc[0, x]
-                    av_results[x + "_sd"] = ""
-                else:
-                    if av_results["anhydrite saturated"] == "Both":
-                        result[x] = result[x].apply(pd.to_numeric, errors="coerce")
-                    av_results[x] = result[x].mean()
-                    av_results[x + "_sd"] = result[x].std()
-            elif is_number(result.loc[0, x]) is False:
-                av_results[x] = result.loc[0, x]
+                av_results["iterations"] = iterations
+                av_results_all1 = pd.DataFrame(av_results, index=[0])
+            if n == first_row:
+                av_results_all = av_results_all1
             else:
-                result[x] = result[x].apply(pd.to_numeric, errors="coerce")
-                av_results[x] = result[x].mean()
-                av_results[x + "_sd"] = result[x].std()
-            av_results["iterations"] = iterations
-            av_results_all1 = pd.DataFrame(av_results, index=[0])
-        if n == first_row:
-            av_results_all = av_results_all1
-        else:
-            av_results_all = pd.concat([av_results_all, av_results_all1])
-        if models.loc["print status", "option"] == "True":
-            print(iterations, setup.loc[run, "Sample"])
+                av_results_all = pd.concat([av_results_all, av_results_all1])
+            if models.loc["print status", "option"] == "True":
+                print(iterations, setup.loc[run, "Sample"])
+            tqdmsteps.update(1)
 
     av_results_all.reset_index(drop=True, inplace=True)
     if models.loc["output csv", "option"] == "True":
