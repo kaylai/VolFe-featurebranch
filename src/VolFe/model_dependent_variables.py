@@ -2170,12 +2170,12 @@ def SCSS(PT, melt_wf, models=default_models):
     - 'ONeill21' Eq. (10.34, 10.43, 10.45, 10.46) excluding water dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
     - 'ONeill21dil' Eq. (10.34, 10.43, 10.45, 10.46) including water dilution from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
     - 'Liu07' Eq. (9) in Liu et al. (2007) GCA 71:1783-1799 https://doi.org/10.1016/j.gca.2007.01.004
-    - 'Fortin15_pss' Fortin et al. (2015) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
-    - 'Liu21_pss' Liu et al. (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Fortin15_pss' Eq. (7) in Fortin et al. (2015) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Liu21_pss' Eq. (2) in Liu et al. (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     - 'ONeill22_pss' O'Neill & Mavrogenes (2022) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     - 'ONeill21_pss' O'Neill (2021) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     - 'Smythe17_pss' Smythe et al. (2017) using PySulfSat by Wieser & Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
-    - 'Li22_pss' Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
+    - 'Li22_pss' Eq. (19) from Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     - 'Blanchard21_eq11_pss' Eq. (11) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
     - 'Blanchard21_eq12_pss' Eq. (12) from Blanchard et al. (2021) using PySulfSat by Wieser and Gleeson (2023) Volcanica 6(1):107-127 https://doi.org/10.30909/vol.06.01.107127
 
@@ -2327,7 +2327,7 @@ def SCSS(PT, melt_wf, models=default_models):
     #        SCSS = (XFeS*math.exp(13.88 - (9744./T) - (328.*(0.0001*PT["P"])/T))) +
     #   104.*H2O
 
-    # Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica
+    # Eq. (19) Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica
     # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Li22_pss":
         output = ss.calculate_LiZhang2022_SCSS(
