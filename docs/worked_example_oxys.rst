@@ -16,3 +16,5 @@ In these examples we will show you how to run this calculation for:
 - :doc:`Example 3b <Examples/3b. SfO2 csv>`: Multiple analyses in a csv file using default options.
 
 - :doc:`Example 3c <Examples/3c. SfO2 user_opt>`: Multiple analyses in a csv file using user-specified options.
+
+- :doc:`Example 3d <Examples/3c. SfO2 error>`: Including uncertainties on inputs into the calculation outputs
