@@ -42,7 +42,7 @@ Equilibrium and differential equations
 These are iterative calculations, which are solved using Jacobian matrix/Newton-Raphson approach (solvers and initial guesses are also in this file).
 
 The associated differential equations required for the solver are contained in ``differential_equations.py``, with symbolic differentiation using SymPy (Meurer et al., 2017).
-It is a long file because there are separate functions for different combinations of species in the melt and vapor (e.g., only carbon species in the system; the full COHS system; only H\ :sub:`2`O-CO\ :sub:`2` in the melt and vapor, etc.)
+It is a long file because there are separate functions for different combinations of species in the melt and vapor (e.g., only carbon species in the system; the full COHS system; only H\ :sub:`2` O-CO\ :sub:`2` in the melt and vapor, etc.)
 
 Calculations
 -----
@@ -65,9 +65,9 @@ Secondly, there are calculation types that do not necessarily have independent v
 
 - *T*, melt composition, vapor+(sulfide or anhydrite)-saturated, ± *P*: calculate *f*\ :sub:`O2` ± *P* and the melt/vapor composition and speciation.
 
-- *T*, *P*, *f*\ :sub:`O2`, CO\ :sub:`2`-eq, H\ :sub:`2`O-eq, vapor±(sulfide and/or anhydrite)-saturation: calculate how much sulfur can dissolve in the melt.
+- *T*, *P*, *f*\ :sub:`O2`, CO\ :sub:`2`-eq, H\ :sub:`2` O-eq, vapor±(sulfide and/or anhydrite)-saturation: calculate how much sulfur can dissolve in the melt.
 
-- *T*, *P*, volatile-free composition, assuming only H\ :sub:`2`O and CO\ :sub:`2`: calculate concentrations of H\ :sub:`2`O and CO\ :sub:`2` in the melt (i.e., isobars).
+- *T*, *P*, volatile-free composition, assuming only H\ :sub:`2` O and CO\ :sub:`2`: calculate concentrations of H\ :sub:`2` O and CO\ :sub:`2` in the melt (i.e., isobars).
 
 
 Batch calculations

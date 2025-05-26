@@ -21,6 +21,6 @@ Here are some hints to the naming convention used for functions, where specific 
 
 - Solubility functions: functions starting with ``C_`` (e.g., ``C_CH4()`` is the function for calculating the solubility function for CH\ :sub:`4`).
 
-- Oxygen fugacity and F\ :sup:`3+`/Fe\ :sub:`T`: functions are ``FMQ()``, ``NNO()``, ``fO22Fe3FeT()``, and ``f_O2()``.
+- Oxygen fugacity and Fe\ :sup:`3+`/Fe\ :sub:`T`: functions are ``FMQ()``, ``NNO()``, ``fO22Fe3FeT()``, and ``f_O2()``.
 
 - Sulfide/sulfate content at sulfide/anhydrite saturation: functions are ``SCSS()`` and ``SCAS()``.
