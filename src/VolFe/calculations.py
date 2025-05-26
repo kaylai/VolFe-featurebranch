@@ -1543,7 +1543,9 @@ def conc_insolubles(PT, melt_wf, models):
     S2m = melt_wf["S2-"]  # weight fraction of S2-
     S6p = (
         mg.C_SO4(PT, melt_wf, models) * mdv.f_O2(PT, melt_wf, models) ** 2 * S2m
-    ) / mg.C_S(PT, melt_wf, models)  # weight fraction S6+
+    ) / mg.C_S(
+        PT, melt_wf, models
+    )  # weight fraction S6+
     H2S = (
         mg.C_H2S(PT, melt_wf, models) * mg.f_H2S(PT, melt_wf, models)
     ) / 1000000.0  # weight fraction H2S
@@ -1636,8 +1638,12 @@ def compositions_within_error(run, setup):
             if x + "_sd_type" in setup:
                 if setup.loc[run, x + "_sd_type"] == "R":  # relative
                     sd = setup.loc[run, x + "_sd"] * setup.loc[run, x]
-            else:
+                else:
+                    sd = setup.loc[run, x + "_sd"]
+            elif x + "_sd" in setup:
                 sd = setup.loc[run, x + "_sd"]
+            else:
+                sd = 0.0
             value = float(np.random.normal(setup.loc[run, x], sd, 1))
 
             if x in ["Fe3FeT", "S6ST"]:
