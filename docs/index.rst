@@ -15,6 +15,7 @@ This is the VolFe documentation
    code_structure
    current_mdv
    references
+   benchmarking
 
 .. toctree::
    :maxdepth: 2
