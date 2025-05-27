@@ -17,4 +17,4 @@ In these examples we will show you how to run this calculation for:
 
 - :doc:`Example 3c <Examples/3c. SfO2 user_opt>`: Multiple analyses in a csv file using user-specified options.
 
-- :doc:`Example 3d <Examples/3d. SfO2 error>`: Including uncertainties on inputs into the calculation outputs
+- :doc:`Example 3d <Examples/3d. SfO2 error>`: Including uncertainties on inputs into the calculation outputs.
