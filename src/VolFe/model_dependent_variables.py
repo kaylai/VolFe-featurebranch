@@ -921,8 +921,8 @@ def C_CO3(PT, melt_wf, models=default_models):
     Model options for 'carbon dioxide'
     -------------
     - 'MORB_Dixon95' [default] Bullet (5) of summary from Dixon et al. (1995) JPet 36(6):1607-1631 https://doi.org/10.1093/oxfordjournals.petrology.a037267
-    - 'Basalt_Dixon97' Eq. (7) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
-    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon et al. (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'Basalt_Dixon97' Eq. (7) from Dixon (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
+    - 'NorthArchBasalt_Dixon97' Eq. (8) from Dixon (1997) AmMin 82(3-4)368-378 https://doi.org/10.2138/am-1997-3-415
     - 'Basalt_Lesne11' Eq. (25,26) from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
     - 'VesuviusAlkaliBasalt_Lesne11' VES-9 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
     - 'EtnaAlkaliBasalt_Lesne11' ETN-1 in Table 4 from Lesne et al. (2011) CMP 162:153-168 https://doi.org/10.1007/s00410-010-0585-0
@@ -3319,17 +3319,22 @@ def MRK(PT, X_1):  # Redlich-Kwong routine to estimate endmember H2O and CO2 fug
         if abs(Temp2 - Temp1) > 0.00001:
             F_1 = F_2
     V = Temp2
+    if X_1 == 0.0:  # CO2
+        B_ = B_2
+        FN1 = FNC(TK)
+        FN2 = FNB(TK)
+    elif X_1 == 1.0:  # H2O
+        B_ = B_1
+        FN1 = FNA(TK)
+        FN2 = FNC(TK)
     G = (
         np.log(V / (V - B))
-        + B_1 / (V - B)
-        - 2
-        * (X_1 * FNA(TK) + (1 - X_1) * FNC(TK))
-        * np.log((V + B) / V)
-        / (R * TK**1.5 * B)
+        + B_ / (V - B)
+        - 2 * (X_1 * FN1 + (1 - X_1) * FN2) * np.log((V + B) / V) / (R * TK**1.5 * B)
     )
     G = (
         G
-        + (np.log((V + B) / V) - B / (V + B)) * A * B_1 / (R * TK**1.5 * B**2)
+        + (np.log((V + B) / V) - B / (V + B)) * A * B_ / (R * TK**1.5 * B**2)
         - np.log(P * V / (R * TK))
     )
     G = np.exp(G)
@@ -3911,6 +3916,7 @@ def y_H2O(PT, models=default_models):
     Model options for y_H2O
     -----------------------
     - 'Holland91' [default] Eq. (4,6,A1-3) and Table 1 (T > 673 K only) from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
+    - 'Flowers79' Flowers (1979) modified from code from MIMiC (Rasmussen et al., 2021: https://github.com/DJRgeoscience/MIMiC), originally from VolatileCalc (Newman & Lowenstern, 2001)
     - 'ideal' Treat as ideal gas, y = 1 at all P.
     Note: "ideal_gas" = "True" overides chosen option.
     """
@@ -3959,6 +3965,7 @@ def y_CO2(PT, models=default_models):
     - 'Holland91_eq8_tab1' Eq. (8) and Table 1 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
     - 'Holland91_eq4,A1-3_tab1' Eq. (4,A1-3) and Table 1 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
     - 'Holland91_eq8,9_tab2' Eq. (8,9) and Table 2 from Holland & Powell (1991) CMP 109:265-273 https://doi.org/10.1007/BF00306484
+    - 'Flowers79' Flowers (1979) modified from code from MIMiC (Rasmussen et al., 2021: https://github.com/DJRgeoscience/MIMiC), originally from VolatileCalc (Newman & # Lowenstern, 2001)
     - 'ideal' Treat as ideal gas, y = 1 at all P.
     Note: "ideal_gas" = "True" overides chosen option
     """
