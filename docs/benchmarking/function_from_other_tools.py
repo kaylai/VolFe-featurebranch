@@ -550,9 +550,10 @@ def find_Y(P, T, species_list):
 # Input changed to PT and added required P0.
 def phiso2(PT):
     P0 = 1.0
-    # This function calculates the fugacity coefficient of SO2 following Shi & Saxena 1992. To avoid discontinuity
-    # in the result, only the calculation at high pressure is used. Instead, fugacity coefficient is assumed to be 1
-    # at pressure lower than 20bar.
+    # This function calculates the fugacity coefficient of SO2 following Shi & Saxena
+    # 1992. To avoid discontinuity in the result, only the calculation at high pressure
+    # is used. Instead, fugacity coefficient is assumed to be 1 at pressure lower than
+    # 20bar.
     if PT["P"] < 20:
         lnphiSO2 = 0
     else:
