@@ -11,11 +11,11 @@ These are shown in the following notebooks:
 
 - :doc:`Fugacity coefficients <benchmarking/fugacity_coefficients>`
 
-- :doc:`Solubility functions <benchmarking/fugacity_coefficients>`
+- :doc:`Solubility functions <benchmarking/solubility_functions>`
 
 - :doc:`Sulfide and anhydrite saturation <benchmarking/sulfur_saturation>`
 
-- :doc:`Oxygen fugacity related variables <benchmarking/oxygen fugacity>`
+- :doc:`Oxygen fugacity related variables <benchmarking/oxygen_fugacity>`
 
 Benchmarking calculations is a few steps up from benchmarking model dependent variables and would answer “how do you know a correct solution is reached”. 
 To benchmark a calculation like isobars or degassing, all the model dependent variables employed in the tool used as a benchmark must be the same as in VolFe (i.e., fugacity coefficients, solubility functions, equilibrium constants etc.). 
