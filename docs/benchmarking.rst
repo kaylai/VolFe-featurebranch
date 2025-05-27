@@ -26,4 +26,4 @@ However, we can still compare the results to see how similar/different they are 
 
 - :doc:`Isobars using Dixon model in VESIcal <benchmarking/isobar_VESIcal-Dixon>`
 
-- :doc:`Closed-system degassing using VESIcal, CHOSETTO, Sulfur_X, and Evo <Examples/5a. marianas>`
+- :doc:`Closed-system degassing using VESIcal, CHOSETTO, Sulfur_X, and Evo <Examples/5a marianas>`
