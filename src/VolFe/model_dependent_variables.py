@@ -2302,7 +2302,8 @@ def SCSS(PT, melt_wf, models=default_models):
             )
             SCSS = math.exp(lnS)
 
-    # Eq. (7) Fortin et al. (2015) GCA 160:100-116 https//doi.org/10.1016/j.gca.2015.03.022
+    # Eq. (7) Fortin et al. (2015) GCA 160:100-116
+    # https//doi.org/10.1016/j.gca.2015.03.022
     # elif model == "Fortin15":
     #    # Mole fractions in the melt on cationic lattice (all Fe as FeOT) and water -
     # molecular masses used are different to spreadsheet attached to paper
@@ -2316,7 +2317,8 @@ def SCSS(PT, melt_wf, models=default_models):
     #    else:
     #        SCSS = math.exp(lnS)
 
-    # Eq. (2) Liu et al. (2021) Chem.Geol. 559:119913 https//doi.org/10.1016.j.chemgeo.2020.119913
+    # Eq. (2) Liu et al. (2021) Chem.Geol. 559:119913
+    # https//doi.org/10.1016.j.chemgeo.2020.119913
     # elif model == "Liu21":
     #    XFeS = sulf_XFe
     #    H2O = melt_wf["H2OT"]*100.
@@ -2327,8 +2329,8 @@ def SCSS(PT, melt_wf, models=default_models):
     #        SCSS = (XFeS*math.exp(13.88 - (9744./T) - (328.*(0.0001*PT["P"])/T))) +
     #   104.*H2O
 
-    # Eq. (19) Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023) Volcanica
-    # 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
+    # Eq. (19) Li and Zhang (2022) using PySulfSat by Wieser and Gleeson (2023)
+    # Volcanica 6(1):107-127 https//doi.org/10.30909/vol.06.01.107127
     elif model == "Li22_pss":
         output = ss.calculate_LiZhang2022_SCSS(
             df=comp,
@@ -5003,7 +5005,8 @@ def FMQ(PT, models=default_models):
 # terms for different equations
 
 
-# terms for Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+# terms for Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92
+# https//doi.org/10.1007/BF00307328
 def FefO2_KC91_Eq7_terms(PT, melt_wf, models=default_models):
     """
     Terms for Kress & Carmichael (1991) [https//doi.org/10.1007/BF00307328] equation (7)
@@ -5253,7 +5256,8 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
     """
     model = models.loc["fO2", "option"]
 
-    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92
+    # https//doi.org/10.1007/BF00307328
     if model == "Kress91":
         a, PTterm = FefO2_KC91_Eq7_terms(PT, melt_wf, models)
         if models.loc["high precision", "option"] == "True":
@@ -5264,7 +5268,8 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
             XFe2O3XFeO = math.exp(lnXFe2O3XFeO)
         return (2.0 * XFe2O3XFeO) / ((2.0 * XFe2O3XFeO) + 1.0)
 
-    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92
+    # https//doi.org/10.1007/BF00307328
     elif model == "Kress91A":
         kd1, KD2, y = FefO2_KC91_EqA_terms(PT, melt_wf, models)
         XFeO15XFeO = (
@@ -5285,7 +5290,8 @@ def fO22Fe3FeT(fO2, PT, melt_wf, models=default_models):  # converting fO2 to Fe
         Fe3Fe2 = 10.0 ** (lnFe3Fe2)
         return Fe3Fe2 / (Fe3Fe2 + 1.0)
 
-    # Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
+    # Eq. (4) from Borisov et al. (2018) CMP 173:98
+    # https//doi.org/10.1007/s00410-018-1524-8
     elif model == "Borisov18":
         a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
         if models.loc["high precision", "option"] == "True":
@@ -5337,12 +5343,14 @@ def f_O2(PT, melt_wf, models=default_models):
     # if model == "yes":
     #    return 10.0**(setup.loc[run,"logfO2"])
 
-    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    # Eq. (7) in Kress and Carmichael (1991) CMP 108:82-92
+    # https//doi.org/10.1007/BF00307328
     if model == "Kress91":
         fO2 = KC91(PT, melt_wf, models)
         return fO2
 
-    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92 https//doi.org/10.1007/BF00307328
+    # Eq. (A-5, A-6) in Kress and Carmichael (1991) CMP 108:82-92
+    # https//doi.org/10.1007/BF00307328
     elif model == "Kress91A":
         F = mg.Fe3Fe2(melt_wf)  # XFeO1.5/XFeO
         kd1, KD2, y = FefO2_KC91_EqA_terms(PT, melt_wf, models)
@@ -5392,7 +5400,8 @@ def f_O2(PT, melt_wf, models=default_models):
     #    fO2 = mg.S6S2_2_fO2(S62,melt_wf,run,PT,setup,models)
     #    return fO2
 
-    # Eq. (4) from Borisov et al. (2018) CMP 173:98 https//doi.org/10.1007/s00410-018-1524-8
+    # Eq. (4) from Borisov et al. (2018) CMP 173:98
+    # https//doi.org/10.1007/s00410-018-1524-8
     elif model == "Borisov18":
         F = mg.Fe3Fe2(melt_wf)
         a, B = FefO2_Borisov18_terms(PT, melt_wf, models)
