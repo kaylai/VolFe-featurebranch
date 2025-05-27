@@ -1173,9 +1173,15 @@ def calc_gassing(
         P_sat_, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
             PT, melt_wf, models, psat_tol, nr_step, nr_tol
         )
+        wm_H2Omol_, wm_OH_ = mg.wm_H2Omol_OH(PT, melt_wf, models)
+        wm_CO2carb_, wm_CO2mol_ = mg.wm_CO32_CO2mol(PT, melt_wf, models)
         conc = {
             "wm_H2O": P_sat_H2O_CO2_result["wm_H2O"],
             "wm_CO2": P_sat_H2O_CO2_result["wm_CO2"],
+            "wm_OH": wm_OH_,
+            "wm_H2Omol": wm_H2Omol_,
+            "wm_CO2mol": wm_CO2mol_,
+            "wm_CO2carb": wm_CO2carb_,
             "wm_H2": 0.0,
             "wm_CO": 0.0,
             "wm_CH4": 0.0,
