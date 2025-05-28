@@ -1,5 +1,5 @@
 __author__ = "Ery Hughes, Pip Liggins, Penny Wieser"
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 # functions for calculating properties of the melt and gas
 from .melt_gas import *  # noqa F401 F403
