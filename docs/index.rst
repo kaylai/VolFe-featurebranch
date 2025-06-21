@@ -36,5 +36,6 @@ This is the VolFe documentation
    model_dependent_variables
    equilibrium_equations
    differential_equations
+   isotopes
    calculations
    batch_calculations

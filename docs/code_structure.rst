@@ -30,7 +30,7 @@ More information can be found on the :doc:`Options <current_mdv>` page, but the 
 
 - Functions to build the models option dataframe, including the default options.
 
-- Functions to calculate solubility functions and equilibrium constants; fugacity coefficients; SCSS and SCAS; and melt density.
+- Functions to calculate solubility functions and equilibrium constants; fugacity coefficients; SCSS and SCAS; melt density; and isotope fractionation factors.
 
 - Functions to convert between *f*\ :sub:`O2` and Fe\ :sup:`3+`/Fe\ :sub:`T`, and *f*\ :sub:`O2` buffers.
 
@@ -44,6 +44,13 @@ These are iterative calculations, which are solved using Jacobian matrix/Newton-
 The associated differential equations required for the solver are contained in ``differential_equations.py``, with symbolic differentiation using SymPy (Meurer et al., 2017).
 It is a long file because there are separate functions for different combinations of species in the melt and vapor (e.g., only carbon species in the system; the full COHS system; only H\ :sub:`2` O-CO\ :sub:`2` in the melt and vapor, etc.)
 
+
+Isotopes
+------
+
+``isotopes.py`` contains the functions to calculate isotopic fractionation between melt and vapor. 
+
+
 Calculations
 -----
 
@@ -56,6 +63,8 @@ Firstly, there are functions for calculating properties about the system, such a
 - Is sulfur or graphite saturated at a given set of condition.
 
 - Monte Carlo simulation of compositional errors.
+
+- Isotopic fractionation between melt and vapor.
 
 Secondly, there are calculation types that do not necessarily have independent variables of *P*, *T*, and bulk composition (as in ``equilibrium_equations.py``), such as:
 
