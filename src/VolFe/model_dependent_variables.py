@@ -111,9 +111,9 @@ default_models = [
     ["alpha_H_H2Sv_H2Sm", "no fractionation"],
     ["alpha_C_CH4v_CH4m", "no fractionation"],
     ["alpha_C_COv_COm", "no fractionation"],
-    ["alpha_C_CO2v_CO2T", "LeePP"],
+    ["alpha_C_CO2v_CO2T", "Lee24"],
     ["alpha_C_CO2v_CO2m", "Blank93"],
-    ["alpha_C_CO2v_CO32mm", "LeePP"],
+    ["alpha_C_CO2v_CO32mm", "Lee24"],
     ["alpha_S_H2Sv_H2Sm", "no fractionation"],
     ["alpha_SO2_SO4", "Fiege15"],
     ["alpha_H2S_S", "Fiege15"],
@@ -5778,7 +5778,37 @@ species = species.set_index("species")
 
 
 def beta_gas(PT, element, species, models):  # beta factors
-    # from Richet et al. (1977)fitted to quadratic equation for 600 < T'C < 1300
+    """
+    Beta isotopic fractionation factors between vapor species containing 32S/34S, 13C/12C, and D/H.
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    element: str
+        Element of interest (H, C, or S).
+
+    species: str
+        Vapor species of interest (H2O, H2, CH4, H2S, CO2, CO, OCS, SO2, S2).
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "beta_factors" and column label of "option".
+
+    Returns
+    -------
+    float
+        Beta factor for element in species of interest
+
+
+    Model options for 'beta_factors'
+    -------------
+    - 'Richet77' [default] Quadratic fits to data in Tables 9, 10, and 13 between 600 < T'C < 1300 of Richet et al. (1977) Ann. Rev. Earth Planet. Sci. 5:65-110 as detailed in Saper et al. (in prep).
+    Only one option available currently, included for future development.
+
+    """
+    # from Richet et al. (1977) fitted to quadratic equation for 600 < T'C < 1300
     if models.loc["beta_factors", "option"] == "Richet77":
         t = 1.0 / (PT["T"] + 273.15)
         if element == "S":
@@ -5818,6 +5848,35 @@ def beta_gas(PT, element, species, models):  # beta factors
 
 
 def alpha_S_H2Sv_S2mm(PT, comp, models):  # alpha for 32/34S between H2S(v) and S2-(m)
+    """
+    Alpha fractionation factor for 32S/34S (R) between H2S(v) and *S2-(m): a = R[H2S(m)]/R[S2-(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H2S_S" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H2S_S"
+    -------------
+    - 'Fiege15' [default] Eq. (8) from Fiege et al. (2015) Chem. Geol. 393:36-54 https://doi.org/10.1016/j.chemgeo.2014.11.012
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_H2S_S", "option"]
     if model == "Fiege15":  # Fiege et al. (2015) Chemical Geology eq. 8
         T_K = PT["T"] + 273.15
@@ -5832,6 +5891,35 @@ def alpha_S_H2Sv_S2mm(PT, comp, models):  # alpha for 32/34S between H2S(v) and 
 
 
 def alpha_S_SO2v_S6pm(PT, comp, models):  # alpha for 32/34S between SO2(v) and S6+(m)
+    """
+    Alpha fractionation factor for 32S/34S (R) between SO2(v) and S6+(m): a = R[SO2(v)]/R[S6+(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_SO2_SO4" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_SO2_SO4"
+    -------------
+    - 'Fiege15' [default] Eq. (9) from Fiege et al. (2015) Chem. Geol. 393:36-54 https://doi.org/10.1016/j.chemgeo.2014.11.012
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_SO2_SO4", "option"]
     if model == "Fiege15":  # Fiege et al. (2015) Chemical Geology eq. 9
         T_K = PT["T"] + 273.15
@@ -5851,6 +5939,35 @@ def alpha_S_SO2v_S6pm(PT, comp, models):  # alpha for 32/34S between SO2(v) and 
 
 
 def alpha_S_H2Sv_H2Sm(PT, comp, models):  # alpha for 32/34S between H2S(v) and H2S(m)
+    """
+    Alpha fractionation factor for 32S/34S (R) between H2S(v) and H2S(m): a = R[H2S(v)]/R[H2S(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_S_H2Sv_H2Sm" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_S_H2Sv_H2Sm"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
+
     model = models.loc["alpha_S_H2Sv_H2Sm", "option"]
     if model == "no fractionation":  #
         a = 1.0
@@ -5865,8 +5982,37 @@ def alpha_S_H2Sv_H2Sm(PT, comp, models):  # alpha for 32/34S between H2S(v) and 
 def alpha_C_CO2v_CO32mm(
     PT, comp, models
 ):  # alpha for 13/12C between CO2(v) and CO32-(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between CO2(v) and CO32-(m): a = R[CO2(v)]/R[CO32-(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_C_CO2v_CO32mm" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_C_CO2v_CO32mm"
+    -------------
+    - 'Lee24' [default] Lee et al. (2024) GCA 380:208-219 https://doi.org/10.1016/j.gca.2024.07.015
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_C_CO2v_CO32mm", "option"]
-    if model == "LeePP":
+    if model == "Lee24":
         a = math.exp(2.9 / 1000.0)
     elif model == "no fractionation":
         a = 1.0
@@ -5876,6 +6022,35 @@ def alpha_C_CO2v_CO32mm(
 def alpha_C_CO2v_CO2m(
     PT, comp, models
 ):  # alpha for 13/12C between CO2(v) and CO2mol(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between CO2(v) and CO2(m): a = R[CO2(v)]/R[CO2(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_C_CO2v_CO2m" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_C_CO2v_CO2m"
+    -------------
+    - 'Blank93' [default] Blank & Stolper (1993) EOS Trans Am Geophys Union 74:347-8
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_C_CO2v_CO2m", "option"]
     if model == "Blank93":
         a = 1.0
@@ -5884,6 +6059,7 @@ def alpha_C_CO2v_CO2m(
     return a
 
 
+# WORK IN PROGRESS
 def alpha_C_CO2v_CO2Tm(PT, comp, models):  # alpha for 13/12C between CO2(v) and CO2T(m)
     model = models.loc["alpha_C_CO2v_CO2T", "option"]
     if model == "LeePP":
@@ -5894,6 +6070,35 @@ def alpha_C_CO2v_CO2Tm(PT, comp, models):  # alpha for 13/12C between CO2(v) and
 
 
 def alpha_C_COv_COm(PT, comp, models):  # alpha for 13/12C between CO(v) and COmol(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between CO(v) and COmol(m): a = R[CO(v)]/R[COmol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_C_COv_COm" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_C_COv_COm"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
+
     model = models.loc["alpha_C_COv_COm", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5903,6 +6108,35 @@ def alpha_C_COv_COm(PT, comp, models):  # alpha for 13/12C between CO(v) and COm
 def alpha_C_CH4v_CH4m(
     PT, comp, models
 ):  # alpha for 13/12C between CH4(v) and CH4mol(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between CH4(v) and CH4mol(m): a = R[CH4(v)]/R[CH4mol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_C_CH4v_CH4m" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_C_CH4v_CH4m"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
+
     model = models.loc["alpha_C_CH4v_CH4m", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5915,6 +6149,35 @@ def alpha_C_CH4v_CH4m(
 
 
 def alpha_H_H2Ov_H2Om(PT, comp, models):
+    """
+    Alpha fractionation factor for D/H (R) between H2O(v) and H2Omol(m): a = R[H2O(v)]/R[H2Omol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H_H2Ov_H2Om" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H_H2Ov_H2Om"
+    -------------
+    - 'Rust04' [default] Rust et al. (2004) Geology 32(4) 349-352 https://doi.org/10.1130/G20388.2
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_H_H2Ov_H2Om", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5924,6 +6187,35 @@ def alpha_H_H2Ov_H2Om(PT, comp, models):
 
 
 def alpha_H_H2Ov_OHmm(PT, comp, models):
+    """
+    Alpha fractionation factor for D/H (R) between H2O(v) and OH-(m): a = R[H2O(v)]/R[OH-(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H_H2Ov_OHmm" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H_H2Ov_OHmm"
+    -------------
+    - 'Rust04' [default] Rust et al. (2004) Geology 32(4) 349-352 https://doi.org/10.1130/G20388.2
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+
+    """
+
     model = models.loc["alpha_H_H2Ov_OHmm", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5933,6 +6225,35 @@ def alpha_H_H2Ov_OHmm(PT, comp, models):
 
 
 def alpha_H_H2v_H2m(PT, comp, models):  # alpha for D/H between H2(v) and H2(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between H2(v) and H2mol(m): a = R[H2(v)]/R[H2mol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H_H2v_H2m" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H_H2v_H2m"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
+
     model = models.loc["alpha_H_H2v_H2m", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5940,6 +6261,35 @@ def alpha_H_H2v_H2m(PT, comp, models):  # alpha for D/H between H2(v) and H2(m)
 
 
 def alpha_H_CH4v_CH4m(PT, comp, models):  # alpha for D/H between CH4(v) and CH4(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between CH4(v) and CH4mol(m): a = R[CH4(v)]/R[CH4mol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H_CH4v_CH4m" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H_CH4v_CH4m"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
+
     model = models.loc["alpha_H_CH4v_CH4m", "option"]
     if model == "no fractionation":
         a = 1.0
@@ -5947,6 +6297,34 @@ def alpha_H_CH4v_CH4m(PT, comp, models):  # alpha for D/H between CH4(v) and CH4
 
 
 def alpha_H_H2Sv_H2Sm(PT, comp, models):  # alpha for D/H between H2S(v) and H2S(m)
+    """
+    Alpha fractionation factor for 13C/12C (R) between H2S(v) and H2Smol(m): a = R[H2S(v)]/R[H2Smol(m)].
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: dict
+        Melt composition (SiO2, TiO2, etc.), not normally used unless model option
+        requires melt composition.
+
+    models: pandas.DataFrame
+        Minimum requirement is index of "alpha_H_H2Sv_H2Sm" and column label of "option".
+
+    Returns
+    -------
+    float
+        alpha fractionation factor
+
+
+    Model options for "alpha_H_H2Sv_H2Sm"
+    -------------
+    - 'no fractionation' Treat as no isotopic fractionation between these species
+    Only one option available currently, included for future development.
+
+    """
     model = models.loc["alpha_H_H2Sv_H2Sm", "option"]
     if model == "no fractionation":  #
         a = 1.0

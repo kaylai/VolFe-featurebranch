@@ -3276,6 +3276,14 @@ def calc_comp_error_function(
 
 # outputting model options used in the calculation
 def results_isotopes_model_options(models):
+    """Outputs headers and values for model options related to isotopic fractionation.
+
+    Args:
+        models (pandas.DataFrame): Model options.
+
+    Returns:
+        tuple(pandas.DataFrame,pandas.DataFrame): Headers. Values.
+    """
     results_headers = pd.DataFrame(
         [
             [
@@ -3322,6 +3330,16 @@ def results_isotopes_model_options(models):
 
 
 def results_isotopes_gas_melt(comp, run):
+    """Outputs headers and values for melt and vapor composition for isotope
+    fractionation calculations.
+
+    Args:
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+        run (float): Index of interest.
+
+    Returns:
+        tuple(pandas.DataFrame,pandas.DataFrame): Headers. Values.
+    """
     results_headers = pd.DataFrame(
         [
             [
@@ -3393,6 +3411,21 @@ def results_isotopes_gas_melt(comp, run):
 def results_table_isotopes(
     PT, R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
 ):
+    """Outputs headers and values for isotope ratios for all species and melt and vapor
+    for all elements.
+
+    Args:
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        R_all_species_S (dict): S isotope ratios of all S-bearing species.
+        R_m_g_S (dict): S isotope ratio of melt and vapor.
+        R_all_species_C (dict): C isotope ratios of all C-bearing species.
+        R_m_g_C (dict): C isotope ratio of melt and vapor.
+        R_all_species_H (dict): H isotope ratios of all H-bearing species.
+        R_m_g_H (dict): H isotope ratio of melt and vapor.
+
+    Returns:
+        tuple(pandas.DataFrame,pandas.DataFrame): Headers. Values.
+    """
     results_headers = pd.DataFrame(
         [
             [
@@ -3473,6 +3506,20 @@ def results_table_isotopes(
 def results_table_isotopes_d(
     R_all_species_S, R_m_g_S, R_all_species_C, R_m_g_C, R_all_species_H, R_m_g_H
 ):
+    """Outputs headers and values for isotope ratios for all species and melt and vapor
+    for all elements as delta-values.
+
+    Args:
+        R_all_species_S (dict): S isotope ratios of all S-bearing species.
+        R_m_g_S (dict): S isotope ratio of melt and vapor.
+        R_all_species_C (dict): C isotope ratios of all C-bearing species.
+        R_m_g_C (dict): C isotope ratio of melt and vapor.
+        R_all_species_H (dict): H isotope ratios of all H-bearing species.
+        R_m_g_H (dict): H isotope ratio of melt and vapor.
+
+    Returns:
+        tuple(pandas.DataFrame,pandas.DataFrame): Headers. Values.
+    """
     results_headers = pd.DataFrame(
         [
             [
@@ -3555,6 +3602,21 @@ def calc_isotopes_gassing(
     nr_tol=1.0e-9,
     models=mdv.default_models,
 ):
+    """Calculates the isotopic ratio and delta value of all species and melt and vapor
+    during degassing.
+
+    Args:
+        setup (pandas.DataFrame): Output from a degassing calculation.
+        R_i_d (dict): Bulk isotope ratios as delta values.
+        first_row (int, optional): First row in setup to run. Defaults to 0.
+        last_row (_type_, optional): Last run in setup to run. Defaults to None.
+        nr_step (float, optional): Step-size for Newton-Raphson solver. Defaults to 1.0.
+        nr_tol (float, optional): Tolerance for Newton-Raphson solver. Defaults to 1.0e-9.
+        models (pandas.DataFrame, optional): Model options. Defaults to mdv.default_models.
+
+    Returns:
+        pandas.DataFrame: Results of isotopic fractionation during degassing.
+    """
     if last_row is None:
         last_row = len(setup)
 

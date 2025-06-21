@@ -1184,8 +1184,21 @@ def mf_S_species_old(melt_wf, gas_mf):
     return mf_S
 
 
-# WORK IN PROGRESS
 def mf_S_species(comp):
+    """
+    Calculates weight fraction of S in each sulfur-bearing species in the melt and vapor wrt to
+    total sulfur in the system.
+
+    Parameters
+    ----------
+    comp: pandas.DataFrame
+        Weight fraction by species in the melt and mole fraction in vapor including the wt% of vapor
+
+    Returns
+    -------
+    dict
+        weight fraction (equivalent to mole fraction) of S in each species relative to total S
+    """
     # weight of S in each sulfur-bearing species
     wtg = (float(comp["wt_g_wtpc"].iloc[0])) / 100.0
     wtm = 1.0 - wtg
@@ -1232,8 +1245,21 @@ def mf_S_species(comp):
     return mf
 
 
-# WORK IN PROGRESS
 def mf_C_species(comp):
+    """
+    Calculates weight fraction of C in each carbon-bearing species in the melt and vapor wrt to
+    total carbon in the system.
+
+    Parameters
+    ----------
+    comp: pandas.DataFrame
+        Weight fraction by species in the melt and mole fraction in vapor including the wt% of vapor
+
+    Returns
+    -------
+    dict
+        weight fraction (equivalent to mole fraction) of C in each species relative to total C
+    """
     # weight of C in each carbon-bearing species
     wtg = (float(comp["wt_g_wtpc"].iloc[0])) / 100.0
     wtm = 1.0 - wtg
@@ -1292,42 +1318,22 @@ def mf_C_species(comp):
     return mf
 
 
-(
-    "xgO2_mf",
-    "xgH2_mf",
-    "xgH2O_mf",
-    "xgS2_mf",
-    "xgSO2_mf",
-    "xgH2S_mf",
-    "xgCO2_mf",
-)
-(
-    "xgCO_mf",
-    "xgCH4_mf",
-    "xgOCS_mf",
-    "xgX_mf",
-    "xgC_S_mf",
-)
-(
-    "H2OT_wtpc",
-    "OH_wtpc",
-    "H2Omol_wtpc",
-    "H2_ppmw",
-    "CH4_ppmw",
-    "CO2T_ppmw",
-)
-(
-    "CO2mol_ppmw",
-    "CO32-_ppmw",
-    "CO_ppmw",
-    "S2-_ppmw",
-    "S6+_ppmw",
-    "H2S_ppmw",
-)
-
-
 # WORK IN PROGRESS
 def mf_H_species(comp):
+    """
+    Calculates weight fraction of H in each hydrogen-bearing species in the melt and vapor wrt to
+    total hydrogen in the system.
+
+    Parameters
+    ----------
+    comp: pandas.DataFrame
+        Weight fraction by species in the melt and mole fraction in vapor including the wt% of vapor
+
+    Returns
+    -------
+    dict
+        weight fraction (equivalent to mole fraction) of H in each species relative to total H
+    """
     # weight of H in each hydrogen-bearing species
     wtg = (float(comp["wt_g_wtpc"].iloc[0])) / 100.0
     wtm = 1.0 - wtg
@@ -1543,7 +1549,9 @@ def conc_insolubles(PT, melt_wf, models):
     S2m = melt_wf["S2-"]  # weight fraction of S2-
     S6p = (
         mg.C_SO4(PT, melt_wf, models) * mdv.f_O2(PT, melt_wf, models) ** 2 * S2m
-    ) / mg.C_S(PT, melt_wf, models)  # weight fraction S6+
+    ) / mg.C_S(
+        PT, melt_wf, models
+    )  # weight fraction S6+
     H2S = (
         mg.C_H2S(PT, melt_wf, models) * mg.f_H2S(PT, melt_wf, models)
     ) / 1000000.0  # weight fraction H2S
@@ -1751,8 +1759,22 @@ def calc_pure_solubility(PT, melt_wf, models):
     return results
 
 
-# WORK IN PROGRESS
 def calc_isotopes(PT, comp, R, models, nr_step, nr_tol, run=0.0):
+    """Calculates the isotope ratio for all species and melt and vapor for H, S, and C
+    for a single melt-vapor composition.
+
+    Args:
+        PT (dict): Pressure in bars as "P" and temperature in 'C as "T"
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+        R (dict): Bulk isotope ratio of the system.
+        models (pandas.DataFrame): Model options
+        nr_step (float): Step-size for Newton-Raphson solver.
+        nr_tol (float): Tolerance for Newton-Raphson solver.
+        run (float, optional): Row number in file to run. Defaults to 0.0.
+
+    Returns:
+        tuple(dict,dict,dict,dict,dict,dict): Isotope ratios for all species in S, C, and H. Isotope ratios for melt and vapor in S, C, and H.
+    """
     comp_ = comp[run : run + 1]  # noqa
     R_all_species_C, R_m_g_C = iso.i2s9("C", PT, comp_, R, models, nr_step, nr_tol)
     R_all_species_S, R_m_g_S = iso.i2s9("S", PT, comp_, R, models, nr_step, nr_tol)

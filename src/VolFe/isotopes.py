@@ -17,10 +17,33 @@ import VolFe.model_dependent_variables as mdv
 
 
 def delta_standard(standard, isotope, element):
+    """
+    Get the isotopic ratio reference value for a standard for an element.
+
+
+    Parameters
+    ----------
+    standard: str
+        Standard material of interest: VCDT for S, VPDB for C, and VSMOW for H.
+
+    isotope: float
+        Minor isotope if interest: 34 for S, 13 for C, and 2 for H
+
+    element: str
+        Element of interest: S, C, or H.
+
+    Returns
+    -------
+    float
+        isotope ratio for reference material
+
+    """
     if element == "S":
         if standard == "VCDT":
             if isotope == 34:
-                reference = 1 / 22.6436  # 34S/32S Ding et al. (2001)
+                reference = (
+                    1 / 22.6436
+                )  # 34S/32S Ding et al. (2001) GCA 65(15):2433–2437 https://doi.org/10.1016/S0016-7037(01)00611-1
     elif element == "C":
         if standard == "VPDB":
             if isotope == 13:
@@ -30,11 +53,37 @@ def delta_standard(standard, isotope, element):
     elif element == "H":
         if standard == "VSMOW":
             if isotope == 2:
-                reference = 155.76 / 1.0e6  # 2H/1H Hagemann et al. (1970)
+                reference = (
+                    155.76 / 1.0e6
+                )  # 2H/1H Hagemann et al. (1970) Tellus 22(6):712–715 https://doi.org/10.1111/J.2153-3490.1970.TB00540.X
     return reference
 
 
 def ratio2delta(standard, isotope, element, ratio):
+    """
+    Convert isotope ratio to delta value.
+
+
+    Parameters
+    ----------
+    standard: str
+        Standard material of interest: VCDT for S, VPDB for C, and VSMOW for H.
+
+    isotope: float
+        Minor isotope if interest: 34 for S, 13 for C, and 2 for H
+
+    element: str
+        Element of interest: S, C, or H.
+
+    ratio: float
+        Value of isotope ratio.
+
+    Returns
+    -------
+    float
+        delta-value of isotope ratio
+
+    """
     reference = delta_standard(standard, isotope, element)
     if ratio == "":
         d = ""
@@ -44,12 +93,52 @@ def ratio2delta(standard, isotope, element, ratio):
 
 
 def delta2ratio(standard, isotope, element, d):
+    """
+    Convert delta value to isotope ratio.
+
+
+    Parameters
+    ----------
+    standard: str
+        Standard material of interest: VCDT for S, VPDB for C, and VSMOW for H.
+
+    isotope: float
+        Minor isotope if interest: 34 for S, 13 for C, and 2 for H
+
+    element: str
+        Element of interest: S, C, or H.
+
+    d: float
+        delta-value.
+
+    Returns
+    -------
+    float
+        isotope ratio of delta-value.
+
+    """
     reference = delta_standard(standard, isotope, element)
     ratio = ((d / 1000.0) * reference) + reference
     return ratio
 
 
 def alpha2Delta(a):
+    """
+    Convert alpha fractionation factor to cap-delta fractionation factor.
+
+
+    Parameters
+    ----------
+    isotope: float
+        alpha fractionation factor
+
+
+    Returns
+    -------
+    float
+        cap-delta fractionation factor
+
+    """
     D = 1000.0 * (1.0 - a)
     return D
 
@@ -60,6 +149,33 @@ def alpha2Delta(a):
 
 
 def alpha_gas_using_beta(element, A, B, PT, models):  # using beta values
+    """
+    Calculate alpha fractionation factor from beta-factors.
+
+
+    Parameters
+    ----------
+    element: str
+        Element of interest: S, C, or H.
+
+    A: str
+        Nominator species.
+
+    B: str
+        Denominator species.
+
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    models: pandas.DataFrame
+        Models options.
+
+    Returns
+    -------
+    float
+        alpha fractionation factor for A-B
+
+    """
     beta_A = mdv.beta_gas(PT, element, A, models)  # gas species A
     beta_B = mdv.beta_gas(PT, element, B, models)  # gas species B
     result = beta_A / beta_B
@@ -72,6 +188,30 @@ def alpha_gas_using_beta(element, A, B, PT, models):  # using beta values
 
 
 def alphas_C(PT, comp, models):
+    """
+    Calculate consistant alpha fractionation factors for C-bearing species (i.e., all
+    relative to the same species). If vapor is present, the species is CO2(v), otherwise
+    it is CO2mol(m) or CO32-(m).
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: pandas.DataFrame
+        Composition of the melt and vapor by species, including weight fraction of
+        vapor.
+
+    models: pandas.DataFrame
+        Models options.
+
+    Returns
+    -------
+    dict
+        alpha fractionation factor for all C-bearing species relative to one species
+
+    """
     if float(comp["wt_g_wtpc"].iloc[0]) > 0.0:  # all alphas against CO2 in the vapor
         A = alpha_gas_using_beta("C", "CO", "CO2", PT, models)  # CO(v)-CO2(v)
         B = alpha_gas_using_beta("C", "CH4", "CO2", PT, models)  # CH4(v)-CO2(v)
@@ -123,6 +263,30 @@ def alphas_C(PT, comp, models):
 
 
 def alphas_H(PT, comp, models):
+    """
+    Calculate consistant alpha fractionation factors for H-bearing species (i.e., all
+    relative to the same species). If vapor is present, the species is H2O(v), otherwise
+    it is H2Omol(m) or OH-(m).
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: pandas.DataFrame
+        Composition of the melt and vapor by species, including weight fraction of
+        vapor.
+
+    models: pandas.DataFrame
+        Models options.
+
+    Returns
+    -------
+    dict
+        alpha fractionation factor for all H-bearing species relative to one species
+
+    """
     if float(comp["wt_g_wtpc"].iloc[0]) > 0.0:  # all alphas against H2O in the vapor
         A = alpha_gas_using_beta("H", "H2", "H2O", PT, models)  # H2(v)
         B = alpha_gas_using_beta("H", "CH4", "H2O", PT, models)  # CH4(v)
@@ -153,9 +317,9 @@ def alphas_H(PT, comp, models):
             A = mdv.alpha_H_H2Ov_H2Om(PT, comp, models)  # H2Omol(m)
             B = c / mdv.alpha_H_H2Ov_OHmm(PT, comp, models)  # OH-(m)
             H_species1, H_species2 = "OH-", "H2Omol"
-        else:  # all alphas against CO2mol in the melt
-            A = mdv.alpha_C_CO2v_CO2m(PT, comp, models)  # OH-(m)
-            B = c / mdv.alpha_H_H2Ov_OHmm(PT, comp, models)  # H2Omol(m)
+        else:  # all alphas against OH- in the melt
+            A = mdv.alpha_H_H2Ov_OHmm(PT, comp, models)  # OH-(m)
+            B = c / mdv.alpha_H_H2Ov_H2Om(PT, comp, models)  # H2Omol(m)
             H_species1, H_species2 = "H2Omol", "OH-"
         C = (a * A) / mdv.alpha_H_H2v_H2m(PT, comp, models)  # H2mol(m)
         D = (b * A) / mdv.alpha_H_CH4v_CH4m(PT, comp, models)  # CH4mol(m)
@@ -179,6 +343,29 @@ def alphas_H(PT, comp, models):
 
 
 def alphas_S(PT, comp, models):  # all alphas against S2-(m)
+    """
+    Calculate consistant alpha fractionation factors for S-bearing species (i.e., all
+    relative to the same species) against *S2-(m).
+
+
+    Parameters
+    ----------
+    PT: dict
+        Pressure (bars) as "P" and temperature ('C) as "T".
+
+    comp: pandas.DataFrame
+        Composition of the melt and vapor by species, including weight fraction of
+        vapor.
+
+    models: pandas.DataFrame
+        Models options.
+
+    Returns
+    -------
+    dict
+        alpha fractionation factor for all S-bearing species relative to *S2-
+
+    """
     C = mdv.alpha_S_H2Sv_S2mm(PT, comp, models)  # H2S(v)
     A = C * alpha_gas_using_beta("S", "S2", "H2S", PT, models)  # S2(v)
     B = C * alpha_gas_using_beta("S", "OCS", "H2S", PT, models)  # OCS(v)
@@ -211,14 +398,16 @@ def simple_isotope_fractionation(D, db):
     Parameters
     ----------
     D: float
-        Float of cap-delta Fractionation factor between vapor and melt in per mil.
+        Cap-delta Fractionation factor between vapor and melt in per mil.
 
     db: float
-        Float initial little-delta isotope value of bulk system in per mil.
+        Initial little-delta isotope value of bulk system in per mil.
+
 
     Returns
     -------
-    Dataframe.
+    pandas.DataFrame
+        Isotopic composition of melt and vapor during closed- and open-system degassing
 
     """
     for n in range(0, 1000, 1):
@@ -252,6 +441,21 @@ def simple_isotope_fractionation(D, db):
 
 
 def newton_raphson(x0, constants, e1, step, eqs, deriv, maxiter=100):
+    """Newton-Raphson solver.
+
+    Args:
+        x0 (float): Initial guess
+        constants (list): Constants required to evaluate equations
+        e1 (float): Tolerance for solver
+        step (float): Step-size for solver
+        eqs (func): Equations to solve
+        deriv (func): Differentials of equations to solve
+        maxiter (int, optional): Maximum number of iterations to try. Defaults to 100.
+
+    Returns:
+        float: Solution
+    """
+
     def dx(x, eqs):
         f_ = eqs(x, constants)
         result = abs(0 - f_)
@@ -291,6 +495,18 @@ def newton_raphson(x0, constants, e1, step, eqs, deriv, maxiter=100):
 
 
 def allocate_species(element, comp, alphas, species_distribution):
+    """Specifies species order for subsequent calculations.
+
+    Args:
+        element (str): Element of interest: H, S, or C.
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+        alphas (dict): Consistent alpha fractionation factors.
+        species_distribution (dict): Fraction of element in each species.
+
+    Returns:
+        tuple(dict,dict): Dictionary of alphas and species distribution in correct
+        order.
+    """
     if element == "S":
         species = "S2-"
         T_a = species_distribution[species]
@@ -402,6 +618,16 @@ def allocate_species(element, comp, alphas, species_distribution):
 
 
 def rename_output(element, input, comp):
+    """Renames generic output with species names.
+
+    Args:
+        element (str): Element of interest: H, S, or C.
+        input (dict): Dictionary of interest with generic names.
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+
+    Returns:
+        dict: Species names instead of generic names.
+    """
     output = {}
     if element == "S":
         output["m_S2-"] = input["A"]
@@ -455,6 +681,21 @@ def rename_output(element, input, comp):
 
 
 def i2s9(element, PT, comp, R, models, nr_step, nr_tol):
+    """Calculate the isotope ratios of up to nine species with two isotopes.
+
+    Args:
+        element (str): Element of interest: H, S, or C.
+        PT (dict): Pressure (bars) as "P" and temperature ('C) as "T".
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+        R (dict): Bulk isotope ratio of the system.
+        models (dict): Model options.
+        nr_step (float): Step-size for Newton-Raphson solver.
+        nr_tol (float): Tolerance for Newton-Raphson solver.
+
+    Returns:
+        tuple(dict,dict): Isotope ratio of each species. Average isotope ratio of melt
+        and vapor.
+    """
     comp.reset_index(drop=True, inplace=True)
     if element == "S":
         if comp.loc[0, "ST_ppmw"] == 0.0:
@@ -673,6 +914,16 @@ def i2s9(element, PT, comp, R, models, nr_step, nr_tol):
 
 
 def av_m_g(element, ratio, constants):
+    """Melt and vapor isotope ratio based on isotope ratio of species within them.
+
+    Args:
+        element (str): Element of interest: H, C, or S.
+        ratio (dict): Isotope ratios of all species
+        constants (tuple(dict,dict,float)): Consistent alpha fractionation factors. Fraction of element in each species. Bulk isotope ratio.
+
+    Returns:
+        dict: Melt and vapor isotope ratio.
+    """
     alphas, species_distribution, R_i = constants
 
     # heavy/total isotope ratio
@@ -769,6 +1020,16 @@ def av_m_g(element, ratio, constants):
 
 
 def iso_initial_guesses(element, R, comp):
+    """Initial guess for Newton-Raphson solver.
+
+    Args:
+        element (str): Element of interest: S, C, or H.
+        R (dict): Isotope ratio of bulk system.
+        comp (pandas.DataFrame): Composition of the melt and vapor by species, including weight fraction of vapor.
+
+    Returns:
+        float: Initial guess for Newton-Raphson solver.
+    """
     if element == "S":
         species_distribution = c.mf_S_species(comp)
         R_i = R["S"]
