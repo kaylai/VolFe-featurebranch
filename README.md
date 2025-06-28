@@ -6,6 +6,7 @@ Welcome to VolFe! an open-source framework for calculating melt-vapour equilibri
 [![PyPI](https://badgen.net/pypi/v/VolFe)](https://pypi.org/project/VolFe/)
 [![Build Status](https://github.com/eryhughes/VolFe/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/eryhughes/VolFe/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/VolFe/badge/?version=latest)](https://VolFe.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/646746387.svg)](https://doi.org/10.5281/zenodo.15756761)
 
 Read more about the python package in the Earth ArXiv pre-print (and please cite if you use the package!):
 Hughes, E.C., Liggins, P., Wieser, P. and Stolper, E.M., 2024. VolFe: an open-source Python package for calculating melt-vapor equilibria including silicate melt, carbon, hydrogen, sulfur, and noble gases. https://doi.org/10.31223/X52X3G
