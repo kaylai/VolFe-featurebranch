@@ -5,7 +5,7 @@ Degassing paths
 As magmas rise to the surface, volatiles dissolved in the melt exsolve into the vapor phase.
 VolFe calculates the proportions of vapor and melt and their compositions and speciation during open- and closed-system, re- and degassing for various combinations of C, H, S, and noble gases as the volatile species.
 
-This calculation is described in detail in `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_ (schematic of the calculation shown in the figure below; `Hughes et al., pre-print <https://doi.org/10.31223/X52X3G>`_).
+This calculation is described in detail in `Hughes et al. (pre-print) <https://doi.org/10.31223/X52X3G>`_ (schematic of the calculation shown in the figure below; `Hughes et al., pre-print <https://doi.org/10.31223/X52X3G>`_). The isotopic fractionation calculation is described in a paper in prep (please check back for a citation!)
 
 .. figure:: figures/degassingcalc.png
 
@@ -20,3 +20,5 @@ In these examples we will show you how to run this calculation for:
 - :doc:`Example 2d <Examples/2d. regas>`: Closed- and open-system CHOS regassing (i.e., increasing in pressure).
 
 - :doc:`Example 2e <Examples/2e. degas_notCHOS>`: Closed-system degassing for different volatile systems (including noble gases).
+
+- :doc:`Example 2f <Examples/2f. degas_closed_open_isotopes>`: Closed- and open-system CHOS degassing calculations including isotopes.

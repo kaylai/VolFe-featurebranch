@@ -2,7 +2,7 @@
 Options
 =========================
 
-Various parameters in VolFe can be calculated using different models - these include parameters like solubility functions, equilibrium constants, fugacity coefficients, etc.
+Various parameters in VolFe can be calculated using different models - these include parameters like solubility functions, equilibrium constants, fugacity coefficients, isotope fractionation factors, etc.
 For solubility functions, oxygen fugacity to Fe\ :sup:`3+`/Fe\ :sub:`T` relationships, and sulfur saturation conditions, this is how VolFe includes the effect of melt compositions on calculations.
 
 There are lots of models already available in VolFe, which can be found in the API reference section.
@@ -24,3 +24,5 @@ Here are some hints to the naming convention used for functions, where specific 
 - Oxygen fugacity and Fe\ :sup:`3+`/Fe\ :sub:`T`: functions are ``FMQ()``, ``NNO()``, ``fO22Fe3FeT()``, and ``f_O2()``.
 
 - Sulfide/sulfate content at sulfide/anhydrite saturation: functions are ``SCSS()`` and ``SCAS()``.
+
+- Isotope fractionation factors: functions are ``alpha_`` (e.g., ``alpha_S_SO2v_S6pm`` is the function for calculating the isotopic fractionation factor between SO\ :sub:`2` in the vapor and S\ :sup:`6+` in the melt)

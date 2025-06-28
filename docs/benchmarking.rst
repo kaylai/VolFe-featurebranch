@@ -17,6 +17,8 @@ These are shown in the following notebooks:
 
 - :doc:`Oxygen fugacity related variables <benchmarking/oxygen_fugacity>`
 
+- Isotopic fractionation factors (in progress)
+
 Benchmarking calculations is a few steps up from benchmarking model dependent variables and would answer “how do you know a correct solution is reached”. 
 To benchmark a calculation like isobars or degassing, all the model dependent variables employed in the tool used as a benchmark must be the same as in VolFe (i.e., fugacity coefficients, solubility functions, equilibrium constants etc.). 
 If they are not the same, the answer will not be the same even if the calculation is working. 
