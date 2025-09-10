@@ -15,7 +15,7 @@ To see the different options available, click on ``make_df_and_add_model_default
 
 Here are some hints to the naming convention used for functions, where specific model options for these model dependent variables can be found:
 
-- Equilibrium constants: functions starting with ``K`` (e.g., ``KCOHg()`` is the function for calculating the equilibrium constants for CH\ :sub:`4` + 2O\ :sub:`2` = CO\ :sub:`2` + 2H\ :sub:`2`O).
+- Equilibrium constants: functions starting with ``K`` (e.g., ``KCOHg()`` is the function for calculating the equilibrium constants for CH\ :sub:`4` + 2O\ :sub:`2` = CO\ :sub:`2` + 2H\ :sub:`2`/O).
 
 - Fugacity coefficients: functions starting with ``y_`` (e.g., ``y_CH4()`` is the function for calculating the fugacity coefficient for CH\ :sub:`4`).
 

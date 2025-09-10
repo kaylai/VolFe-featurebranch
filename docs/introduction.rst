@@ -6,9 +6,9 @@ This is VolFe: an open-source Python package for calculating melt-vapor equilibr
 
 VolFe can be installed using pip from `PyPI <https://pypi.org/project/VolFe/>`_ or from `GitHub <https://github.com/eryhughes/VolFe>`_.
 
-VolFe is a work in progress. If you see any problems or have any feedback, super keen to hear it! Drop Ery an email at e[dot]hughes[at]gns[dot]cri[dot]nz.
+VolFe is a work in progress. If you see any problems or have any feedback, super keen to hear it! Drop Ery an email at ery[dot]hughes[at]ucl[dot]ac[dot]uk.
 
-If you have used VolFe in your work, please cite the pre-print available on EarthArXiv (and check back to see if it has been published!).
+If you have used VolFe in your work, please cite the pre-print available on EarthArXiv (and check back to see if it has been published!) - it has been accepted in Volcanica so should be typseset soon!
 
 For chemistry and speciation, please cite:
 
