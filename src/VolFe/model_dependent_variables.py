@@ -1170,11 +1170,12 @@ def C_CO3(PT, melt_wf, models=default_models):
         DH = -28.15  # kJ/mol ±4.24
         T0 = 1200.0 + 273.15  # K
         P0 = 1000.0  # bar
-        A = gp.exp(-13.36)
         B = -((DV / (R_ * T_K)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
         if models.loc["high precision", "option"] == "True":
+            A = gp.exp(-13.36)
             C = A * gp.exp(B)
         else:
+            A = math.exp(-13.36)
             C = A * math.exp(B)
     # elif model == "TholeiiteBasalt_Allison22": # N72 basalt in Table 2 from Allison et
     # al. (2022) CMP 177:40, based on experiments from Shishkina et al. (2010)
