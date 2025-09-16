@@ -2107,7 +2107,7 @@ def newton_raphson(x0, constants, e1, step, eqs, deriv):
 # jac_newton(1,1,test_f,test_df,1)
 
 
-def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=1000):
+def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=50):
     """Jacobian matrix/Newton-Raphson approach in 2D.
 
     Args:
@@ -2156,13 +2156,44 @@ def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=1000):
         n = n + 1.0
         deriv_ = deriv(x0, y0, constants)
         guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
-        while guessx < 0.0 or guessy < 0.0:
-            step = step / 10.0
-            guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
-        # print(guessx,guessy)
-        # print(guessx,guessy,diff1,diff2,wtg1,wtg2,wtg3)
-        # if (abs(x0 - guessx)/x0)*100 < tol and (abs(y0-guessy)/y0)*100 < tol: tol =
-        # 1e-5
+        
+        try:
+            temp1 = int(guessx)
+            temp2 = int(guessy)
+        except:  # noqa: E722
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
+        if (
+            guessx < 0.0
+            or guessy < 0.0
+            or guessx > 1.0
+            or guessy > 1.0
+        ):
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
+        try:
+            temp1 = int(guessx)
+            temp2 = int(guessy)
+        except:  # noqa: E722
+            if step < 0.01:
+                break
+            else:
+                step = step / 10.0
+                guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
+        if (
+            guessx < 0.0
+            or guessy < 0.0
+            or guessx > 1.0
+            or guessy > 1.0
+        ):
+            break
+        
         diff1, diff2, wtg1, wtg2, wtg3 = eqs(guessx, guessy)
         if abs(diff1) < tol and abs(diff2) < tol:
             return guessx, guessy
@@ -2193,16 +2224,33 @@ def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=1000):
     #    results1 = pd.DataFrame([[guessx, guessy,diff1,diff2,step]])
     #    results = pd.concat([results, results1], ignore_index=True)
     #    results.to_csv('results_jacnewton2.csv', index=False, header=False)
-
+    
+    step = step0 - (step0 / 10.0)
+    x0, y0 = x00, y00
     for iter in range(9):
-        step = step0 - (step0 / 10.0)
-        x0, y0 = x00, y00
+        n = 0.0
+        step_0 = step
         for iter in range(maxiter):
+            n = n + 1.0
             deriv_ = deriv(x0, y0, constants)
             guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
-            while guessx < 0.0 or guessy < 0.0:
-                step = step / 10.0
-                guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
+            try:
+                temp1 = int(guessx)  # noqa: F841
+                temp2 = int(guessy)  # noqa: F841
+            except:  # noqa: E722
+                if step < 0.01:
+                    break
+                else:
+                    step = step / 10.0
+                    guessx, guessy, J = x2jac(step, deriv_, eqs, x0, y0)
+            if (
+                guessx < 0.0
+                or guessy < 0.0
+                or guessx > 1.0
+                or guessy > 1.0
+            ):
+                x0, y0 = x00, y00
+                break
             diff1, diff2, wtg1, wtg2, wtg3 = eqs(guessx, guessy)
             if abs(diff1) < tol and abs(diff2) < tol:
                 return guessx, guessy
@@ -2212,7 +2260,10 @@ def jac_newton(x0, y0, constants, eqs, deriv, step, tol, maxiter=1000):
             y0 = guessy
             results1 = pd.DataFrame([[guessx, guessy, diff1, diff2, step]])
             results = pd.concat([results, results1], ignore_index=True)
-            results.to_csv("results_jacnewton2.csv", index=False, header=False)
+            if n % 50 == 0:
+                results.to_csv("results_jacnewtonw.csv", index=False, header=False)
+        step = step_0 - (step0 / 10.0)
+
 
     guessx, guessy = 1.0, 1.0
     return guessx, guessy
@@ -2367,7 +2418,7 @@ def jac_newton3(x0, y0, z0, constants, eqs, deriv, step, tol, maxiter=50):
     #    if abs(diff1) < tol and abs(diff2) < tol and abs(diff3) < tol:
     #        return guessx, guessy, guessz
     #    #elif np.isnan(float(guessx)) or np.isnan(float(guessy)) or
-    # np.isnan(float(guessz)):
+    #np.isnan(float(guessz)):
     #        #print("nan encountered")
     #    x0 = guessx
     #    y0 = guessy
