@@ -1195,6 +1195,7 @@ def calc_gassing(
     else:
         P_sat_, conc, frac = c.P_sat(PT, melt_wf, models, psat_tol, nr_step, nr_tol)
     PT["P"] = P_sat_
+    P_sat_initial = P_sat_
     if models.loc["print status", "option"] == "True":
         print("T=", PT["T"], "P=", PT["P"], datetime.datetime.now())
 
@@ -1583,9 +1584,9 @@ def calc_gassing(
     # run over different pressures #
     number_of_step = 0.0
     if models.loc["gassing_direction", "option"] == "degas":
-        max_number_of_step = initial
+        max_number_of_step = math.ceil(P_sat_initial)
     elif models.loc["gassing_direction", "option"] == "regas":
-        max_number_of_step = final - initial
+        max_number_of_step = final - math.floor(P_sat_initial)
 
     PT["P"] = initial
     last_successful_P = math.floor(PT["P"])
@@ -1736,7 +1737,9 @@ def calc_gassing(
                             "guessz": original_guessz,
                             "guessw": original_guessw,
                         }
-                        if dp_step < 1.0 or dp_step == 1.0:
+                        if number_of_step == 1.0:
+                            last_successful_P = math.floor(P_sat_initial)
+                        elif dp_step < 1.0 or dp_step == 1.0:
                             if PT["P"] <= 10.0:
                                 print("P < 10 bar, trying P = 1 bar")
                                 PT["P"] = 1.0
