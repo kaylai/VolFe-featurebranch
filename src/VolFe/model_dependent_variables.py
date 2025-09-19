@@ -102,7 +102,7 @@ default_models = [
     ["gassing_direction", "degas"],
     ["P_variation", "polybaric"],
     ["eq_Fe", "yes"],
-    ["solve_species", "OCS"],
+    ["solve_species", "auto"],
     ["beta_factors", "Richet77"],
     ["alpha_H_CH4v_CH4m", "no fractionation"],
     ["alpha_H_H2v_H2m", "no fractionation"],
