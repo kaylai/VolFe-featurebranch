@@ -8,12 +8,14 @@ VolFe can be installed using pip from `PyPI <https://pypi.org/project/VolFe/>`_ 
 
 VolFe is a work in progress. If you see any problems or have any feedback, super keen to hear it! Drop Ery an email at ery[dot]hughes[at]ucl[dot]ac[dot]uk.
 
-If you have used VolFe in your work, please cite the pre-print available on EarthArXiv (and check back to see if it has been published!) - it has been accepted in Volcanica so should be typseset soon!
+If you want to know more about how VolFe works, check out the following articles (and please cite them if have used VolFe in your work!)
 
-For chemistry and speciation, please cite:
+For chemistry (e.g., concentration and speciation):
 
-Hughes, E.C., Liggins, P., Wieser, P. and Stolper, E.M., 2024. VolFe: an open-source Python package for calculating melt-vapor equilibria including silicate melt, carbon, hydrogen, sulfur, and noble gases. https://doi.org/10.31223/X52X3G
+Hughes EC, Liggins P, Wieser P, and Stolper EM (2024). VolFe: an open-source Python package for calculating melt-vapor equilibria including silicate melt, carbon, hydrogen, sulfur, and noble gases. Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781
 
-For isotope ratios - paper is in prep!
+For isotope ratios (in the Supplementary Materials):
+
+Saper LM, Bromiley G, Cao R, Brounce M, Hughes EC, and Woelki D (2025). The primary magmatic δ34S of the Troodos Ophiolite and evidence for early and late sulfide saturation. Lithos 518-519:108331 https://doi.org/10.1016/j.lithos.2025.108331
 
 .. figure:: figures/overview.png
