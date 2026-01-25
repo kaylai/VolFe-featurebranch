@@ -9,9 +9,11 @@ Welcome to VolFe! An open-source framework for calculating melt-vapour equilibri
 [![DOI](https://zenodo.org/badge/646746387.svg)](https://doi.org/10.5281/zenodo.15756761)
 
 Read more about the python package in the Volcanica article for the chemistry and speciation calculations (and please cite if you use the package!):
+
 Hughes EC, Liggins P, Wieser P, and Stolper EM (2025). VolFe: an open-source Python package for calculating melt-vapor equilibria including silicate melt, carbon, hydrogen, sulfur, and noble gases. Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781
 
 The Supplementary Material of the Lithos article explains the isotope calculations (and please additionally cite this paper if you use the isotope calculations):
+
 Saper LM, Bromiley G, Cao R, Brounce M, Hughes EC, and Woelki D (2025). The primary magmatic δ34S of the Troodos Ophiolite and evidence for early and late sulfide saturation. Lithos 518-519:108331 https://doi.org/10.1016/j.lithos.2025.108331
 
 
