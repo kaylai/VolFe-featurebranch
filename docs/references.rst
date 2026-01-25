@@ -2,17 +2,27 @@
 References
 ==========
 
+*in progress*
+
+Anderson et al., 1989
+
 Ardia et al. (2013) GCA 114:52-71 https://doi.org/10.1016/j.gca.2013.03.028
 
 Armstrong et al. (2015)
 
 Beermann O, Botcharnikov RE, Holtz F, Diedrich O, Nowak M (2011). Temperature dependence of sulfide and sulfate solubility in olivine-saturated basaltic magmas. Geochimica et Cosmochimica Acta 75(23):7612-7631 https://doi.org/10.1016/j.gca.2011.09.024
 
+Belgrano et al., 2021
+
+Black and Andrews, 2020
+
 Blanchard et al. (2021)
 
 Blank et al. (1993) EPSL 119:27-36 https://doi.org/10.1016/0012-821X(93)90004-S
 
 Blank & Stolper (1993) EOS Trans Am Geophys Union 74:347-8
+
+Blundy & Cashman, 2009
 
 Borisov A, Behrens H, Holtz F (2018). Ferric/ferrous ratio in silicate melts: a new model for 1 atm data with special emphasis on the effects of melt composition. Contributions to Mineralogy and Petrology 173:1-15 https://doi.org/10.1007/s00410-018-1524-8
 
@@ -27,6 +37,16 @@ Boulliung & Wood (2023) GCA 343:420 https://doi.org/10.1016/j.gca.2022.11.025
 Brounce MN, Kelley KA, Cottrell E (2014). Variations in Fe3+/ΣFe of Mariana Arc basalts and mantle wedge fO2. Journal of Petrology 55:2513–2536 https://doi.org/10.1093/petrology/egu065
 
 Brounce MN, Kelley KA, Stern R, Martinez F, Cottrell E (2016). The Fina Nagu volcanic complex: Unusual submarine arc volcanism in the rapidly deforming southern Mariana margin. Geochemistry, Geophysics, Geosystems 17:4078–4091 https://doi.org/10.1002/2016GC006457
+
+Camejo-Harry et al., 2018
+
+Camejo-Harry et al., 2019
+
+Carmichael and Ghiorso, 1990
+
+Colman et al., 2015
+
+Coombs et al., 2006
 
 Cottrell E, Birner SK, Brounce M, Davis FA, Waters LE, Kelley KA (2021). Oxygen fugacity across tectonic settings. Magma redox geochemistry p33-61 https://doi.org/10.1002/9781119473206.ch3
 
@@ -66,6 +86,8 @@ Iacovino K, Till CB (2019). DensityX: A program for calculating the densities of
 
 Kelley KA, Cottrell E (2012). The influence of magmatic differentiation on the oxidation state of Fe in a basaltic arc magma. Earth and Planetary Science Letters 329-330:109–121 https://doi.org/10.1016/j.epsl.2012.02.010
 
+Kolzenburg et al., 2018
+
 Kress VC, Carmichael IS (1991). The compressibility of silicate liquids containing Fe2O3 and the effect of composition, temperature, oxygen fugacity and pressure on their redox states. Contributions to Mineralogy and Petrology 108:82-92 https://doi.org/10.1007/BF00307328
 
 Lee et al. (2024) GCA 380:208-219 https://doi.org/10.1016/j.gca.2024.07.015
@@ -83,6 +105,8 @@ Liu Y, Samaha NT, Baker DR (2007). Sulfur concentration at sulfide saturation (S
 Liu K, Zhang L, Guo X, Ni H (2021). Effects of sulfide composition and melt H2O on sulfur content at sulfide saturation in basaltic melts. Chemical Geology 559:119913 https://doi.org/10.1016/j.chemgeo.2020.119913
 
 Liu K, Zhang L, Ni H (2023). Anhydrite solubility enhanced by CaO in silicate melts: Implications for sulfur cycling in subduction zones. Geochimica et Cosmochimica Acta 349:135-145 https://doi.org/10.1016/j.gca.2023.04.007
+
+Lund et al., 2018
 
 Masotta and Kepler (2015)
 
@@ -118,6 +142,8 @@ Rust et al. (2004) Geology 32(4) 349-352 https://doi.org/10.1130/G20388.2
 
 Saper LM, Bromiley G, Cao R, Brounce M, Hughes EC, and Woelki D (2025). The primary magmatic δ34S of the Troodos Ophiolite and evidence for early and late sulfide saturation. Lithos 518-519:108331 https://doi.org/10.1016/j.lithos.2025.108331
 
+Seaman et al., 2004
+
 Shaw HR, Wones DR (1964). Fugacity coefficients for hydrogen gas between O degrees and 1000 degrees C, for pressures to 3000 atm. American Journal of Science 262(7):918-929 https://doi.org/10.2475/ajs.262.7.918
 
 Shi P, Saxena SK (1992). Thermodynamic modeing of the CHOS fluid system. American Mineralogist 77(9-10):1038-1049.
@@ -132,7 +158,11 @@ The pandas development team (2024). pandas-dev/pandas: Pandas https://doi.org/10
 
 Thibault & Holloway (1994) CMP 116:216-224 https://doi.org/10.1007/BF00310701
 
+Wanless et al., 2015
+
 Wetzel et al. (2013)
+
+Wieser et al., 2021
 
 Wieser P, Gleeson M (2023). PySulfSat: An open-source Python3 tool for modeling sulfide and sulfate saturation. Volcanica 6(1):107–127 https://doi.org/10.30909/vol.06.01.107127
 
