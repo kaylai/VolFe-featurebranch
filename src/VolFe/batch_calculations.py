@@ -2171,7 +2171,12 @@ def calc_gassing(
                         results_me["wm_S"] = 0.0
                     if results_me["wm_X"] < 1.0e-7:  # 0.1 ppm X
                         results_me["wm_X"] = 0.0
-                    if results_me["wm_C"] == 0.0 and results_me["wm_H"] == 0.0 and results_me["wm_S"] == 0.0 and results_me["wm_X"] == 0.:
+                    if (
+                        results_me["wm_C"] == 0.0
+                        and results_me["wm_H"] == 0.0
+                        and results_me["wm_S"] == 0.0
+                        and results_me["wm_X"] == 0.0
+                    ):
                         break
                     bulk_wf = {
                         "C": results_me["wm_C"],
