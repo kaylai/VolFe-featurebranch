@@ -938,10 +938,14 @@ def calc_Pvsat(
     if last_row is None:
         last_row = len(setup)
 
+    results = None
     for n in range(
         first_row, last_row, 1
     ):  # n is number of rows of data in conditions file
+      try:
         run = n
+        # get sample name for error messages
+        sample_name = setup.loc[run, "Sample"] if "Sample" in setup.columns else f"row {run}"
         PT = {"T": setup.loc[run, "T_C"]}
         melt_wf_i = mg.melt_comp(run, setup)
         melt_wf = mg.melt_comp(run, setup)
@@ -989,6 +993,14 @@ def calc_Pvsat(
             if melt_wf["XT"] > 0.0:
                 raise TypeError("This is not currently possible")
             P_sat_, conc, frac = c.P_VSA(PT, melt_wf, models, nr_step, nr_tol, p_tol)
+        else:
+            raise ValueError(
+                f"Cannot calculate Pvsat: sulfur_is_sat="
+                f"'{models.loc['sulfur_is_sat', 'option']}', "
+                f"sulfur_saturation="
+                f"'{models.loc['sulfur_saturation', 'option']}' "
+                f"did not match any known calculation path."
+            )
         PT["P"] = P_sat_
         melt_wf["H2OT"] = conc["wm_H2O"]
         melt_wf["CO2"] = conc["wm_CO2"]
@@ -1091,7 +1103,7 @@ def calc_Pvsat(
             axis=1,
         )
 
-        if n == first_row:
+        if results is None:
             results = pd.concat([results_headers, results1])
         else:
             results = pd.concat([results, results1])
@@ -1099,6 +1111,17 @@ def calc_Pvsat(
         if models.loc["print status", "option"] == True:
             print(n, setup.loc[run, "Sample"], PT["P"])
 
+      except Exception as e:
+        warnings.warn(
+            f"Sample '{sample_name}' (row {n}) failed and was skipped: {e}",
+            stacklevel=2,
+        )
+        continue
+
+    if results is None:
+        raise RuntimeError(
+            "No samples completed successfully. Check warnings above for details."
+        )
     results.columns = results.iloc[0]
     results = results[1:]
     results.reset_index(drop=True, inplace=True)

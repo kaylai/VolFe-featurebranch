@@ -60,6 +60,14 @@ def set_system(melt_wf, models):
         sys = "CHOXFe"
     elif wt_H > 0.0 and wt_C > 0.0 and wt_S > 0.0 and wt_X > 0.0:
         sys = "SCHOXFe"
+    else:
+        raise ValueError(
+            f"Cannot determine volatile system for composition: "
+            f"H={wt_H}, C={wt_C}, S={wt_S}, X={wt_X}. "
+            f"No matching system found — at least one volatile species "
+            f"(H2O, CO2, or S) must have a concentration > 0, and this "
+            f"combination of species is not currently supported."
+        )
     return sys
 
 
