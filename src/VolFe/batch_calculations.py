@@ -789,9 +789,9 @@ def options_from_setup(run, models, setup):
     pandas.DataFrame
         Models options with the options updated from the setup file.
     """
-    if models.loc["setup", "option"] == "False":
+    if models.loc["setup", "option"] == False:
         return models
-    elif models.loc["setup", "option"] == "True":
+    elif models.loc["setup", "option"] == True:
         # species
         if models.loc["COH_species", "option"] == "setup":
             models.loc["COH_species", "option"] = setup.loc[run, "COH_species"]
@@ -977,15 +977,15 @@ def calc_Pvsat(
         #    }
         # else:
         #    raise TypeError("This is not currently possible")
-        if models.loc["sulfur_is_sat", "option"] == "yes":
+        if models.loc["sulfur_is_sat", "option"] == True:
             if melt_wf["XT"] > 0.0:
                 raise TypeError("This is not currently possible")
             P_sat_, conc, frac = c.fO2_P_VSA(
                 PT, melt_wf, models, nr_step, nr_tol, p_tol
             )
-        elif models.loc["sulfur_saturation", "option"] == "False":
+        elif models.loc["sulfur_saturation", "option"] == False:
             P_sat_, conc, frac = c.P_sat(PT, melt_wf, models, p_tol, nr_step, nr_tol)
-        elif models.loc["sulfur_saturation", "option"] == "True":
+        elif models.loc["sulfur_saturation", "option"] == True:
             if melt_wf["XT"] > 0.0:
                 raise TypeError("This is not currently possible")
             P_sat_, conc, frac = c.P_VSA(PT, melt_wf, models, nr_step, nr_tol, p_tol)
@@ -1096,13 +1096,13 @@ def calc_Pvsat(
         else:
             results = pd.concat([results, results1])
 
-        if models.loc["print status", "option"] == "True":
+        if models.loc["print status", "option"] == True:
             print(n, setup.loc[run, "Sample"], PT["P"])
 
     results.columns = results.iloc[0]
     results = results[1:]
     results.reset_index(drop=True, inplace=True)
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_saturation_pressures.csv", index=False, header=True)
 
     return results
@@ -1151,7 +1151,7 @@ def calc_gassing(
     If output csv = yes in models results_gassing_chemistry: csv file
     """
 
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print(setup.loc[run, "Sample"])
 
     # check if any options need to be read from the setup file rather than the models
@@ -1196,7 +1196,7 @@ def calc_gassing(
         P_sat_, conc, frac = c.P_sat(PT, melt_wf, models, psat_tol, nr_step, nr_tol)
     PT["P"] = P_sat_
     P_sat_initial = P_sat_
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print("T=", PT["T"], "P=", PT["P"], datetime.datetime.now())
 
     # update melt composition at saturation pressure, check for sulfur saturation, and
@@ -1381,7 +1381,7 @@ def calc_gassing(
     results = pd.concat([results_headers, results1])
 
     # results for isotope calculations...
-    if models.loc["isotopes", "option"] == "yes":
+    if models.loc["isotopes", "option"] == True:
         raise TypeError("This is not currently supported")
         a_H2S_S_, a_SO4_S_, a_S2_S_, a_SO2_S_, a_OCS_S_ = iso.i2s6_S_alphas(PT)
         results_isotopes1 = pd.DataFrame(
@@ -1496,7 +1496,7 @@ def calc_gassing(
             ]
         )
         results_isotopes = pd.concat([results_isotopes1, results1], ignore_index=True)
-        if models.loc["output csv", "option"] == "True":
+        if models.loc["output csv", "option"] == True:
             results_isotopes.to_csv(
                 "results_gassing_isotopes.csv", index=False, header=False
             )
@@ -1770,7 +1770,7 @@ def calc_gassing(
                                     results.columns = results.iloc[0]
                                     results = results[1:]
                                     results.reset_index(drop=True, inplace=True)
-                                    if models.loc["output csv", "option"] == "True":
+                                    if models.loc["output csv", "option"] == True:
                                         results.to_csv(
                                             "results_gassing_chemistry.csv",
                                             index=False,
@@ -1877,7 +1877,7 @@ def calc_gassing(
                     results.columns = results.iloc[0]
                     results = results[1:]
                     results.reset_index(drop=True, inplace=True)
-                    if models.loc["output csv", "option"] == "True":
+                    if models.loc["output csv", "option"] == True:
                         results.to_csv(
                             "results_gassing_chemistry.csv", index=False, header=True
                         )
@@ -1965,9 +1965,9 @@ def calc_gassing(
                 warning = ""
 
             # calculate fO2
-            if eq_Fe == "yes":
+            if eq_Fe == True:
                 fO2_ = mdv.f_O2(PT, melt_wf, models)
-            elif eq_Fe == "no":
+            elif eq_Fe == False:
                 fO2_ = gas_mf["O2"] * mdv.y_O2(PT, models) * PT["P"]
 
             wm_CO2eq, wm_H2Oeq = mg.melt_H2O_CO2_eq(melt_wf)
@@ -2074,9 +2074,9 @@ def calc_gassing(
             results = pd.concat([results, results1])
 
             # equilibrium isotope fractionation
-            if models.loc["isotopes", "option"] == "yes":
+            if models.loc["isotopes", "option"] == True:
                 raise TypeError("This is not currently supported")
-                if models.loc["H2S", "option"] == "yes":
+                if models.loc["H2S", "option"] == True:
                     print("not currently possible")
                 # A, B = iso.i2s6("S", PT, R_i, melt_wf, gas_mf, i_nr_step, i_nr_tol,
                 # guessx)
@@ -2143,12 +2143,12 @@ def calc_gassing(
                 results_isotopes = pd.concat(
                     [results_isotopes, results2], ignore_index=True
                 )
-                if models.loc["output csv", "option"] == "True":
+                if models.loc["output csv", "option"] == True:
                     results_isotopes.to_csv(
                         "results_gassing_isotopes.csv", index=False, header=False
                     )
 
-            if models.loc["print status", "option"] == "True":
+            if models.loc["print status", "option"] == True:
                 if number_of_step % 100 == 0:
                     print(
                         PT["T"],
@@ -2204,7 +2204,7 @@ def calc_gassing(
                     # melt_wf["HT"] = results_nbro["wm_H"]
                     # melt_wf["ST"] = results_nbro["wm_S"]
                     # melt_wf["XT"] = results_nbro["wm_X"]
-            if models.loc["crystallisation", "option"] == "yes":
+            if models.loc["crystallisation", "option"] == True:
                 wt_C_ = bulk_wf["C"]
                 wt_H_ = bulk_wf["H"]
                 wt_O_ = bulk_wf["O"]
@@ -2238,10 +2238,10 @@ def calc_gassing(
     results.columns = results.iloc[0]
     results = results[1:]
     results.reset_index(drop=True, inplace=True)
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_gassing_chemistry.csv", index=False, header=True)
 
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print("done", datetime.datetime.now())
 
     return results
@@ -2296,14 +2296,14 @@ def calc_isobar(
             PT["P"] = n  # pressure in bars
             results1 = c.calc_isobar_CO2H2O(PT, melt_wf, models)
             results = pd.concat([results, results1], ignore_index=True)
-            if models.loc["print status", "option"] == "True":
+            if models.loc["print status", "option"] == True:
                 print(setup.loc[run, "Sample"], n)
         results.columns = results.iloc[0]
         results = results[1:]
 
     else:
         raise TypeError("COH_species option must be H2O-CO2 only")
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_isobars.csv", index=False, header=False)
 
     return results
@@ -2331,7 +2331,7 @@ def calc_pure_solubility(setup, run=0, models=mdv.default_models, initial_P=5000
     results_pure_solubility.csv: csv file (if output csv = yes in models)
 
     """
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print(setup.loc[run, "Sample"], initial_P)
     PT = {"T": setup.loc[run, "T_C"]}
 
@@ -2352,9 +2352,9 @@ def calc_pure_solubility(setup, run=0, models=mdv.default_models, initial_P=5000
 
     results.columns = results.iloc[0]
     results = results[1:]
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_pure_solubility.csv", index=False, header=False)
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print("done")
 
     return results
@@ -2535,7 +2535,7 @@ def calc_sol_consts(setup, first_row=0, last_row=None, models=mdv.default_models
         else:
             results = pd.concat([results, results1])
 
-        if models.loc["print status", "option"] == "True":
+        if models.loc["print status", "option"] == True:
             print(
                 n,
                 setup.loc[run, "Sample"],
@@ -2553,7 +2553,7 @@ def calc_sol_consts(setup, first_row=0, last_row=None, models=mdv.default_models
     results.columns = results.iloc[0]
     results = results[1:]
 
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("capacities.csv", index=False, header=False)
 
     return results
@@ -2683,13 +2683,13 @@ def calc_fugacity_coefficients(
         else:
             results = pd.concat([results, results1])
 
-        if models.loc["print status", "option"] == "True":
+        if models.loc["print status", "option"] == True:
             print(n, setup.loc[run, "Sample"], PT["P"])
 
     results.columns = results.iloc[0]
     results = results[1:]
 
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_fugacity_coefficients.csv", index=False, header=True)
 
     return results
@@ -2853,7 +2853,7 @@ def calc_melt_S_oxybarometer(
         else:
             results = pd.concat([results, results1])
 
-        if models.loc["print status", "option"] == "True":
+        if models.loc["print status", "option"] == True:
             print(
                 n,
                 setup.loc[run, "Sample"],
@@ -2865,7 +2865,7 @@ def calc_melt_S_oxybarometer(
     results = results[1:]
     results.reset_index(drop=True, inplace=True)
 
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("fO2_range_from_S.csv", index=False, header=True)
 
     return results
@@ -3153,9 +3153,9 @@ def calc_comp_error(setup, run, iterations=100, models=mdv.default_models):
     results.columns = results.iloc[0]
     results = results[1:]
     results.reset_index()
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("random_compositions.csv", index=False, header=True)
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print(n, setup.loc[run, "Sample"], results1["SiO2"])
 
     return results
@@ -3261,12 +3261,12 @@ def calc_comp_error_function(
                 av_results_all = av_results_all1
             else:
                 av_results_all = pd.concat([av_results_all, av_results_all1])
-            if models.loc["print status", "option"] == "True":
+            if models.loc["print status", "option"] == True:
                 print(iterations, setup.loc[run, "Sample"])
             tqdmsteps.update(1)
 
     av_results_all.reset_index(drop=True, inplace=True)
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         av_results_all.to_csv(
             function + "_random_compositions.csv", index=False, header=True
         )
@@ -3676,9 +3676,9 @@ def calc_isotopes_gassing(
     results.columns = results.iloc[0]
     results = results[1:]
     results.reset_index(drop=True, inplace=True)
-    if models.loc["output csv", "option"] == "True":
+    if models.loc["output csv", "option"] == True:
         results.to_csv("results_gassing_isotopes.csv", index=False, header=True)
 
-    if models.loc["print status", "option"] == "True":
+    if models.loc["print status", "option"] == True:
         print("done", datetime.datetime.now())
     return results
