@@ -942,181 +942,187 @@ def calc_Pvsat(
     for n in range(
         first_row, last_row, 1
     ):  # n is number of rows of data in conditions file
-      try:
-        run = n
-        # get sample name for error messages
-        sample_name = setup.loc[run, "Sample"] if "Sample" in setup.columns else f"row {run}"
-        PT = {"T": setup.loc[run, "T_C"]}
-        melt_wf_i = mg.melt_comp(run, setup)
-        melt_wf = mg.melt_comp(run, setup)
-
-        # check if any options need to be read from the setup file rather than the
-        # models file
-        models = options_from_setup(run, models, setup)
-
-        # calculate Pvsat assuming only H2O CO2 in vapour and melt
-        # if setup.loc[run,"Fe3FeT"] > 0.:
-        #    melt_wf['Fe3FeT'] = setup.loc[run,"Fe3FeT"]
-        # else:
-        #    melt_wf['Fe3FeT'] = 0.
-        P_sat_H2O_CO2_only, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
-            PT, melt_wf, models, p_tol, nr_step, nr_tol
-        )
-
-        if models.loc["calc_sat", "option"] == "fO2_fX":
-            P_sat_fO2_fS2_result = c.P_sat_fO2_fS2(PT, melt_wf, models, p_tol)
-            PT["P"] = P_sat_fO2_fS2_result["P_tot"]
-        else:
-            wm_ST = melt_wf["ST"]
-        melt_wf["ST"] = wm_ST
-
-        # if models.loc["bulk_composition", "option"] == "melt-only":
-        #    bulk_wf = {
-        #        "H": (2.0 * mdv.species.loc["H", "M"] * melt_wf["H2OT"])
-        #        / mdv.species.loc["H2O", "M"],
-        #        "C": (mdv.species.loc["C", "M"] * melt_wf["CO2"])
-        #        / mdv.species.loc["CO2", "M"],
-        #        "S": wm_ST,
-        #        "X": wm_X,
-        #    }
-        # else:
-        #    raise TypeError("This is not currently possible")
-        if models.loc["sulfur_is_sat", "option"] == True:
-            if melt_wf["XT"] > 0.0:
-                raise TypeError("This is not currently possible")
-            P_sat_, conc, frac = c.fO2_P_VSA(
-                PT, melt_wf, models, nr_step, nr_tol, p_tol
+        try:
+            run = n
+            # get sample name for error messages
+            sample_name = (
+                setup.loc[run, "Sample"] if "Sample" in setup.columns else f"row {run}"
             )
-        elif models.loc["sulfur_saturation", "option"] == False:
-            P_sat_, conc, frac = c.P_sat(PT, melt_wf, models, p_tol, nr_step, nr_tol)
-        elif models.loc["sulfur_saturation", "option"] == True:
-            if melt_wf["XT"] > 0.0:
-                raise TypeError("This is not currently possible")
-            P_sat_, conc, frac = c.P_VSA(PT, melt_wf, models, nr_step, nr_tol, p_tol)
-        else:
-            raise ValueError(
-                f"Cannot calculate Pvsat: sulfur_is_sat="
-                f"'{models.loc['sulfur_is_sat', 'option']}', "
-                f"sulfur_saturation="
-                f"'{models.loc['sulfur_saturation', 'option']}' "
-                f"did not match any known calculation path."
+            PT = {"T": setup.loc[run, "T_C"]}
+            melt_wf_i = mg.melt_comp(run, setup)
+            melt_wf = mg.melt_comp(run, setup)
+
+            # check if any options need to be read from the setup file rather than the
+            # models file
+            models = options_from_setup(run, models, setup)
+
+            # calculate Pvsat assuming only H2O CO2 in vapour and melt
+            # if setup.loc[run,"Fe3FeT"] > 0.:
+            #    melt_wf['Fe3FeT'] = setup.loc[run,"Fe3FeT"]
+            # else:
+            #    melt_wf['Fe3FeT'] = 0.
+            P_sat_H2O_CO2_only, P_sat_H2O_CO2_result = c.P_sat_H2O_CO2(
+                PT, melt_wf, models, p_tol, nr_step, nr_tol
             )
-        PT["P"] = P_sat_
-        melt_wf["H2OT"] = conc["wm_H2O"]
-        melt_wf["CO2"] = conc["wm_CO2"]
-        melt_wf["S2-"] = conc["wm_S2m"]
-        melt_wf["Fe3FeT"] = conc["Fe3FeT"]
-        # if models.loc["sulfur_is_sat","option"] == "yes":
-        #    melt_wf["Fe3FeT"] = frac["Fe3FeT"]
-        # else:
-        #    melt_wf["Fe3FeT"] = mg.Fe3FeT_i(PT,melt_wf,models)
 
-        sulf_sat_result = c.sulfur_saturation(PT, melt_wf, models)
-        # gas_mf = {"O2":mg.xg_O2(PT,melt_wf,models),"CO":mg.xg_CO(PT,melt_wf,models),
-        # "CO2":mg.xg_CO2(PT,melt_wf,models),"H2":mg.xg_H2(PT,melt_wf,models),
-        # "H2O":mg.xg_H2O(PT,melt_wf,models),"CH4":mg.xg_CH4(PT,melt_wf,models),
-        # "S2":mg.xg_S2(PT,melt_wf,models),"SO2":mg.xg_SO2(PT,melt_wf,models),
-        # "H2S":mg.xg_H2S(PT,melt_wf,models),"OCS":mg.xg_OCS(PT,melt_wf,models),
-        # "X":mg.xg_X(PT,melt_wf,models),"Xg_t":mg.Xg_tot(PT,melt_wf,models),"wt_g":0.}
-        melt_comp = mg.melt_normalise_wf(melt_wf, "yes", "no")
+            if models.loc["calc_sat", "option"] == "fO2_fX":
+                P_sat_fO2_fS2_result = c.P_sat_fO2_fS2(PT, melt_wf, models, p_tol)
+                PT["P"] = P_sat_fO2_fS2_result["P_tot"]
+            else:
+                wm_ST = melt_wf["ST"]
+            melt_wf["ST"] = wm_ST
 
-        # create results
-        results_headers_table_sample_name, results_values_table_sample_name = (
-            results_table_sample_name(setup, run)
-        )
-        results_headers_table_melt_comp_etc, results_values_table_melt_comp_etc = (
-            results_table_melt_comp_etc(PT, melt_comp, conc, frac, melt_wf)
-        )
-        results_headers_table_model_options, results_values_table_model_options = (
-            results_table_model_options(models)
-        )
-        (
-            results_headers_table_f_p_xg_y_M_C_K_d,
-            results_values_table_f_p_xg_y_M_C_K_d,
-        ) = results_table_f_p_xg_y_M_C_K_d(PT, melt_wf, models)
-        results_headers_table_sat, results_values_table_sat = results_table_sat(
-            sulf_sat_result, PT, melt_wf, models
-        )
-        results_headers_table_melt_vol = (
-            results_table_melt_vol()
-        )  # "H2OT-eq_wtpc","CO2T-eq_ppmw","ST_ppmw","X_ppmw"
-        results_values_table_melt_vol = pd.DataFrame(
-            [
-                [
-                    melt_wf_i["H2OT"] * 100.0,
-                    melt_wf_i["CO2"] * 1000000.0,
-                    melt_wf_i["ST"] * 1000000.0,
-                    melt_wf_i["XT"] * 1000000.0,
-                ]
-            ]
-        )
-        results_headers_table_H2OCO2only = pd.DataFrame(
-            [
-                [
-                    "Pvsat (H2O CO2 only)",
-                    "xg_H2O (H2O CO2 only)",
-                    "xg_CO2 (H2O CO2 only)",
-                    "f_H2O (H2O CO2 only)",
-                    "f_CO2 (H2O CO2 only)",
-                    "p_H2O (H2O CO2 only)",
-                    "p_CO2 (H2O CO2 only)",
-                    "Pvsat_diff_bar",
-                ]
-            ]
-        )
-        results_values_table_H2OCO2only = pd.DataFrame(
-            [
-                [
-                    P_sat_H2O_CO2_only,
-                    P_sat_H2O_CO2_result["xg_H2O"],
-                    P_sat_H2O_CO2_result["xg_CO2"],
-                    P_sat_H2O_CO2_result["f_H2O"],
-                    P_sat_H2O_CO2_result["f_CO2"],
-                    P_sat_H2O_CO2_result["p_H2O"],
-                    P_sat_H2O_CO2_result["p_CO2"],
-                    (P_sat_H2O_CO2_only - PT["P"]),
-                ]
-            ]
-        )
-        results_headers = pd.concat(
-            [
-                results_headers_table_sample_name,
-                results_headers_table_melt_comp_etc,
-                results_headers_table_melt_vol,
-                results_headers_table_sat,
-                results_headers_table_H2OCO2only,
+            # if models.loc["bulk_composition", "option"] == "melt-only":
+            #    bulk_wf = {
+            #        "H": (2.0 * mdv.species.loc["H", "M"] * melt_wf["H2OT"])
+            #        / mdv.species.loc["H2O", "M"],
+            #        "C": (mdv.species.loc["C", "M"] * melt_wf["CO2"])
+            #        / mdv.species.loc["CO2", "M"],
+            #        "S": wm_ST,
+            #        "X": wm_X,
+            #    }
+            # else:
+            #    raise TypeError("This is not currently possible")
+            if models.loc["sulfur_is_sat", "option"] == True:
+                if melt_wf["XT"] > 0.0:
+                    raise TypeError("This is not currently possible")
+                P_sat_, conc, frac = c.fO2_P_VSA(
+                    PT, melt_wf, models, nr_step, nr_tol, p_tol
+                )
+            elif models.loc["sulfur_saturation", "option"] == False:
+                P_sat_, conc, frac = c.P_sat(
+                    PT, melt_wf, models, p_tol, nr_step, nr_tol
+                )
+            elif models.loc["sulfur_saturation", "option"] == True:
+                if melt_wf["XT"] > 0.0:
+                    raise TypeError("This is not currently possible")
+                P_sat_, conc, frac = c.P_VSA(
+                    PT, melt_wf, models, nr_step, nr_tol, p_tol
+                )
+            else:
+                raise ValueError(
+                    f"Cannot calculate Pvsat: sulfur_is_sat="
+                    f"'{models.loc['sulfur_is_sat', 'option']}', "
+                    f"sulfur_saturation="
+                    f"'{models.loc['sulfur_saturation', 'option']}' "
+                    f"did not match any known calculation path."
+                )
+            PT["P"] = P_sat_
+            melt_wf["H2OT"] = conc["wm_H2O"]
+            melt_wf["CO2"] = conc["wm_CO2"]
+            melt_wf["S2-"] = conc["wm_S2m"]
+            melt_wf["Fe3FeT"] = conc["Fe3FeT"]
+            # if models.loc["sulfur_is_sat","option"] == "yes":
+            #    melt_wf["Fe3FeT"] = frac["Fe3FeT"]
+            # else:
+            #    melt_wf["Fe3FeT"] = mg.Fe3FeT_i(PT,melt_wf,models)
+
+            sulf_sat_result = c.sulfur_saturation(PT, melt_wf, models)
+            # gas_mf = {"O2":mg.xg_O2(PT,melt_wf,models),"CO":mg.xg_CO(PT,melt_wf,models),
+            # "CO2":mg.xg_CO2(PT,melt_wf,models),"H2":mg.xg_H2(PT,melt_wf,models),
+            # "H2O":mg.xg_H2O(PT,melt_wf,models),"CH4":mg.xg_CH4(PT,melt_wf,models),
+            # "S2":mg.xg_S2(PT,melt_wf,models),"SO2":mg.xg_SO2(PT,melt_wf,models),
+            # "H2S":mg.xg_H2S(PT,melt_wf,models),"OCS":mg.xg_OCS(PT,melt_wf,models),
+            # "X":mg.xg_X(PT,melt_wf,models),"Xg_t":mg.Xg_tot(PT,melt_wf,models),"wt_g":0.}
+            melt_comp = mg.melt_normalise_wf(melt_wf, "yes", "no")
+
+            # create results
+            results_headers_table_sample_name, results_values_table_sample_name = (
+                results_table_sample_name(setup, run)
+            )
+            results_headers_table_melt_comp_etc, results_values_table_melt_comp_etc = (
+                results_table_melt_comp_etc(PT, melt_comp, conc, frac, melt_wf)
+            )
+            results_headers_table_model_options, results_values_table_model_options = (
+                results_table_model_options(models)
+            )
+            (
                 results_headers_table_f_p_xg_y_M_C_K_d,
-                results_headers_table_model_options,
-            ],
-            axis=1,
-        )
-        results1 = pd.concat(
-            [
-                results_values_table_sample_name,
-                results_values_table_melt_comp_etc,
-                results_values_table_melt_vol,
-                results_values_table_sat,
-                results_values_table_H2OCO2only,
                 results_values_table_f_p_xg_y_M_C_K_d,
-                results_values_table_model_options,
-            ],
-            axis=1,
-        )
+            ) = results_table_f_p_xg_y_M_C_K_d(PT, melt_wf, models)
+            results_headers_table_sat, results_values_table_sat = results_table_sat(
+                sulf_sat_result, PT, melt_wf, models
+            )
+            results_headers_table_melt_vol = (
+                results_table_melt_vol()
+            )  # "H2OT-eq_wtpc","CO2T-eq_ppmw","ST_ppmw","X_ppmw"
+            results_values_table_melt_vol = pd.DataFrame(
+                [
+                    [
+                        melt_wf_i["H2OT"] * 100.0,
+                        melt_wf_i["CO2"] * 1000000.0,
+                        melt_wf_i["ST"] * 1000000.0,
+                        melt_wf_i["XT"] * 1000000.0,
+                    ]
+                ]
+            )
+            results_headers_table_H2OCO2only = pd.DataFrame(
+                [
+                    [
+                        "Pvsat (H2O CO2 only)",
+                        "xg_H2O (H2O CO2 only)",
+                        "xg_CO2 (H2O CO2 only)",
+                        "f_H2O (H2O CO2 only)",
+                        "f_CO2 (H2O CO2 only)",
+                        "p_H2O (H2O CO2 only)",
+                        "p_CO2 (H2O CO2 only)",
+                        "Pvsat_diff_bar",
+                    ]
+                ]
+            )
+            results_values_table_H2OCO2only = pd.DataFrame(
+                [
+                    [
+                        P_sat_H2O_CO2_only,
+                        P_sat_H2O_CO2_result["xg_H2O"],
+                        P_sat_H2O_CO2_result["xg_CO2"],
+                        P_sat_H2O_CO2_result["f_H2O"],
+                        P_sat_H2O_CO2_result["f_CO2"],
+                        P_sat_H2O_CO2_result["p_H2O"],
+                        P_sat_H2O_CO2_result["p_CO2"],
+                        (P_sat_H2O_CO2_only - PT["P"]),
+                    ]
+                ]
+            )
+            results_headers = pd.concat(
+                [
+                    results_headers_table_sample_name,
+                    results_headers_table_melt_comp_etc,
+                    results_headers_table_melt_vol,
+                    results_headers_table_sat,
+                    results_headers_table_H2OCO2only,
+                    results_headers_table_f_p_xg_y_M_C_K_d,
+                    results_headers_table_model_options,
+                ],
+                axis=1,
+            )
+            results1 = pd.concat(
+                [
+                    results_values_table_sample_name,
+                    results_values_table_melt_comp_etc,
+                    results_values_table_melt_vol,
+                    results_values_table_sat,
+                    results_values_table_H2OCO2only,
+                    results_values_table_f_p_xg_y_M_C_K_d,
+                    results_values_table_model_options,
+                ],
+                axis=1,
+            )
 
-        if results is None:
-            results = pd.concat([results_headers, results1])
-        else:
-            results = pd.concat([results, results1])
+            if results is None:
+                results = pd.concat([results_headers, results1])
+            else:
+                results = pd.concat([results, results1])
 
-        if models.loc["print status", "option"] == True:
-            print(n, setup.loc[run, "Sample"], PT["P"])
+            if models.loc["print status", "option"] == True:
+                print(n, setup.loc[run, "Sample"], PT["P"])
 
-      except Exception as e:
-        warnings.warn(
-            f"Sample '{sample_name}' (row {n}) failed and was skipped: {e}",
-            stacklevel=2,
-        )
-        continue
+        except Exception as e:
+            warnings.warn(
+                f"Sample '{sample_name}' (row {n}) failed and was skipped: {e}",
+                stacklevel=2,
+            )
+            continue
 
     if results is None:
         raise RuntimeError(
@@ -2194,7 +2200,12 @@ def calc_gassing(
                         results_me["wm_S"] = 0.0
                     if results_me["wm_X"] < 1.0e-7:  # 0.1 ppm X
                         results_me["wm_X"] = 0.0
-                    if results_me["wm_C"] == 0.0 and results_me["wm_H"] == 0.0 and results_me["wm_S"] == 0.0 and results_me["wm_X"] == 0.:
+                    if (
+                        results_me["wm_C"] == 0.0
+                        and results_me["wm_H"] == 0.0
+                        and results_me["wm_S"] == 0.0
+                        and results_me["wm_X"] == 0.0
+                    ):
                         break
                     bulk_wf = {
                         "C": results_me["wm_C"],

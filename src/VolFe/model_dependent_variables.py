@@ -50,8 +50,12 @@ def make_models_df(models):
     # Coerce string booleans to real booleans for backwards compatibility
     # lookup dict for values we want to translate from: to
     str_to_bool = {
-        "True": True, "true": True, "yes": True,
-        "False": False, "false": False, "no": False,
+        "True": True,
+        "true": True,
+        "yes": True,
+        "False": False,
+        "false": False,
+        "no": False,
     }
     # takes entire models["option"] column, checks every row
     # if row is in keys of str_to_bool dict, replaces with that key's value

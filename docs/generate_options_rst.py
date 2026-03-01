@@ -8,7 +8,7 @@ comprehensive RST reference page.
 
 Usage:
     python generate_options_rst.py
-    
+
 Kayla Iacovino with function mapping by Claude.
 """
 
@@ -134,7 +134,9 @@ def parse_main_docstring():
     """
     docstring = inspect.getdoc(mdv.make_df_and_add_model_defaults)
     if docstring is None:
-        raise RuntimeError("Could not get docstring from make_df_and_add_model_defaults")
+        raise RuntimeError(
+            "Could not get docstring from make_df_and_add_model_defaults"
+        )
 
     # Find the "Model Parameters and Options" section
     marker = "Model Parameters and Options"
@@ -214,32 +216,42 @@ def parse_main_docstring():
             continue
 
         # Check for inline option: "- 'option_name' [default] description"
-        opt_match = re.match(r"""\s*-\s+['"]([^'"]+)['"]\s*(?:\[default\])?\s*(.*)""", line)
+        opt_match = re.match(
+            r"""\s*-\s+['"]([^'"]+)['"]\s*(?:\[default\])?\s*(.*)""", line
+        )
         if opt_match:
             opt_name = opt_match.group(1)
             opt_desc = opt_match.group(2).strip()
             is_default = "[default]" in line
-            current_param["inline_options"].append({
-                "name": opt_name,
-                "description": opt_desc,
-                "is_default": is_default,
-            })
+            current_param["inline_options"].append(
+                {
+                    "name": opt_name,
+                    "description": opt_desc,
+                    "is_default": is_default,
+                }
+            )
             continue
 
         # Check for "default: 'value'" pattern (used in "In development")
         default_match = re.match(r"\s+default:\s+['\"]?(.+?)['\"]?\s*$", line)
         if default_match:
             val = default_match.group(1).strip()
-            current_param["inline_options"].append({
-                "name": val,
-                "description": "",
-                "is_default": True,
-            })
+            current_param["inline_options"].append(
+                {
+                    "name": val,
+                    "description": "",
+                    "is_default": True,
+                }
+            )
             continue
 
         # Append continuation text to description
         stripped = line.strip()
-        if stripped and current_param["description"] and not stripped.startswith("Only one"):
+        if (
+            stripped
+            and current_param["description"]
+            and not stripped.startswith("Only one")
+        ):
             if not stripped.startswith("For now"):
                 current_param["description"] += " " + stripped
 
@@ -267,7 +279,9 @@ def parse_function_options(func_name, param_name=None):
 
     func = getattr(mdv, actual_name, None)
     if func is None:
-        print(f"  Warning: function '{actual_name}' not found in module", file=sys.stderr)
+        print(
+            f"  Warning: function '{actual_name}' not found in module", file=sys.stderr
+        )
         return []
 
     docstring = inspect.getdoc(func)
@@ -303,11 +317,13 @@ def parse_function_options(func_name, param_name=None):
                 r"""\s*-\s+['"]([^'"]+)['"]\s*(?:\[default\])?\s*(.*)""", line
             )
             if opt_match:
-                current_options.append({
-                    "name": opt_match.group(1),
-                    "description": opt_match.group(2).strip(),
-                    "is_default": "[default]" in line,
-                })
+                current_options.append(
+                    {
+                        "name": opt_match.group(1),
+                        "description": opt_match.group(2).strip(),
+                        "is_default": "[default]" in line,
+                    }
+                )
             elif line.strip() == "" or line.strip().startswith("Only one"):
                 # Blank line or note — could end this section or just be a gap
                 pass
@@ -362,7 +378,9 @@ def format_param_rst(param, default_value, func_options=None, is_dev=False):
             func_ref = param.get("func_ref")
             if func_ref:
                 actual_func = FUNC_NAME_MAP.get(func_ref, func_ref)
-                desc_clean += f" See :func:`~VolFe.model_dependent_variables.{actual_func}`."
+                desc_clean += (
+                    f" See :func:`~VolFe.model_dependent_variables.{actual_func}`."
+                )
             lines.append(f"   {desc_clean}")
         elif param.get("func_ref"):
             actual_func = FUNC_NAME_MAP.get(param["func_ref"], param["func_ref"])
@@ -371,9 +389,7 @@ def format_param_rst(param, default_value, func_options=None, is_dev=False):
             )
     elif param.get("func_ref"):
         actual_func = FUNC_NAME_MAP.get(param["func_ref"], param["func_ref"])
-        lines.append(
-            f"   See :func:`~VolFe.model_dependent_variables.{actual_func}`."
-        )
+        lines.append(f"   See :func:`~VolFe.model_dependent_variables.{actual_func}`.")
 
     # Options: prefer function docstring options, fall back to inline
     options = func_options if func_options else param.get("inline_options", [])
