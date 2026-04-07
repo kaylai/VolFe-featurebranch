@@ -1599,13 +1599,24 @@ def calc_gassing(
             eq_Fe = models.loc["eq_Fe", "option"]
             # guesses_original = guesses # store original guesses in case the
             # calculation needs to be restarted
-            original_guessx, original_guessy, original_guessz, original_guessw = (
-                guesses["guessx"],
-                guesses["guessy"],
-                guesses["guessz"],
-                guesses["guessw"],
-            )
-
+            original_guesses = {}
+            original_guesses['xgO2'] = guesses['xgO2']
+            original_guesses['xgCO'] = guesses['xgCO']
+            original_guesses['xgH2'] = guesses['xgH2']
+            original_guesses['xgS2'] = guesses['xgS2']
+            original_guesses['xgCO2'] = guesses['xgCO2']
+            original_guesses['xgH2O'] = guesses['xgH2O']
+            original_guesses['xgSO2'] = guesses['xgSO2']
+            original_guesses['xgH2S'] = guesses['xgH2S']
+            original_guesses['xgCH4'] = guesses['xgCH4']
+            original_guesses['xgOCS'] = guesses['xgOCS']
+            original_guesses['xgX'] = guesses['xgX']
+            #original_guessx, original_guessy, original_guessz, original_guessw = (
+            #    guesses["guessx"],
+            #    guesses["guessy"],
+            #    guesses["guessz"],
+            #    guesses["guessw"],
+            #)
             if dp_step_choice == "auto":
                 if models.loc["gassing_style", "option"] == "open":
                     dp_step = 1.0
@@ -1732,16 +1743,24 @@ def calc_gassing(
                     #    nr_step,nr_tol)
                     if xg["xg_O2"] == 1.0:
                         guesses = {
-                            "guessx": original_guessx,
-                            "guessy": original_guessy,
-                            "guessz": original_guessz,
-                            "guessw": original_guessw,
+                            "xgO2": original_guesses['xgO2'],
+                            "xgCO": original_guesses['xgCO'],
+                            "xgH2": original_guesses['xgH2'],
+                            "xgS2": original_guesses['xgS2'],
+                            "xgCO2": original_guesses['xgCO2'],
+                            "xgH2O": original_guesses['xgH2O'],
+                            "xgSO2": original_guesses['xgSO2'],
+                            "xgH2S": original_guesses['xgH2S'],
+                            "xgCH4": original_guesses['xgCH4'],
+                            "xgOCS": original_guesses['xgOCS'],
+                            "xgX": original_guesses['xgX'],
                         }
                         if number_of_step == 1.0:
                             last_successful_P = math.floor(P_sat_initial)
                         elif dp_step < 1.0 or dp_step == 1.0:
                             if PT["P"] <= 10.0:
-                                print("P < 10 bar, trying P = 1 bar")
+                                if models.loc["print status", "option"] == "True":
+                                    print("P < 10 bar, trying P = 1 bar")
                                 PT["P"] = 1.0
                                 with warnings.catch_warnings():
                                     warnings.simplefilter(
@@ -1776,38 +1795,48 @@ def calc_gassing(
                                             index=False,
                                             header=True,
                                         )
-                                    print(
-                                        "solver failed, calculation aborted at P = ",
-                                        last_successful_P,
-                                        datetime.datetime.now(),
-                                    )
+                                    if models.loc["print status", "option"] == "True":    
+                                        print(
+                                            "solver failed, calculation aborted at P = ",
+                                            last_successful_P,
+                                            datetime.datetime.now(),
+                                        )
                                     return results
-                            print(
-                                "solver failed at P = ",
-                                PT["P"],
-                                "with dp_step = ",
-                                dp_step,
-                                ", increasing step size by factor 10",
-                            )
+                            if models.loc["print status", "option"] == "True":    
+                                print(
+                                    "solver failed at P = ",
+                                    PT["P"],
+                                    "with dp_step = ",
+                                    dp_step,
+                                    ", increasing step size by factor 10",
+                                )
                             dp_step = dp_step * 10.0
                         else:
-                            print(
-                                "solver failed at P = ",
-                                PT["P"],
-                                "with dp_step = ",
-                                dp_step,
-                                ", decreasing step size by factor 10",
-                            )
+                            if models.loc["print status", "option"] == "True":    
+                                print(
+                                    "solver failed at P = ",
+                                    PT["P"],
+                                    "with dp_step = ",
+                                    dp_step,
+                                    ", decreasing step size by factor 10",
+                                )
                             dp_step = dp_step / 10.0
                         newP = last_successful_P - dp_step
                         if newP < 1.0:
                             newP = 1.0
                         PT["P"] = newP
                         guesses = {
-                            "guessx": original_guessx,
-                            "guessy": original_guessy,
-                            "guessz": original_guessz,
-                            "guessw": original_guessw,
+                            "xgO2": original_guesses['xgO2'],
+                            "xgCO": original_guesses['xgCO'],
+                            "xgH2": original_guesses['xgH2'],
+                            "xgS2": original_guesses['xgS2'],
+                            "xgCO2": original_guesses['xgCO2'],
+                            "xgH2O": original_guesses['xgH2O'],
+                            "xgSO2": original_guesses['xgSO2'],
+                            "xgH2S": original_guesses['xgH2S'],
+                            "xgCH4": original_guesses['xgCH4'],
+                            "xgOCS": original_guesses['xgOCS'],
+                            "xgX": original_guesses['xgX'],
                         }
                         with warnings.catch_warnings():
                             warnings.simplefilter(
@@ -1834,21 +1863,29 @@ def calc_gassing(
                         models = new_models
                 if xg["xg_O2"] == 1.0:
                     if dp_step > 1.0:
-                        print(
-                            "solver failed at P = ",
-                            PT["P"],
-                            "with dp_step = ",
-                            dp_step,
-                            ", decreasing step size to 1 bar",
-                        )
+                        if models.loc["print status", "option"] == "True":    
+                            print(
+                                "solver failed at P = ",
+                                PT["P"],
+                                "with dp_step = ",
+                                dp_step,
+                                ", decreasing step size to 1 bar",
+                            )
                         dp_step = 1.0
                         newP = last_successful_P - dp_step
                         PT["P"] = newP
                         guesses = {
-                            "guessx": original_guessx,
-                            "guessy": original_guessy,
-                            "guessz": original_guessz,
-                            "guessw": original_guessw,
+                            "xgO2": original_guesses['xgO2'],
+                            "xgCO": original_guesses['xgCO'],
+                            "xgH2": original_guesses['xgH2'],
+                            "xgS2": original_guesses['xgS2'],
+                            "xgCO2": original_guesses['xgCO2'],
+                            "xgH2O": original_guesses['xgH2O'],
+                            "xgSO2": original_guesses['xgSO2'],
+                            "xgH2S": original_guesses['xgH2S'],
+                            "xgCH4": original_guesses['xgCH4'],
+                            "xgOCS": original_guesses['xgOCS'],
+                            "xgX": original_guesses['xgX'],
                         }
                         with warnings.catch_warnings():
                             warnings.simplefilter(
@@ -1874,6 +1911,72 @@ def calc_gassing(
                             )
                         models = new_models
                 if xg["xg_O2"] == 1.0:
+                    if system == "CHOFe":
+                        if models.loc["print status", "option"] == "True":    
+                            print(
+                                "solver failed at P = ",
+                                PT["P"],
+                                "with dp_step = ",
+                                dp_step,
+                                ", trying O2-CO2 solver",
+                            )
+                        models.loc["solve_species", "option"] = 'O2-CO2'
+                        with warnings.catch_warnings():
+                            warnings.simplefilter(
+                                "ignore" if suppress_warnings else "default",
+                                category=RuntimeWarning,
+                            )
+                            (
+                                xg,
+                                conc,
+                                melt_and_gas,
+                                guesses,
+                                new_models,
+                                solve_species,
+                                mass_balance,
+                            ) = eq.mg_equilibrium(
+                                PT,
+                                melt_wf,
+                                bulk_wf,
+                                models,
+                                nr_step_eq,
+                                nr_tol,
+                                guesses,
+                            )
+                if xg["xg_O2"] == 1.0:
+                    if system == "CHOFe":
+                        if models.loc["print status", "option"] == "True":    
+                            print(
+                                "solver failed at P = ",
+                                PT["P"],
+                                "with dp_step = ",
+                                dp_step,
+                                ", trying O2-H2O solver",
+                            )
+                        models.loc["solve_species", "option"] = 'O2-H2O'
+                        with warnings.catch_warnings():
+                            warnings.simplefilter(
+                                "ignore" if suppress_warnings else "default",
+                                category=RuntimeWarning,
+                            )
+                            (
+                                xg,
+                                conc,
+                                melt_and_gas,
+                                guesses,
+                                new_models,
+                                solve_species,
+                                mass_balance,
+                            ) = eq.mg_equilibrium(
+                                PT,
+                                melt_wf,
+                                bulk_wf,
+                                models,
+                                nr_step_eq,
+                                nr_tol,
+                                guesses,
+                            )                     
+                if xg["xg_O2"] == 1.0:
                     results.columns = results.iloc[0]
                     results = results[1:]
                     results.reset_index(drop=True, inplace=True)
@@ -1887,6 +1990,7 @@ def calc_gassing(
                         datetime.datetime.now(),
                     )
                     return results
+                
                 # gas composition
                 gas_mf = {
                     "O2": xg["xg_O2"],
@@ -1903,6 +2007,22 @@ def calc_gassing(
                     "Xg_t": xg["Xg_t"],
                     "wt_g": melt_and_gas["wt_g"],
                 }
+            
+            # update guesses
+            guesses = {
+                "xgO2": xg['xg_O2'],
+                "xgCO": xg['xg_CO'],
+                "xgH2": xg['xg_H2'],
+                "xgS2": xg['xg_S2'],
+                "xgCO2": xg['xg_CO2'],
+                "xgH2O": xg['xg_H2O'],
+                "xgSO2": xg['xg_SO2'],
+                "xgH2S": xg['xg_H2S'],
+                "xgCH4": xg['xg_CH4'],
+                "xgOCS": xg['xg_OCS'],
+                "xgX": xg['xg_X'],
+                }
+
             # else: # NEEDS SORTING ###
             # conc = eq.melt_speciation(PT,melt_wf,models,nr_step,nr_tol)
             # frac = c.melt_species_ratios(conc)
@@ -2222,7 +2342,7 @@ def calc_gassing(
                     "Fe": wt_Fe_ * (1.0 / (1.0 - Xst)),
                     "Wt": wt_ * (1.0 - Xst),
                 }
-
+            
             tqdmsteps.update(abs(dp_step))
 
             if models.loc["gassing_direction", "option"] == "regas":
