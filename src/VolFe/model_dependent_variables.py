@@ -1159,7 +1159,7 @@ def C_CO3(PT, melt_wf, models=default_models):
             A = gp.exp(-14.32)
         else:
             A = math.exp(-14.32)
-        B = -((DV / (R_ * T_K)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
+        B = -((DV / (R_ * T0)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
         if models.loc["high precision", "option"] == "True":
             C = A * gp.exp(B)
         else:
@@ -1170,7 +1170,7 @@ def C_CO3(PT, melt_wf, models=default_models):
         DH = -28.15  # kJ/mol ±4.24
         T0 = 1200.0 + 273.15  # K
         P0 = 1000.0  # bar
-        B = -((DV / (R_ * T_K)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
+        B = -((DV / (R_ * T0)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
         if models.loc["high precision", "option"] == "True":
             A = gp.exp(-13.36)
             C = A * gp.exp(B)
@@ -1198,7 +1198,7 @@ def C_CO3(PT, melt_wf, models=default_models):
             A = gp.exp(-14.45)  # ±0.02
         else:
             A = math.exp(-14.45)  # ±0.02
-        B = -((DV / (R_ * T_K)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
+        B = -((DV / (R_ * T0)) * (P - P0)) + (DH / R) * ((1.0 / T0) - (1.0 / T_K))
         if models.loc["high precision", "option"] == "True":
             C = A * gp.exp(B)
         else:
@@ -1347,6 +1347,10 @@ def C_S(PT, melt_wf, models=default_models):
     - 'ONeill21hyd' (hydrous) Eq. (10.34, 10.49) from O'Neill (2021) in "Magma Redox Geochemistry" https://doi.org/10.1002/9781119473206.ch10
     - 'Boulliung23_eq6' Eq. (6) from Boulliung & Wood (2023) CMP 178:56 https://doi.org10.1007/s00410-023-02033-9
     - 'Boulliung23_eq7' Eq. (7) from Boulliung & Wood (2023) CMP 178:56 https://doi.org10.1007/s00410-023-02033-9
+    - 'Boulliung23_eq7_12' Eq. (7) and (12) [P-effect] from Boulliung & Wood (2023) CMP 178:56 https://doi.org10.1007/s00410-023-02033-9
+    - 'GorojovskyPP_eq8' Eq. (8) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions. Earth ArXiv https://doi.org/10.31223/X5T755
+    - 'GorojovskyPP_eq9' Eq. (9) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions. Earth ArXiv https://doi.org/10.31223/X5T755
+    - 'Thomas26_eq15' Eq. (15) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta. https://doi.org/10.1016/j.gca.2026.02.003
     """
     model = models.loc["sulfide", "option"]
 
@@ -1434,10 +1438,10 @@ def C_S(PT, melt_wf, models=default_models):
         )
         C = 10.0 ** (logC)
 
-    # Eq. (7) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
+    # Eq. (7) (with or without effect of P from eq. 12) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    if model == "Boulliung23_eq7":
+    if model in ["Boulliung23_eq7","Boulliung23_eq7_12"]:
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         melt_comp = mg.melt_single_O(
@@ -1456,6 +1460,71 @@ def C_S(PT, melt_wf, models=default_models):
             )
             / T
         )
+        if model == "Boulliung23_eq7_12":
+            logC = logC + (((PT['P']-1)*6.2)/(8.314*2.303*T))
+        C = 10.0 ** (logC)
+
+    # Eq. (15) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta.
+    # https://doi.org/10.1016/j.gca.2026.02.003
+    # NOT BENCHMARKED
+    if model == "Thomas26_eq15":
+        # Mole fractions in the melt on cationic lattice with no volatiles and Fe
+        # speciated
+        melt_comp = mg.melt_single_O(
+            melt_wf, "no", "no", molmass="M_Boulliung23", majors="majors_Boulliung23"
+        )
+        logC = (
+            0.405
+            + ( - 0.0573*PT['P']
+                + 24661.0 * melt_comp["FeO"]
+                + 5804.0 * melt_comp["CaO"]
+                + 25366.0 * melt_comp["K2O"]
+                - 1321.0 * melt_comp["SiO2"]
+                - 9092
+            )
+            / T
+        )
+        C = 10.0 ** (logC)
+    
+    # Eq. (8) or (9) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions.
+    # Earth ArXiv https://doi.org/10.31223/X5T755
+    # NOT BENCH-MARKED
+    if model in ["GorojovskyPP_eq8","GorojovskyPP_eq9"]:
+        # Mole fractions in the melt on cationic lattice with no volatiles and Fe
+        # speciated
+        melt_comp = mg.melt_single_O(
+            melt_wf, "no", "yes", molmass="M_Boulliung23", majors="majors_Boulliung23"
+        )
+        if model == 'GorojovskyPP_eq8':
+            logC = (
+                0.3
+                + (
+                    19298. * melt_comp["FeO"]
+                    - 1303. * melt_comp["Na2O"]
+                    + 11423. * melt_comp["K2O"]
+                    - 2935. * melt_comp["SiO2"]
+                    - 7261.
+                )
+                / T
+            )
+        elif model == 'GorojovskyPP_eq9':
+            logC = (
+                0.65
+                + ((
+                    -3368. * melt_comp["SiO2"]
+                    -1233. * melt_comp["Al2O3"]
+                    +1295. * melt_comp["CaO"]
+                    -44885. * melt_comp["K2O"]
+                    +10914. * melt_comp["FeO"] * melt_comp["SiO2"]
+                    -871864. * melt_comp["FeO"] * melt_comp["K2O"]
+                    -225569. * melt_comp["FeO"] * melt_comp["Na2O"]
+                    +54392. * melt_comp["FeO"] * melt_comp["Al2O3"]
+                    - 7585.
+                )
+                / T)
+                + 3.9 * math.erf(melt_comp['FeO'])
+            )
+
         C = 10.0 ** (logC)
 
     # elif model == "FR54-S1":
@@ -1498,8 +1567,12 @@ def C_SO4(PT, melt_wf, models=default_models):
     - 'Boulliung22nP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420 https://doi.org/10.1016/j.gca.2022.11.025
     - 'Boulliung22wP' Eq. (5) from Boulliung & Wood (2023) GCA 343:420 https://doi.org/10.1016/j.gca.2022.11.025 and Eq. (8) for P from Boulliung & Wood (2022) GCA 336:150-164 https://doi.org/10.1016/j.gca.2022.08.032
     - 'Boulliung23_eq9' Eq. (9) from Boulliung & Wood (2023) CMP 178:56 https://doi.org/10.1007/s00410-023-02033-9
+    - 'Boulliung23_eq9_12' Eq. (9) and (12) [P-effect] from Boulliung & Wood (2023) CMP 178:56 https://doi.org/10.1007/s00410-023-02033-9
     - 'Boulliung23_eq11' Eq. (11) from Boulliung & Wood (2023) CMP 178:56 https://doi.org/10.1007/s00410-023-02033-9
-
+    - 'GorojovskyPP_eq10' Eq. (10) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions. Earth ArXiv https://doi.org/10.31223/X5T755
+    - 'GorojovskyPP_eq11' Eq. (11) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions. Earth ArXiv https://doi.org/10.31223/X5T755
+    - 'Thomas26_eq21' Eq. (21) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta. https://doi.org/10.1016/j.gca.2026.02.003
+    - 'Thomas26_eq22' Eq. (22) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta. https://doi.org/10.1016/j.gca.2026.02.003
     """
 
     model = models.loc["sulfate", "option"]
@@ -1566,10 +1639,10 @@ def C_SO4(PT, melt_wf, models=default_models):
         else:
             Csulfate = math.exp(lnC) * KOSg2(PT, models)  # ppm S
 
-    # Eq. (9) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
+    # Eq. (9) (with or without effect of P from eq. 12) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
     # silicate melts. Contrib Mineral Petrol 178, 56 (2023).
     # https://doi.org/10.1007/s00410-023-02033-9
-    elif model == "Boulliung23_eq9":
+    elif model in ["Boulliung23_eq9","Boulliung23_eq9_12"]:
         # Mole fractions in the melt on cationic lattice with no volatiles and Fe
         # speciated
         # Used 29244.299 instead of 292544 to match spreadsheet
@@ -1588,6 +1661,8 @@ def C_SO4(PT, melt_wf, models=default_models):
             )
             / T
         )
+        if model == "Boulliung23_eq9_12":
+            logC = logC + (((PT['P']-1)*29.2)/(8.314*2.303*T))
         Csulfate = 10.0 ** (logC)
 
     # Eq. (11) from Boulliung, J., Wood, B.J. Sulfur oxidation state and solubility in
@@ -1615,6 +1690,104 @@ def C_SO4(PT, melt_wf, models=default_models):
             )
             + 55.029 * math.log10(T)
         )
+        Csulfate = 10.0 ** (logC)
+
+    # Eq. (21) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta.
+    # https://doi.org/10.1016/j.gca.2026.02.003
+    # NOT BENCHMARKED
+    elif model == "Thomas26_eq21":
+        # Mole fractions in the melt on cationic lattice with no volatiles and Fe
+        # speciated
+        melt_comp = mg.melt_single_O(
+            melt_wf, "no", "yes", molmass="M_Boulliung23", majors="majors_Boulliung23"
+        )
+        logC = (
+            -213.65
+            + (
+                (
+                    25696.0 * melt_comp["Na2O"]
+                    + 15076.0 * melt_comp["CaO"]
+                    + 9543.0 * melt_comp["MgO"]
+                    + 16158.0 * melt_comp["MnO"]
+                    + 4316.0 * melt_comp["Al2O3"]
+                    - 0.165*PT['P']
+                    + 68254.0
+                )
+                / T
+            )
+            + 55.03 * math.log10(T)
+        )
+        Csulfate = 10.0 ** (logC)
+
+    # Eq. (22) from Thomas, R.W. and Wood, B.J., 2026. Sulfur speciation in silicate melts at high pressure. Geochimica et Cosmochimica Acta.
+    # https://doi.org/10.1016/j.gca.2026.02.003
+    # NOT BENCHMARKED
+    elif model == "Thomas26_eq22":
+        # Mole fractions in the melt on cationic lattice with no volatiles and Fe
+        # speciated
+        melt_comp = mg.melt_single_O(
+            melt_wf, "yes", "no", molmass="M_Boulliung23", majors="majors_Boulliung23"
+        )
+        # Used -213.645 instead of -213.65, 55.029 instead of 55.03 to match spreadsheet
+        logC = (
+            -13.951
+            + (
+                (
+                    - 0.1715*PT['P']
+                    + 18516.0 * melt_comp["CaO"]
+                    + 41119.0 * melt_comp["Na2O"]
+                    + 6689.0 * melt_comp["MgO"]
+                    + 4236.0 * melt_comp["MnO"]
+                    - 2791.0 * melt_comp["FeO"]
+                    + 7551.0 * melt_comp["H2O"]
+                    + 31224.0
+                )
+                / T
+            )
+        )
+        Csulfate = 10.0 ** (logC)
+    
+    # Eq. (10) or (11) from Gorojovsky, L.R. and Wood, B.J., (pre-print). Solubility and speciation of sulfur in silicate melts under crustal conditions.
+    # Earth ArXiv https://doi.org/10.31223/X5T755
+    # NOT BENCH-MARKED
+    elif model in ["GorojovskyPP_eq10","GorojovskyPP_eq11"]:
+        # Mole fractions in the melt on cationic lattice with no volatiles and Fe
+        # speciated
+        melt_comp = mg.melt_single_O(
+            melt_wf, "no", "yes", molmass="M_Boulliung23", majors="majors_Boulliung23"
+        )
+        if model == "GorojovskyPP_eq10":
+            logC = (
+                -11.11
+                + (
+                    (
+                        31725.0 * melt_comp["Na2O"]
+                        + 17422.0 * melt_comp["CaO"]
+                        + 5633.0 * melt_comp["MgO"]
+                        + 8989.0 * melt_comp["MnO"]
+                        + 26845.0
+                    )
+                    / T
+                )
+            )
+        elif model == "GorojovskyPP_eq11":
+            logC = (
+                196.
+                + (
+                    (
+                        -7633.0 * melt_comp["SiO2"]
+                        -10670.0 * melt_comp["TiO2"]
+                        -6901.0 * melt_comp["Al2O3"]
+                        -4625.0 * melt_comp["FeO"]
+                        +19114.0 * melt_comp["MnO"]
+                        +11740.0 * melt_comp["CaO"]
+                        +33267.0 * melt_comp["Na2O"]
+                        -4095.
+                    )
+                    / T
+                )
+                -57.3* math.log10(T)
+            )
         Csulfate = 10.0 ** (logC)
 
     # OLD #
@@ -5805,7 +5978,7 @@ def beta_gas(PT, element, species, models):  # beta factors
 
     Model options for 'beta_factors'
     -------------
-    - 'Richet77' [default] Quadratic fits to data in Tables 9, 10, and 13 between 600 < T'C < 1300 of Richet et al. (1977) Ann. Rev. Earth Planet. Sci. 5:65-110 as detailed in Saper et al. (in prep).
+    - 'Richet77' [default] Quadratic fits to data in Tables 9, 10, and 13 between 600 < T'C < 1300 of Richet et al. (1977) Ann. Rev. Earth Planet. Sci. 5:65-110 as detailed in Saper et al. (2025) Lithos 518-519:108331 https://doi.org/10.1016/j.lithos.2025.108331.
     Only one option available currently, included for future development.
 
     """
