@@ -700,7 +700,7 @@ def make_df_and_add_model_defaults(models):
         default: 'no'
 
     solve_species
-        default: 'OCS'
+        default: 'auto'
 
     setup
         default: 'False'
