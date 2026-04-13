@@ -7282,7 +7282,7 @@ def eq_SCHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
             dmbc_B = de.SCHOFe2_OCH_CS_H2(xg_O2_, xg_A, xg_B, constants)  # dmbCS_H
         return dmba_O, dmba_A, dmba_B, dmbb_O, dmbb_A, dmbb_B, dmbc_O, dmbc_A, dmbc_B
 
-    guessx = guesses['xgO2']
+    guessx = guesses['xgO2'] 
     if solve_species == "O2-CO-S2":
         guessy = guesses['xgCO']
         guessz = guesses['xgS2']
