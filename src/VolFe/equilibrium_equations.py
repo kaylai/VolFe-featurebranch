@@ -36,42 +36,62 @@ def set_system(melt_wf, models):
     wt_X = melt_wf["XT"]
     if wt_H > 0.0 and wt_C == 0.0 and wt_S == 0.0 and wt_X == 0.0:
         sys = "HOFe"
+        if models.loc["solve_species", "option"] in ['O2-CO','O2-H2','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2'
     elif wt_H == 0.0 and wt_C > 0.0 and wt_S == 0.0 and wt_X == 0.0:
         sys = "COFe"
+        if models.loc["solve_species", "option"] in ['O2-CO','O2-H2','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2'
     elif wt_H == 0.0 and wt_C == 0.0 and wt_S > 0.0 and wt_X == 0.0:
         sys = "SOFe"
+        if models.loc["solve_species", "option"] in ['O2-CO','O2-H2','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2'
     elif wt_H > 0.0 and wt_C > 0.0 and wt_S == 0.0 and wt_X == 0.0:
         sys = "CHOFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-CO'
     elif wt_H > 0.0 and wt_C == 0.0 and wt_S > 0.0 and wt_X == 0.0:
         sys = "SHOFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-H2'
     elif wt_H == 0.0 and wt_C > 0.0 and wt_S > 0.0 and wt_X == 0.0:
         sys = "SCOFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-H2','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-CO'
     elif wt_H == 0.0 and wt_C > 0.0 and wt_S == 0.0 and wt_X > 0.0:
         sys = "COXFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-CO'
     elif wt_H > 0.0 and wt_C == 0.0 and wt_S == 0.0 and wt_X > 0.0:
         sys = "HOXFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO','O2-CO-S2','O2-H2-S2','O2-CO-X','O2-H2-X','O2-CO-H2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-H2'
     elif wt_H > 0.0 and wt_C > 0.0 and wt_S > 0.0 and wt_X == 0.0:
         sys = "SCHOFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO','O2-H2','O2-CO-S2','O2-H2-S2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-CO-S2'
     elif wt_H > 0.0 and wt_C > 0.0 and wt_S == 0.0 and wt_X > 0.0:
         sys = "CHOXFe"
+        if models.loc["solve_species", "option"] in ['O2','O2-CO','O2-H2','O2-CO-S2','O2-H2-S2']:
+            models.loc["solve_species", "option"] = 'auto'
         if models.loc["solve_species", "option"] == 'auto':
             models.loc["solve_species", "option"] = 'O2-CO-X'        
     elif wt_H > 0.0 and wt_C > 0.0 and wt_S > 0.0 and wt_X > 0.0:
