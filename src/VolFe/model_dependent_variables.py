@@ -67,7 +67,7 @@ default_models = [
     ["hydrogen sulfide", "Basalt_Hughes24"],
     ["methane", "Basalt_Ardia13"],
     ["carbon monoxide", "Basalt_Hughes24"],
-    ["species X solubility", "Ar_Basalt_HughesIP"],
+    ["species X solubility", "Ar_Basalt_Hughes25"],
     ["Cspeccomp", "Basalt"],
     ["Hspeccomp", "MORB_HughesIP"],
     ["SCSS", "ONeill21hyd"],
