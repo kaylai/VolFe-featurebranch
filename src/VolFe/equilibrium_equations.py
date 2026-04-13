@@ -7368,7 +7368,7 @@ def eq_SCHOFe_2(PT, bulk_wf, melt_wf, models, nr_step, nr_tol, guesses, solve_sp
             solve_species = "O2-H2-S2"
             models.loc["solve_species", "option"] = solve_species
             guessy = guesses['xgH2']
-            guessz = guess['xgS2']
+            guessz = guesses['xgS2']
             #guessw_hold = guessw
             #guessz_hold = guessz
             #guessw = guessy  # xgCO is guessw
