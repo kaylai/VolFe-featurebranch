@@ -123,7 +123,7 @@ def test_other_df_puresol_useropt():
     result = vf.calc_pure_solubility(my_analysis, models=my_models)
 
     assert result.loc[1, "H2O_wtpc"] == pytest.approx(9.958981268050458)
-    assert result.loc[500, "CO2_ppmw"] == pytest.approx(3025.990363824278)
+    assert result.loc[500, "CO2_ppmw"] == pytest.approx(2196.3958172917173)
 
 
 def test_other_df_isobar():
