@@ -137,10 +137,10 @@ default_models = default_models.set_index("type")
 # define default models for rhyolite
 default_models_rhyolite = [
     ["carbon dioxide", "Rhyolite_Blank93"],
-    ["water", "Rhyolite_HughesIP"],
+    ["water", "Rhyolite_Hughes25"],
     ["hydrogen", "Andesite_Hughes24"],
     ["hydrogen sulfide", "BasalticAndesite_Hughes24"],
-    ["species X solubility", "Ar_Rhyolite_HughesIP"],
+    ["species X solubility", "Ar_Rhyolite_Hughes25"],
     ["Cspeccomp", "Rhyolite"],
     ["Hspeccomp", "Rhyolite_Zhang97"],
 ]
@@ -754,7 +754,7 @@ def C_H2O(PT, melt_wf, models=default_models):
     Model options for water
     ------------------------
     - 'Basalt_Hughes24' [default] Fig.S2 from Hughes et al. (2024) AmMin 109(3):422-438 https://doi.org/10.2138/am-2023-8739
-    - 'Rhyolite_HughesIP' Fig.SX from Hughes et al. (in prep) based on data in Fig. 3 of Blank et al. (1993)
+    - 'Rhyolite_Hughes25' Eq. (S1) from Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data in Fig. 3 of Blank et al. (1993)
 
     """
     model_speciation = models.loc["Hspeciation", "option"]
@@ -766,9 +766,9 @@ def C_H2O(PT, melt_wf, models=default_models):
         "none+ideal",
         "none+regular",
     ]:
-        # Fig.SX from Hughes et al. (in prep) based on data in Fig. 3 of Blank et al.
+        # Eq. (S1) from Hughes et al. (2025) based on data in Fig. 3 of Blank et al.
         # (1993)
-        if model_solubility == "Rhyolite_HughesIP":
+        if model_solubility == "Rhyolite_Hughes25":
             C = 5.3851e-06
 
         # Fig.S2 from Hughes et al. (2024) based on data compilation from Allison et
@@ -2072,34 +2072,34 @@ def C_X(PT, melt_wf, models=default_models):
 
     Model options for species X solubility
     -------------
-    - 'Ar_Basalt_HughesIP' [default] Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
-    - 'Ar_Rhyolite_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
-    - 'Ne_Basalt_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
-    - 'Ne_Rhyolite_HughesIP' Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ar_Basalt_Hughes25' [default] Eq. (S2) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ar_Rhyolite_Hughes25' Eq. (S3) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ne_Basalt_Hughes25' Eq. (S4) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
+    - 'Ne_Rhyolite_Hughes25' Eq. (S5) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical Geology 279(3–4):145-157
     - [float: user specified number] User can type a number that will be used instead (i.e., a constant value)
 
     """
 
     model = models.loc["species X solubility", "option"]
 
-    # Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical
+    # Eq. (S2) Hughes et al. (2025) Volcanica 8(2):457-481 based on data from Iacono-Marziano et al. (2010) Chemical
     # Geology 279(3–4):145-157
-    if model == "Ar_Basalt_HughesIP":
+    if model == "Ar_Basalt_Hughes25":
         K = 0.0799  # fitted assuming Ar is an ideal gas... i.e. yAr = 1.
 
-    # Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical
+    # Eq. (S3) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical
     # Geology 279(3–4):145-157
-    elif model == "Ar_Rhyolite_HughesIP":
+    elif model == "Ar_Rhyolite_Hughes25":
         K = 0.4400  # fitted assuming Ar is an ideal gas... i.e. yAr = 1.
 
-    # Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical
+    # Eq. (S4) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical
     # Geology 279(3–4):145-157
-    elif model == "Ne_Basalt_HughesIP":
+    elif model == "Ne_Basalt_Hughes25":
         K = 0.1504  # fitted assuming Ne is an ideal gas... i.e. yNe = 1.
 
-    # Hughes et al. (in prep) based on data from Iacono-Marziano et al. (2010) Chemical
+    # Eq. (S5) Hughes et al. (2025) Volcanica 8(2):457-481 https://doi.org/10.30909/vol/imvc1781 based on data from Iacono-Marziano et al. (2010) Chemical
     # Geology 279(3–4):145-157
-    elif model == "Ne_Rhyolite_HughesIP":
+    elif model == "Ne_Rhyolite_Hughes25":
         K = 0.8464  # fitted assuming Ne is an ideal gas... i.e. yNe = 1.
 
     # WORK IN PROGRESS

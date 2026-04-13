@@ -115,7 +115,7 @@ def test_other_df_puresol_useropt():
     my_analysis = pd.DataFrame(my_analysis, index=[0])
 
     # choose the options I want - everything else will use the default options
-    my_models = [["water", "Rhyolite_HughesIP"], ["carbon dioxide", "Rhyolite_Blank93"]]
+    my_models = [["water", "Rhyolite_Hughes25"], ["carbon dioxide", "Rhyolite_Blank93"]]
 
     # turn to dataframe with correct column headers and indexes
     my_models = vf.make_df_and_add_model_defaults(my_models)
