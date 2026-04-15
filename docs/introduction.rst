@@ -4,7 +4,7 @@ Introduction and citation
 
 This is VolFe: an open-source Python package for calculating melt-vapor equilibra in the CHOS+ system, including concentration, speciation, and isotope ratios.
 
-VolFe can be installed using pip from `PyPI <https://pypi.org/project/VolFe/>`_ or from `GitHub <https://github.com/eryhughes/VolFe>`_.
+VolFe can be installed using pip from `PyPI <https://pypi.org/project/VolFe/>`_ or from `GitHub <https://github.com/eryhughes/VolFe>`_. Please install VolFe in its own environment because it will rewrite all your package versions.
 
 VolFe is a work in progress. If you see any problems or have any feedback, super keen to hear it! Drop Ery an email at ery[dot]hughes[at]ucl[dot]ac[dot]uk.
 
