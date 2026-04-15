@@ -21,7 +21,7 @@ dependencies = [
     "datetime==5.5",
     "densityx==1.2.0",
     "gmpy2==2.2.1",
-    "numpy<2",
+    "numpy==2.4.4",
     "pandas==2.2.3",
     "PySulfSat==1.0.6",
     "scipy>=1.13.1",
